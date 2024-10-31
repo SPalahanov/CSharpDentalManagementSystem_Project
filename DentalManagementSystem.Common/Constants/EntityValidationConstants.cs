@@ -35,5 +35,10 @@ namespace DentalManagementSystem.Common.Constants
             public const int AddressMaxLength = 150;
         }
 
+        public class Prescription
+        {
+            public const int MedicineNameMinLength = 2;
+            public const int MedicineNameMaxLength = 30;
+        }
     }
 }
