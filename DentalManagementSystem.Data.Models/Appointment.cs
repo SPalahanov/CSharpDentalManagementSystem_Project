@@ -27,6 +27,10 @@
 
         [Required]
         public AppointmentStatus AppointmentStatus { get; set; } // Schedule, Completed, Cancelled
+        
+        [Required]
+        public int AppointmentTypeId { get; set; }
+        public virtual AppointmentType AppointmentType { get; set; } = null!;
 
         public virtual ICollection<AppointmentProcedure> AppointmentProcedures { get; set; } =
             new HashSet<AppointmentProcedure>();

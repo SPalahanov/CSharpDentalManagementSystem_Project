@@ -27,5 +27,8 @@
 
         public virtual ICollection<AppointmentProcedure> AppointmentProcedures { get; set; } =
             new HashSet<AppointmentProcedure>();
+
+        public virtual ICollection<Prescription> Prescriptions { get; set; } =
+            new HashSet<Prescription>();
     }
 }
