@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using DentalManagementSystem.Common.Enums;
 
     public class Appointment
     {
@@ -23,6 +24,9 @@
 
         [Required]
         public TimeSpan AppointmentTime { get; set; }
+
+        [Required]
+        public AppointmentStatus AppointmentStatus { get; set; } // Schedule, Completed, Cancelled
 
         public virtual ICollection<AppointmentProcedure> AppointmentProcedures { get; set; } =
             new HashSet<AppointmentProcedure>();
