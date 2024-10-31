@@ -7,18 +7,22 @@
     using System.Text;
     using System.Threading.Tasks;
 
+    using static DentalManagementSystem.Common.EntityValidationConstants.Procedure
+
     public class Procedure
     {
         [Key]
         public int ProcedureId { get; set; }
 
         [Required]
+        [MaxLength(NameMaxLength)]
         public string Name { get; set; } = null!;
 
         [Required]
         public decimal Price { get; set; }
 
         [Required]
+        [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; } = null!;
 
         public virtual ICollection<AppointmentProcedure> AppointmentProcedures { get; set; } =
