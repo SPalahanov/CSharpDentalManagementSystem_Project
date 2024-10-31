@@ -8,5 +8,6 @@ namespace DentalManagementSystem.Common
 {
     public static class EntityValidationConstants
     {
+        
     }
 }
