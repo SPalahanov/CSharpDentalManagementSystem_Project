@@ -21,9 +21,11 @@
         public string Name { get; set; } = null!;
 
         [Required]
+        [MaxLength(PhoneNumberMaxLength)]
         public string PhoneNumber { get; set; } = null!;
 
         [Required]
+        [MaxLength(AddressMaxLength)]
         public string Address { get; set; } = null!;
 
         [Required]

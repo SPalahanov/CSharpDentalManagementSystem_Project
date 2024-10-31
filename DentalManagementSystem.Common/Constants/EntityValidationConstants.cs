@@ -27,6 +27,12 @@ namespace DentalManagementSystem.Common.Constants
         {
             public const int NameMinLength = 2;
             public const int NameMaxLength = 40;
+
+            public const int PhoneNumberMinLength = 7;
+            public const int PhoneNumberMaxLength = 15;
+
+            public const int AddressMinLength = 30;
+            public const int AddressMaxLength = 150;
         }
 
     }
