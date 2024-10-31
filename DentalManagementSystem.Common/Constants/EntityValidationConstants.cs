@@ -23,5 +23,11 @@ namespace DentalManagementSystem.Common.Constants
             public const int NameMaxLength = 30;
         }
 
+        public class Patient
+        {
+            public const int NameMinLength = 2;
+            public const int NameMaxLength = 40;
+        }
+
     }
 }
