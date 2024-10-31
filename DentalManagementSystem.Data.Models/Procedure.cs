@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Procedure
+    using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Procedure;
 
     public class Procedure
     {
