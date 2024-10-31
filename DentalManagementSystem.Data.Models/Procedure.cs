@@ -7,7 +7,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    using static DentalManagementSystem.Common.EntityValidationConstants.Procedure
+    using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Procedure
 
     public class Procedure
     {

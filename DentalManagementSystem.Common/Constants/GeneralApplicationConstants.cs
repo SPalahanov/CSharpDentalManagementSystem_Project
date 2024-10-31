@@ -1,4 +1,4 @@
-﻿namespace DentalManagementSystem.Common
+﻿namespace DentalManagementSystem.Common.Constants
 {
     public static class GeneralApplicationConstants
     {
