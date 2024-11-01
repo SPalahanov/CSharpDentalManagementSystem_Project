@@ -10,10 +10,10 @@
     {
         public void Configure(EntityTypeBuilder<AppointmentType> builder)
         {
-            builder.HasData(this.GenerateAppointmentType());
+            //builder.HasData(this.GenerateAppointmentType());
         }
 
-        private AppointmentType[] GenerateAppointmentType()
+        /*private AppointmentType[] GenerateAppointmentType()
         {
             ICollection<AppointmentType> appointmentTypes = new HashSet <AppointmentType>();
 
@@ -48,6 +48,6 @@
             appointmentTypes.Add(appointmentType);
 
             return appointmentTypes.ToArray();
-        }
+        }*/
     }
 }
