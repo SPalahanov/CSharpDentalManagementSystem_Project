@@ -11,7 +11,7 @@
         {
         }
 
-        public DentalManagementSystemDbContext(DbContextOptions options)
+        public DentalManagementSystemDbContext(DbContextOptions<DentalManagementSystemDbContext> options)
             : base(options)
         {
         }

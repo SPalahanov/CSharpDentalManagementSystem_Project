@@ -1,7 +1,7 @@
 namespace DentalManagementSystem.Web
 {
     using Data;
-    using Microsoft.AspNetCore.Identity;
+    using DentalManagementSystem.Data.Models;
     using Microsoft.EntityFrameworkCore;
 
     public class Program
@@ -14,9 +14,9 @@ namespace DentalManagementSystem.Web
             builder.Services.AddDbContext<DentalManagementSystemDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
             {
-            options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedAccount = true;
             })
                 .AddEntityFrameworkStores<DentalManagementSystemDbContext>();
 
