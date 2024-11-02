@@ -18,6 +18,18 @@
                 .WithMany(at => at.Appointments)
                 .HasForeignKey(a => a.AppointmentTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasOne(p => p.Patient)
+                .WithMany(pat => pat.Appointments)
+                .HasForeignKey(p => p.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasOne(p => p.Dentist)
+                .WithMany(pat => pat.Appointments)
+                .HasForeignKey(p => p.DentistId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

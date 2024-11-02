@@ -23,6 +23,21 @@ namespace DentalManagementSystem.Common.Constants
             public const int NameMaxLength = 30;
         }
 
+        public class Dentist
+        {
+            public const int NameMinLength = 2;
+            public const int NameMaxLength = 40;
+
+            public const int PhoneNumberMinLength = 7;
+            public const int PhoneNumberMaxLength = 15;
+
+            public const int AddressMinLength = 30;
+            public const int AddressMaxLength = 150;
+
+            public const int LicenseNumberMinLength = 5;
+            public const int LicenseNumberMaxLength = 20;
+        }
+
         public class Patient
         {
             public const int NameMinLength = 2;
@@ -37,8 +52,8 @@ namespace DentalManagementSystem.Common.Constants
 
         public class Prescription
         {
-            public const int MedicineNameMinLength = 2;
-            public const int MedicineNameMaxLength = 30;
+            public const int MedicationNameMinLength = 2;
+            public const int MedicationNameMaxLength = 30;
         }
     }
 }

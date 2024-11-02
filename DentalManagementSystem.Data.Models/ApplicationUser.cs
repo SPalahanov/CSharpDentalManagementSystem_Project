@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Identity;
     using System;
+    using System.ComponentModel.DataAnnotations;
 
     public class ApplicationUser : IdentityUser<Guid>
     {
@@ -9,5 +10,8 @@
         {
             this.Id = Guid.NewGuid();
         }
+
+        [Required]
+        public string Role { get; set; } = null!;
     }
 }

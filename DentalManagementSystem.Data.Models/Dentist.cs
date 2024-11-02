@@ -4,17 +4,17 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Patient;
+    using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Dentist;
 
-    public class Patient
+    public class Dentist
     {
-        public Patient()
+        public Dentist()
         {
-            this.PatientId = Guid.NewGuid();
+            this.DentistId = Guid.NewGuid();
         }
 
         [Key]
-        public Guid PatientId { get; set; }
+        public Guid DentistId { get; set; }
 
         [Required]
         [MaxLength(NameMaxLength)]
@@ -29,22 +29,23 @@
         public string Address { get; set; } = null!;
 
         [Required]
-        public DateTime DateOfBirth { get; set; }
-
-        [Required]
         public string Gender { get; set; } = null!;
 
-        public string Allergies { get; set; } = null!;
+        [Required]
+        public string Specialty { get; set; } = null!;
 
-        public string InsuranceNumber { get; set; } = null!;
-
-        public string EmergencyContact { get; set; } = null!;
+        [Required]
+        [MaxLength(LicenseNumberMaxLength)]
+        public string LicenseNumber { get; set; } = null!;
 
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
 
         public virtual ICollection<Appointment> Appointments { get; set; } =
             new HashSet<Appointment>();
+
+        public virtual ICollection<Procedure> Procedures { get; set; } =
+            new HashSet<Procedure>();
 
         public virtual ICollection<Prescription> Prescriptions { get; set; } =
             new HashSet<Prescription>();

@@ -25,6 +25,12 @@
                 .HasForeignKey(p => p.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder
+                .HasOne(p => p.Dentist)
+                .WithMany(pat => pat.Prescriptions)
+                .HasForeignKey(p => p.DentistId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             //builder.HasData(this.GeneratePrescriptions());
         }
 
