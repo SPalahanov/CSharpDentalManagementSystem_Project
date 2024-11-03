@@ -30,6 +30,37 @@
                 .WithMany(pat => pat.Appointments)
                 .HasForeignKey(p => p.DentistId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            //builder.HasData(GenerateAppointment());
+        }
+
+        private Appointment[] GenerateAppointment()
+        { 
+            ICollection<Appointment> appointments = new HashSet<Appointment>();
+
+            Appointment appointment;
+
+            appointment = new Appointment()
+            {
+                AppointmentDate = DateTime.UtcNow,
+                AppointmentStatus = Common.Enums.AppointmentStatus.Schedule,
+                AppointmentTypeId = 3,
+                PatientId = Guid.Parse(""),
+                DentistId = Guid.Parse(""),
+            };
+            appointments.Add(appointment);
+
+            appointment = new Appointment()
+            {
+                AppointmentDate = DateTime.UtcNow,
+                AppointmentStatus = Common.Enums.AppointmentStatus.Schedule,
+                AppointmentTypeId = 1,
+                PatientId = Guid.Parse(""),
+                DentistId = Guid.Parse("FFA779BE-A8D5-4662-95F2-D5771AE8A22A"),
+            };
+            appointments.Add(appointment);
+
+            return appointments.ToArray();
         }
     }
 }

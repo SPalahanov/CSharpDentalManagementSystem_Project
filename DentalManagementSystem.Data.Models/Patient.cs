@@ -34,11 +34,11 @@
         [Required]
         public string Gender { get; set; } = null!;
 
-        public string Allergies { get; set; } = null!;
+        public string? Allergies { get; set; }
 
-        public string InsuranceNumber { get; set; } = null!;
+        public string? InsuranceNumber { get; set; }
 
-        public string EmergencyContact { get; set; } = null!;
+        public string? EmergencyContact { get; set; }
 
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
