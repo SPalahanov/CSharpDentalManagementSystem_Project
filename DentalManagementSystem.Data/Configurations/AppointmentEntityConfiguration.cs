@@ -31,7 +31,7 @@
                 .HasForeignKey(p => p.DentistId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //builder.HasData(GenerateAppointment());
+            builder.HasData(GenerateAppointment());
         }
 
         private Appointment[] GenerateAppointment()
@@ -44,18 +44,8 @@
             {
                 AppointmentDate = DateTime.UtcNow,
                 AppointmentStatus = Common.Enums.AppointmentStatus.Schedule,
-                AppointmentTypeId = 3,
-                PatientId = Guid.Parse(""),
-                DentistId = Guid.Parse(""),
-            };
-            appointments.Add(appointment);
-
-            appointment = new Appointment()
-            {
-                AppointmentDate = DateTime.UtcNow,
-                AppointmentStatus = Common.Enums.AppointmentStatus.Schedule,
                 AppointmentTypeId = 1,
-                PatientId = Guid.Parse(""),
+                PatientId = Guid.Parse("D6C3BEDB-81E7-4315-8E55-841B06BDD51F"),
                 DentistId = Guid.Parse("FFA779BE-A8D5-4662-95F2-D5771AE8A22A"),
             };
             appointments.Add(appointment);
