@@ -13,7 +13,7 @@
     {
         public void Configure(EntityTypeBuilder<Procedure> builder)
         {
-            builder.HasData(GenerateProcedure());
+            //builder.HasData(GenerateProcedure());
         }
 
         private Procedure[] GenerateProcedure()
@@ -24,6 +24,7 @@
 
             procedure = new Procedure() 
             {
+                ProcedureId = 1,
                 Name = "Teeth Cleaning",
                 Price = 30,
                 Description = "Professional cleaning to remove tartar and plaque using an ultrasonic scaler."
@@ -32,6 +33,7 @@
 
             procedure = new Procedure()
             {
+                ProcedureId = 2,
                 Name = "Cavity Filling",
                 Price = 70,
                 Description = "Treatment of dental cavities with high-quality composite filling to restore the tooth's function and aesthetics."
@@ -40,6 +42,7 @@
 
             procedure = new Procedure()
             {
+                ProcedureId = 3,
                 Name = "Tooth Extraction",
                 Price = 80,
                 Description = "Removal of a tooth due to damage, infection, or orthodontic reasons."
@@ -48,6 +51,7 @@
 
             procedure = new Procedure()
             {
+                ProcedureId = 4,
                 Name = "Teeth Whitening",
                 Price = 150,
                 Description = "Professional whitening procedure using special gels and lamps to achieve a brighter smile."
@@ -56,6 +60,7 @@
 
             procedure = new Procedure()
             {
+                ProcedureId = 5,
                 Name = "Veneers",
                 Price = 250,
                 Description = "Placement of thin porcelain veneers to improve the appearance of front teeth, giving them a natural and attractive look"
