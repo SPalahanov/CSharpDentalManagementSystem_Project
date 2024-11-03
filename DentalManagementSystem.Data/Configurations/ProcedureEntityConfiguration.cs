@@ -13,7 +13,7 @@
     {
         public void Configure(EntityTypeBuilder<Procedure> builder)
         {
-            //builder.HasData(GenerateProcedure());
+            builder.HasData(GenerateProcedure());
         }
 
         private Procedure[] GenerateProcedure()
