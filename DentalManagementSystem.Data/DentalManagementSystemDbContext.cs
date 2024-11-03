@@ -17,12 +17,14 @@
         {
         }
 
-        public virtual DbSet<Procedure> Procedures { get; set; } = null!;
-        public virtual DbSet<Prescription> Prescriptions { get; set; } = null!;
+        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
         public virtual DbSet<Patient> Patients { get; set; } = null!;
-        public virtual DbSet<AppointmentType> AppointmentsTypes { get; set; } = null!;
-        public virtual DbSet<AppointmentProcedure> AppointmentProcedures { get; set; } = null!;
+        public virtual DbSet<Dentist> Dentists { get; set; } = null!;
         public virtual DbSet<Appointment> Appointments { get; set; } = null!;
+        public virtual DbSet<Procedure> Procedures { get; set; } = null!;
+        public virtual DbSet<AppointmentProcedure> AppointmentProcedures { get; set; } = null!;
+        public virtual DbSet<Prescription> Prescriptions { get; set; } = null!;
+        public virtual DbSet<AppointmentType> AppointmentsTypes { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
