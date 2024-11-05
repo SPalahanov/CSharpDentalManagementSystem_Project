@@ -2,6 +2,9 @@ namespace DentalManagementSystem.Web
 {
     using Data;
     using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Services.Data;
+    using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.Infrastructure.Extensions;
     using Microsoft.EntityFrameworkCore;
 
     public class Program
@@ -25,6 +28,8 @@ namespace DentalManagementSystem.Web
                 options.Password.RequiredLength = builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
             })
                 .AddEntityFrameworkStores<DentalManagementSystemDbContext>();
+
+            builder.Services.AddApplicationServices(typeof(PatientService));
 
             builder.Services.AddControllersWithViews();
 

@@ -15,7 +15,7 @@
             this.patientService = patientService;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> Index()
         {
             IEnumerable<AllPatientsIndexViewModel> viewModel = await this.patientService.GetAllPatientsAsync();
 

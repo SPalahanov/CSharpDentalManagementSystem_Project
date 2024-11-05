@@ -23,6 +23,7 @@
     <ProjectReference Include="..\DentalManagementSystem.Data.Models\DentalManagementSystem.Data.Models.csproj" />
     <ProjectReference Include="..\DentalManagementSystem.Data\DentalManagementSystem.Data.csproj" />
     <ProjectReference Include="..\DentalManagementSystem.Services.Data\DentalManagementSystem.Services.Data.csproj" />
+    <ProjectReference Include="..\DentalManagementSystem.Web.Infrastructure\DentalManagementSystem.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\DentalManagementSystem.Web.ViewModels\DentalManagementSystem.Web.ViewModels.csproj" />
   </ItemGroup>
 
