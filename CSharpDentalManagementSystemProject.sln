@@ -3,19 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Web", "DentalManagementSystem.Web\DentalManagementSystem.Web.csproj", "{F693CEEB-CF85-484B-A2D7-9A4BD3EC19A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Web", "DentalManagementSystem.Web\DentalManagementSystem.Web.csproj", "{F693CEEB-CF85-484B-A2D7-9A4BD3EC19A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Common", "DentalManagementSystem.Common\DentalManagementSystem.Common.csproj", "{1C7901C6-1B5E-4CA5-8BE9-23664F5A3946}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Common", "DentalManagementSystem.Common\DentalManagementSystem.Common.csproj", "{1C7901C6-1B5E-4CA5-8BE9-23664F5A3946}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{BDDCFBBB-DCB9-45D1-B6D2-23799A1C9499}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{A131D4E1-A5ED-4331-8319-60A50D893813}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Data", "DentalManagementSystem.Data\DentalManagementSystem.Data.csproj", "{6642805F-D790-4AE4-9154-74B5C15FAA44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Data", "DentalManagementSystem.Data\DentalManagementSystem.Data.csproj", "{6642805F-D790-4AE4-9154-74B5C15FAA44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Data.Models", "DentalManagementSystem.Data.Models\DentalManagementSystem.Data.Models.csproj", "{5D7AA9C4-6A17-4504-935D-79EF0FFC702A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Data.Models", "DentalManagementSystem.Data.Models\DentalManagementSystem.Data.Models.csproj", "{5D7AA9C4-6A17-4504-935D-79EF0FFC702A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Web.ViewModels", "DentalManagementSystem.Web.ViewModels\DentalManagementSystem.Web.ViewModels.csproj", "{20F7BFA7-0577-428C-8091-6FAD2BDE0642}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Web.ViewModels", "DentalManagementSystem.Web.ViewModels\DentalManagementSystem.Web.ViewModels.csproj", "{20F7BFA7-0577-428C-8091-6FAD2BDE0642}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{FBC43B7D-154F-4EF6-A2B8-AD52D1F51A39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Services.Data", "DentalManagementSystem.Services.Data\DentalManagementSystem.Services.Data.csproj", "{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +47,10 @@ Global
 		{20F7BFA7-0577-428C-8091-6FAD2BDE0642}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20F7BFA7-0577-428C-8091-6FAD2BDE0642}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20F7BFA7-0577-428C-8091-6FAD2BDE0642}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +60,7 @@ Global
 		{6642805F-D790-4AE4-9154-74B5C15FAA44} = {A131D4E1-A5ED-4331-8319-60A50D893813}
 		{5D7AA9C4-6A17-4504-935D-79EF0FFC702A} = {A131D4E1-A5ED-4331-8319-60A50D893813}
 		{20F7BFA7-0577-428C-8091-6FAD2BDE0642} = {BDDCFBBB-DCB9-45D1-B6D2-23799A1C9499}
+		{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C} = {FBC43B7D-154F-4EF6-A2B8-AD52D1F51A39}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52D1EEDF-C5B9-4941-BE4E-7319041F9FF1}
