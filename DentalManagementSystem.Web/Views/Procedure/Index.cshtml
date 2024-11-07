@@ -1,0 +1,26 @@
+﻿@model IEnumerable<DentalManagementSystem.Web.ViewModels.Procedure.ProcedureIndexViewModel>
+
+@{
+    ViewData["Title"] = "All Procedures";
+}
+
+<h2>Procedures</h2>
+
+<!-- Button to add a new procedure -->
+<a asp-action="Create" class="btn btn-success mb-4">Add New Procedure</a>
+
+<div class="row">
+    @foreach (var procedure in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img src="images/images.png" class="card-img-top" alt="Cinema Image" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">@procedure.Name</h5>
+                    <p class="card-text">@procedure.Name</p>
+                    <a asp-action="Details" asp-route-id="@procedure.Id" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

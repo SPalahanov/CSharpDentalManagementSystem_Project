@@ -1,5 +1,6 @@
 ﻿namespace DentalManagementSystem.Web.ViewModels.Procedure
 {
+    using DentalManagementSystem.Data.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -14,5 +15,11 @@
         public decimal Price { get; set; }
 
         public string Description { get; set; } = null!;
+
+        public virtual ICollection<AppointmentProcedure> AppointmentProcedures { get; set; } =
+            new HashSet<AppointmentProcedure>();
+
+        public virtual ICollection<Prescription> Prescriptions { get; set; } =
+            new HashSet<Prescription>();
     }
 }
