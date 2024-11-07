@@ -1,0 +1,30 @@
+﻿@using DentalManagementSystem.Web.ViewModels.Dentist
+@model IEnumerable<AllDentistIndexViewModel>
+
+@{
+    ViewData["Title"] = "All Dentists";
+}
+
+<h2>All Dentists</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Specialty</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (AllDentistIndexViewModel dentist in Model)
+        {
+            <tr>
+                <td>@dentist.Name</td>
+                <td>@dentist.Specialty</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@dentist.Id" class="btn btn-info">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

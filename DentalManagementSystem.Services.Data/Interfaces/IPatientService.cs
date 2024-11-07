@@ -8,5 +8,9 @@
     public interface IPatientService
     {
         Task<IEnumerable<AllPatientsIndexViewModel>> GetAllPatientsAsync();
+
+        //Task<bool> AddPatientAsync(AddPatientInputModel inputModel);
+
+        //Task<PatientDetailsViewModel?> GetPatientDetailsByIdAsync(Guid id);
     }
 }
