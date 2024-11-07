@@ -19,9 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Web.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{FBC43B7D-154F-4EF6-A2B8-AD52D1F51A39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Services.Data", "DentalManagementSystem.Services.Data\DentalManagementSystem.Services.Data.csproj", "{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Services.Data", "DentalManagementSystem.Services.Data\DentalManagementSystem.Services.Data.csproj", "{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Web.Infrastructure", "DentalManagementSystem.Web.Infrastructure\DentalManagementSystem.Web.Infrastructure.csproj", "{ED1AE699-6399-4EBA-81AA-46DF3AB65991}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Web.Infrastructure", "DentalManagementSystem.Web.Infrastructure\DentalManagementSystem.Web.Infrastructure.csproj", "{ED1AE699-6399-4EBA-81AA-46DF3AB65991}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Services.Mapping", "DentalManagementSystem.Service.Mapping\DentalManagementSystem.Services.Mapping.csproj", "{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{ED1AE699-6399-4EBA-81AA-46DF3AB65991}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED1AE699-6399-4EBA-81AA-46DF3AB65991}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED1AE699-6399-4EBA-81AA-46DF3AB65991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{20F7BFA7-0577-428C-8091-6FAD2BDE0642} = {BDDCFBBB-DCB9-45D1-B6D2-23799A1C9499}
 		{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C} = {FBC43B7D-154F-4EF6-A2B8-AD52D1F51A39}
 		{ED1AE699-6399-4EBA-81AA-46DF3AB65991} = {BDDCFBBB-DCB9-45D1-B6D2-23799A1C9499}
+		{FF5591AB-285B-4ACB-953F-27B2C30ACA1A} = {FBC43B7D-154F-4EF6-A2B8-AD52D1F51A39}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52D1EEDF-C5B9-4941-BE4E-7319041F9FF1}
