@@ -14,6 +14,7 @@
     <ProjectReference Include="..\DentalManagementSystem.Common\DentalManagementSystem.Common.csproj" />
     <ProjectReference Include="..\DentalManagementSystem.Data.Models\DentalManagementSystem.Data.Models.csproj" />
     <ProjectReference Include="..\DentalManagementSystem.Data\DentalManagementSystem.Data.csproj" />
+    <ProjectReference Include="..\DentalManagementSystem.Service.Mapping\DentalManagementSystem.Services.Mapping.csproj" />
   </ItemGroup>
 
 </Project>

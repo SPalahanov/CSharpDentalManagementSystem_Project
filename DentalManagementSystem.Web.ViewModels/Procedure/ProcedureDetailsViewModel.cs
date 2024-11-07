@@ -1,12 +1,6 @@
 ﻿namespace DentalManagementSystem.Web.ViewModels.Procedure
 {
     using DentalManagementSystem.Data.Models;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class ProcedureDetailsViewModel
     {
@@ -16,10 +10,10 @@
 
         public string Description { get; set; } = null!;
 
-        public virtual ICollection<AppointmentProcedure> AppointmentProcedures { get; set; } =
+        public ICollection<AppointmentProcedure> AppointmentProcedures { get; set; } =
             new HashSet<AppointmentProcedure>();
 
-        public virtual ICollection<Prescription> Prescriptions { get; set; } =
-            new HashSet<Prescription>();
+        /*public ICollection<Prescription> Prescriptions { get; set; } =
+            new HashSet<Prescription>();*/
     }
 }

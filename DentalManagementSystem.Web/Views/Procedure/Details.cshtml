@@ -1,0 +1,12 @@
+﻿@using DentalManagementSystem.Web.ViewModels.Procedure
+@model ProcedureDetailsViewModel
+
+@{
+    ViewData["Title"] = "Procedures";
+}
+
+<h2>@Model.Name - Procedure</h2>
+<p><strong>Price:</strong> @Model.Price</p>
+<p><strong>Description:</strong> @Model.Description</p>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Back to Procedures</a>

@@ -13,6 +13,6 @@
 
         Task AddProcedureAsync(AddProcedureFormModel model);
 
-        Task<ProcedureDetailsViewModel?> GetProcedureDetailsByIdAsync(Guid id);
+        Task<ProcedureDetailsViewModel?> GetProcedureDetailsByIdAsync(int id);
     }
 }

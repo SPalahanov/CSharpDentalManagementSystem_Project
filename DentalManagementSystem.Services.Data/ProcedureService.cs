@@ -1,40 +1,68 @@
-﻿using DentalManagementSystem.Services.Data.Interfaces;
-
-namespace DentalManagementSystem.Services.Data
+﻿namespace DentalManagementSystem.Services.Data
 {
     using DentalManagementSystem.Data;
     using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Data.Repository.Interfaces;
+    using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Services.Mapping;
     using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class ProcedureService : IProcedureService
     {
         private readonly DentalManagementSystemDbContext dbContext;
 
-        public ProcedureService(DentalManagementSystemDbContext dbContext)
+        private IRepository<Procedure, int> procedureRepository;
+
+        public ProcedureService(IRepository<Procedure, int> procedureRepository)
         {
-            this.dbContext = dbContext;
+            this.procedureRepository = procedureRepository;
         }
 
-        public Task AddProcedureAsync(AddProcedureFormModel model)
+        public async Task AddProcedureAsync(AddProcedureFormModel model)
         {
-            throw new NotImplementedException();
+            Procedure procedure = new Procedure();
+
+            AutoMapperConfig.MapperInstance.Map(model, procedure);
+
+            await this.procedureRepository.AddAsync(procedure);
         }
 
 
-        public Task<ProcedureDetailsViewModel?> GetProcedureDetailsByIdAsync(Guid id)
+        public async Task<ProcedureDetailsViewModel?> GetProcedureDetailsByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            Procedure? procedure = await this.procedureRepository
+                .GetAllAttached()
+                .Include(p => p.AppointmentProcedures)
+                .ThenInclude(ap => ap.Appointment)
+                .FirstOrDefaultAsync(p => p.ProcedureId == id);
+
+            ProcedureDetailsViewModel? viewModel = null;
+
+            if (procedure != null)
+            {
+                viewModel = new ProcedureDetailsViewModel()
+                {
+                    Name = procedure.Name,
+                    Price = procedure.Price,
+                    Description = procedure.Description
+                };
+            };
+
+            return viewModel;
         }
 
         public async Task<IEnumerable<ProcedureIndexViewModel>> IndexGetAllAsync()
         {
-            throw new NotImplementedException();
+            IEnumerable<ProcedureIndexViewModel> procedures = await this.procedureRepository
+                .GetAllAttached()
+                .To<ProcedureIndexViewModel>()
+                .ToArrayAsync();
+
+            return procedures;
         }
     }
 }
