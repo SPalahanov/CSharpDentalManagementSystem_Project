@@ -11,10 +11,10 @@ namespace DentalManagementSystem.Web
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Services.Mapping;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
-    using DentalManagementSystem.Web.ViewModels;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System.Reflection;
+    using DentalManagementSystem.Web.ViewModels.Home;
 
     public class Program
     {
@@ -26,6 +26,8 @@ namespace DentalManagementSystem.Web
             
             builder.Services.AddDbContext<DentalManagementSystemDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DentalManagementSystemDbContext>();
 
             builder.Services
                 .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
@@ -48,6 +50,7 @@ namespace DentalManagementSystem.Web
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Account/Login";
+                //options.LogoutPath = "/Identity/Account/Logout";
             });
 
             //builder.Services.AddScoped<IRepository<Procedure, int>, BaseRepository<Procedure, int>>();

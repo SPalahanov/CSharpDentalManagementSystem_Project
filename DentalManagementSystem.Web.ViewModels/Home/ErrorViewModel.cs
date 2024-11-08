@@ -1,4 +1,4 @@
-namespace DentalManagementSystem.Web.ViewModels
+namespace DentalManagementSystem.Web.ViewModels.Home
 {
     public class ErrorViewModel
     {
