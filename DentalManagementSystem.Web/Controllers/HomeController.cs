@@ -1,6 +1,6 @@
 namespace DentalManagementSystem.Web.Controllers
 {
-    using DentalManagementSystem.Web.ViewModels.Home;
+    using DentalManagementSystem.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
 

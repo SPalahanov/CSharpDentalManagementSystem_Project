@@ -8,9 +8,9 @@
 
     public class DentalManagementSystemDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
-        public DentalManagementSystemDbContext()
+        /*public DentalManagementSystemDbContext()
         {
-        }
+        }*/
 
         public DentalManagementSystemDbContext(DbContextOptions<DentalManagementSystemDbContext> options)
             : base(options)
