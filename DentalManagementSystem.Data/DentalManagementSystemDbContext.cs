@@ -26,7 +26,7 @@
         public virtual DbSet<Prescription> Prescriptions { get; set; } = null!;
         public virtual DbSet<AppointmentType> AppointmentsTypes { get; set; } = null!;
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        /*protected override void OnModelCreating(ModelBuilder builder)
         {
             Assembly configAssembly = Assembly.GetAssembly(typeof(DentalManagementSystemDbContext)) ??
                                       Assembly.GetExecutingAssembly();
@@ -34,6 +34,12 @@
             builder.ApplyConfigurationsFromAssembly(configAssembly);
 
             base.OnModelCreating(builder);
+        }*/
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

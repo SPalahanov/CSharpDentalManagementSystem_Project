@@ -24,13 +24,15 @@
 
         public async Task AddProcedureAsync(AddProcedureFormModel model)
         {
-            Procedure procedure = new Procedure();
-
-            AutoMapperConfig.MapperInstance.Map(model, procedure);
+            Procedure procedure = new Procedure()
+            {
+                Name = model.Name,
+                Price = model.Price,
+                Description = model.Description,
+            };
 
             await this.procedureRepository.AddAsync(procedure);
         }
-
 
         public async Task<ProcedureDetailsViewModel?> GetProcedureDetailsByIdAsync(int id)
         {
@@ -59,7 +61,11 @@
         {
             IEnumerable<ProcedureIndexViewModel> procedures = await this.procedureRepository
                 .GetAllAttached()
-                .To<ProcedureIndexViewModel>()
+                .Select(p => new ProcedureIndexViewModel
+                {
+                    Id = p.ProcedureId,
+                    Name = p.Name
+                })
                 .ToArrayAsync();
 
             return procedures;

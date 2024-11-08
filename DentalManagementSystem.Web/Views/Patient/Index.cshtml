@@ -27,7 +27,7 @@
                 <td>@patient.DateOfBirth</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-info">Details</a>
-                    <a asp-action="AddToProgram" asp-route-id="@patient.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-warning">Edit</a>
                     <form asp-controller="Watchlist" asp-action="AddToWatchlist" method="post" class="d-inline">
                         <input type="hidden" name="movieId" value="@patient.Id" />
                         <button type="submit" class="btn btn-danger">Delete</button>

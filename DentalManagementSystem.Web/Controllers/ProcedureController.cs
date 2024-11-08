@@ -42,26 +42,23 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(string? id)
+        public async Task<IActionResult> Details(int id)
         {
-            /*Guid cinemaGuid = Guid.Empty;
-
-            bool isIdValid = this.IsGuidValid(id, ref cinemaGuid);
-
-            if (!isIdValid)
+            if (id <= 0)
             {
                 return this.RedirectToAction(nameof(Index));
-            }*/
+            }
 
             ProcedureDetailsViewModel? viewModel = await this.procedureService
-                .GetProcedureDetailsByIdAsync(int.Parse(id));
+                .GetProcedureDetailsByIdAsync(id);
 
             if (viewModel == null)
             {
                 return this.RedirectToAction(nameof(Index));
             }
 
-            return this.View(viewModel);
+            return View(viewModel);
         }
+
     }
 }

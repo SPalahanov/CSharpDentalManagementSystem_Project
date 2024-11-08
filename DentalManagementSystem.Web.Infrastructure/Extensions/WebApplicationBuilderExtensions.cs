@@ -1,7 +1,10 @@
 ﻿namespace DentalManagementSystem.Web.Infrastructure.Extensions
 {
+    using DentalManagementSystem.Data;
     using DentalManagementSystem.Services.Data;
     using DentalManagementSystem.Services.Data.Interfaces;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Collections.Generic;
@@ -12,32 +15,14 @@
 
     public static class WebApplicationBuilderExtensions
     {
-        public static void AddApplicationServices(this IServiceCollection services, Type serviceType)
+        public static IApplicationBuilder ApplyMigrations(this IApplicationBuilder app)
         {
-            Assembly? serviceAssembly = Assembly.GetAssembly(serviceType);
+            using var serviceScope = app.ApplicationServices.CreateScope();
 
-            if (serviceAssembly == null)
-            {
-                throw new InvalidOperationException("Invalid service type provided");
-            }
+            DentalManagementSystemDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<DentalManagementSystemDbContext>()!;
+            dbContext.Database.Migrate();
 
-            Type[] serviceTypes = serviceAssembly
-                .GetTypes()
-                .Where(t => t.Name.EndsWith("Service") && !t.IsInterface)
-                .ToArray();
-
-            foreach (var implementationType in serviceTypes)
-            {
-                Type? interfaceType = implementationType
-                    .GetInterface($"I{implementationType.Name}");
-
-                if (interfaceType == null)
-                {
-                    throw new InvalidOperationException($"No interface is provided for the service with the name: {implementationType.Name}");
-                }
-
-                services.AddScoped(interfaceType, implementationType);
-            }
+            return app;
         }
     }
 }
