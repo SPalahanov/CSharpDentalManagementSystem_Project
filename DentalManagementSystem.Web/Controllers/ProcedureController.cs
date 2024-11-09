@@ -2,6 +2,7 @@
 {
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.ViewModels.Procedure;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class ProcedureController : Controller
@@ -23,6 +24,7 @@
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             return View();

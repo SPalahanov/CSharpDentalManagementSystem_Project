@@ -4,6 +4,7 @@
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Dentist;
     using DentalManagementSystem.Web.ViewModels.Patient;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class DentistController : Controller
@@ -15,6 +16,7 @@
             this.dentistService = dentistService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             IEnumerable<AllDentistIndexViewModel> viewModel = await this.dentistService.GetAllDentistsAsync();
@@ -22,6 +24,8 @@
             return View(viewModel);
         }
 
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Details()
         {
             IEnumerable<AllDentistIndexViewModel> viewModel = await this.dentistService.GetAllDentistsAsync();

@@ -20,4 +20,8 @@
     }
 </div>
 
-<a asp-action="Create" class="btn btn-success mb-4">Add New Procedure</a>
+
+@if (this.User.Identity?.IsAuthenticated ?? false)
+{
+    <a asp-action="Create" class="btn btn-success mb-4">Add New Procedure</a>
+}

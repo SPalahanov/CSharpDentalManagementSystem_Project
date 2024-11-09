@@ -2,8 +2,10 @@
 {
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.ViewModels.Appointment;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class AppointmentController : BaseController
     {
         private readonly IAppointmentService appointmentService;

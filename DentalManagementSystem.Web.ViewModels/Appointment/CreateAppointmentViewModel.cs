@@ -1,6 +1,7 @@
 ﻿namespace DentalManagementSystem.Web.ViewModels.Appointment
 {
     using DentalManagementSystem.Common.Enums;
+    using Microsoft.AspNetCore.Authorization;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -8,6 +9,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class CreateAppointmentViewModel
     {
         [Required]
