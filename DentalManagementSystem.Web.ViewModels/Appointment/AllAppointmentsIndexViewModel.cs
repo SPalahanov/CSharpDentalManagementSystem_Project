@@ -16,19 +16,5 @@
         public string AppointmentDate { get; set; } = null!;
 
         public string AppointmentStatus { get; set; } = null!;
-
-        /*public int AppointmentTypeId { get; set; }
-        public virtual AppointmentType AppointmentType { get; set; } = null!;
-
-        [Required]
-        public Guid PatientId { get; set; }
-        public virtual Patient Patient { get; set; } = null!;
-
-        [Required]
-        public Guid DentistId { get; set; }
-        public virtual Dentist Dentist { get; set; } = null!;*/
-
-        /*public virtual ICollection<AppointmentProcedure> AppointmentProcedures { get; set; } =
-            new HashSet<AppointmentProcedure>();*/
     }
 }

@@ -1,28 +1,34 @@
 ﻿namespace DentalManagementSystem.Services.Data
 {
-    using DentalManagementSystem.Data.Repository.Interfaces;
-    using DentalManagementSystem.Data;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using DentalManagementSystem.Common.Enums;
     using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Procedure;
-    using static DentalManagementSystem.Common.Constants.EntityValidationConstants;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class AppointmentService : IAppointmentService
     {
-        private readonly DentalManagementSystemDbContext dbContext;
+        
+        private readonly IRepository<Appointment, Guid> appointmentRepository;
+        private readonly IRepository<Patient, Guid> patientRepository;
+        private readonly IRepository<Dentist, Guid> dentistRepository;
+        private readonly IRepository<AppointmentType, int> appointmentTypeRepository;
 
-        private IRepository<Appointment, int> appointmentRepository;
-
-        public AppointmentService(IRepository<Appointment, int> appointmentRepository)
+        public AppointmentService(IRepository<Appointment, Guid> appointmentRepository, 
+                                  IRepository<Patient, Guid> patientRepository,
+                                  IRepository<Dentist, Guid> dentistRepository,
+                                  IRepository<AppointmentType, int> appointmentTypeRepository)
         {
             this.appointmentRepository = appointmentRepository;
+            this.patientRepository = patientRepository;
+            this.dentistRepository = dentistRepository;
+            this.appointmentTypeRepository = appointmentTypeRepository;
         }
 
         public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAllAppointmentsAsync()
@@ -72,6 +78,42 @@
             }
 
             return viewModel;
+        }
+
+        public async Task<CreateAppointmentViewModel> GetCreateAppointmentModelAsync()
+        {
+            return new CreateAppointmentViewModel
+            {
+                Patients = await this.patientRepository
+                    .GetAllAttached()
+                    .Select(p => new PatientAppointmentViewModel { Id = p.PatientId, Name = p.Name })
+                    .ToArrayAsync(),
+                Dentists = await this.dentistRepository
+                    .GetAllAttached()
+                    .Select(d => new DentistAppointmentViewModel { Id = d.DentistId, Name = d.Name })
+                    .ToArrayAsync(),
+                AppointmentTypes = await this.appointmentTypeRepository
+                    .GetAllAttached()
+                    .Select(at => new AppointmentTypeViewModel { Id = at.Id, Name = at.Name })
+                    .ToArrayAsync()
+            };
+        }
+
+        public async Task<bool> CreateAppointmentAsync(CreateAppointmentViewModel model)
+        {
+            var appointment = new Appointment
+            {
+                AppointmentId = Guid.NewGuid(),
+                AppointmentDate = model.AppointmentDate,
+                AppointmentTypeId = model.AppointmentTypeId,
+                PatientId = model.PatientId,
+                DentistId = model.DentistId,
+                AppointmentStatus = AppointmentStatus.Schedule
+            };
+
+            await this.appointmentRepository.AddAsync(appointment);
+
+            return true;
         }
     }
 }

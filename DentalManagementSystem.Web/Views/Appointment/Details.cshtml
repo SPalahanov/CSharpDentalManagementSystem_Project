@@ -28,31 +28,3 @@ else
 }
 
 <a asp-action="Index" class="btn btn-secondary mt-3">Back to Appointments</a>
-
-@*@{
-    ViewData["Title"] = "Appointment Procedure Details";
-}
-
-<h2>@Model.AppointmentDate - Appointment Date</h2>
-
-<h3>Appointment procedure:</h3>
-
-@if (Model.Procedures.Any())
-{
-    <ul class="list-group">
-        @foreach (AppointmentProcedureViewModel procedure in Model.Procedures)
-        {
-            <li class="list-group-item">
-                <strong>@procedure.Name</strong> <br />
-                <small>Price: @procedure.Price</small>
-                <small>Description: @procedure.Description</small>
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>No procedure is assigned to this appointment.</p>
-}
-
-<a asp-action="Index" class="btn btn-secondary mt-3">Back to Appointments</a>*@
