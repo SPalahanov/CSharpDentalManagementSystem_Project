@@ -1,13 +1,9 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using DentalManagementSystem.Data;
 namespace DentalManagementSystem.Web
 {
-    using Data;
+    using DentalManagementSystem.Data;
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Data.Repository;
-    using DentalManagementSystem.Services.Data;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Services.Mapping;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
@@ -27,8 +23,6 @@ namespace DentalManagementSystem.Web
             builder.Services.AddDbContext<DentalManagementSystemDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<DentalManagementSystemDbContext>();
-
             builder.Services
                 .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
                 {
@@ -45,19 +39,10 @@ namespace DentalManagementSystem.Web
                 .AddSignInManager<SignInManager<ApplicationUser>>()
                 .AddUserManager<UserManager<ApplicationUser>>();
 
-            
-
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Account/Login";
-                //options.LogoutPath = "/Identity/Account/Logout";
             });
-
-            //builder.Services.AddScoped<IRepository<Procedure, int>, BaseRepository<Procedure, int>>();
-            //builder.Services.AddScoped<IRepository<Dentist, Guid>, BaseRepository<Dentist, Guid>>();
-            //builder.Services.AddScoped<IRepository<Patient, Guid>, BaseRepository<Patient, Guid>>();
-            //builder.Services.AddScoped<IRepository<Patient, object>, BaseRepository<CinemaMovie, object>>();
-            //builder.Services.AddScoped<IRepository<ApplicationUserMovie, object>, BaseRepository<ApplicationUserMovie, object>>();
 
             builder.Services.RegisterRepositories(typeof(ApplicationUser).Assembly);
             builder.Services.RegisterUserDefinedServices(typeof(IProcedureService).Assembly);
@@ -76,7 +61,6 @@ namespace DentalManagementSystem.Web
             {
                 app.UseExceptionHandler("/Home/Error");
 
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
