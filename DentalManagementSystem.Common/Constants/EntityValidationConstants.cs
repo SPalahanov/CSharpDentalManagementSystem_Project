@@ -31,8 +31,8 @@ namespace DentalManagementSystem.Common.Constants
             public const int PhoneNumberMinLength = 7;
             public const int PhoneNumberMaxLength = 15;
 
-            public const int AddressMinLength = 30;
-            public const int AddressMaxLength = 150;
+            public const int AddressMinLength = 10;
+            public const int AddressMaxLength = 70;
 
             public const int LicenseNumberMinLength = 5;
             public const int LicenseNumberMaxLength = 20;
@@ -46,8 +46,8 @@ namespace DentalManagementSystem.Common.Constants
             public const int PhoneNumberMinLength = 7;
             public const int PhoneNumberMaxLength = 15;
 
-            public const int AddressMinLength = 30;
-            public const int AddressMaxLength = 150;
+            public const int AddressMinLength = 10;
+            public const int AddressMaxLength = 70;
         }
 
         public class Prescription
