@@ -36,18 +36,42 @@
         [HttpGet]
         public async Task<IActionResult> Become()
         {
-            string? userId = this.User.GetId();
+            string? userId = this.User.GetUserId();
 
             bool isDentist = await dentistService.DentistExistsByUserIdAsync(userId);
 
-            if (!isDentist)
+            if (isDentist)
             {
-                //this.TempData[ErrorMessage] = "You are already an agent";
+                //this.TempData[ErrorMessage] = "You are already an dentist";
 
                 return this.RedirectToAction("Index", "Home");
             }
 
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Become(BecomeDentistFormModel model)
+        {
+            string? userId = this.User.GetUserId();
+
+            bool isDentist = await dentistService.DentistExistsByUserIdAsync(userId);
+
+            if (isDentist)
+            {
+                //this.TempData[ErrorMessage] = "You are already an dentist";
+
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await this.dentistService.CreateDentistAsync(userId, model);
+
+            return this.RedirectToAction("Index", "Home");
         }
     }
 }

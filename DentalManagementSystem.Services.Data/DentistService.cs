@@ -2,6 +2,7 @@
 {
     using DentalManagementSystem.Data;
     using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.ViewModels.Dentist;
     using Microsoft.EntityFrameworkCore;
@@ -10,16 +11,19 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class DentistService : IDentistService
+    public class DentistService : BaseService, IDentistService
     {
         private readonly DentalManagementSystemDbContext dbContext;
 
-        public DentistService(DentalManagementSystemDbContext dbContext)
+        private readonly IRepository<Dentist, Guid> dentistRepository;
+
+        public DentistService(IRepository<Dentist, Guid> dentistRepository, DentalManagementSystemDbContext dbContext)
         {
+            this.dentistRepository = dentistRepository;
             this.dbContext = dbContext;
         }
 
-        public async Task Create(string userId, BecomeDentistFormModel model)
+        public async Task CreateDentistAsync(string userId, BecomeDentistFormModel model)
         {
             Dentist dentist = new Dentist()
             {
@@ -72,6 +76,20 @@
                 .ToArrayAsync();
 
             return allDentists;
+        }
+
+        public async Task<bool> IsUserDentist(string userId)
+        {
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return false;
+            }
+
+            bool result = await this.dentistRepository
+                .GetAllAttached()
+                .AnyAsync(d => d.UserId.ToString().ToLower() == userId);
+
+            return result;
         }
     }
 }

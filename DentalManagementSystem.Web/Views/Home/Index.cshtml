@@ -1,19 +1,29 @@
-﻿@{
+﻿@using DentalManagementSystem.Services.Data.Interfaces
+@using DentalManagementSystem.Web.Infrastructure.Extensions
+@inject IDentistService dentistService
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 @if (User.Identity?.IsAuthenticated ?? false)
 {
-    <div class="container text-center mt-5">
+    @if (await this.dentistService.IsUserDentist(this.User.GetUserId()) == false)
+    {
+        <div class="container text-center mt-5">
         <h2>Welcome!</h2>
         <p>Please select your role in the system to continue.</p>
         <form method="post">
-            <button type="submit" name="role" value="Patient" class="btn btn-primary btn-lg">Become a patient</button>
             <a class="nav-link text-dark" asp-area="" asp-controller="Dentist" asp-action="Become">Become Dentist</a>
-            <button type="submit" name="role" value="Dentist" class="btn btn-secondary btn-lg">Become a dentist</button>
-            <a asp-action="Become" class="btn btn-info">Become</a>
         </form>
-    </div>
+        </div>
+    }
+    else
+    {
+        <h1>Dentist Dashboard</h1>
+        <h2>.......................</h2>
+    }
+
 }
 
 @if (!User.Identity.IsAuthenticated)

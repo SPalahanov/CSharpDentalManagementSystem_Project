@@ -15,6 +15,8 @@
 
         Task<bool> DentistExistsByLicenseNumberAsync(string phoneNumber);
 
-        Task Create(string userId, BecomeDentistFormModel model);
+        Task CreateDentistAsync(string userId, BecomeDentistFormModel model);
+
+        Task<bool> IsUserDentist(string userId);
     }
 }
