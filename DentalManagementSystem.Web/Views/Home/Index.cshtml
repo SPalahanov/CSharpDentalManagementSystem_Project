@@ -1,6 +1,7 @@
 ﻿@using DentalManagementSystem.Services.Data.Interfaces
 @using DentalManagementSystem.Web.Infrastructure.Extensions
 @inject IDentistService dentistService
+@inject IPatientService patientService
 
 @{
     ViewData["Title"] = "Home Page";
@@ -8,20 +9,25 @@
 
 @if (User.Identity?.IsAuthenticated ?? false)
 {
-    @if (await this.dentistService.IsUserDentist(this.User.GetUserId()) == false)
-    {
-        <div class="container text-center mt-5">
-        <h2>Welcome!</h2>
-        <p>Please select your role in the system to continue.</p>
-        <form method="post">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Dentist" asp-action="Become">Become Dentist</a>
-        </form>
-        </div>
-    }
-    else
+    @if(await this.dentistService.IsUserDentist(this.User.GetUserId()) == true)
     {
         <h1>Dentist Dashboard</h1>
         <h2>.......................</h2>
+    }else if (await this.patientService.IsUserPatient(this.User.GetUserId()) == true)
+    {
+        <h1> Patient Dashboard </h1>
+        <h2> .......................</h2>
+    }
+    else
+    {
+        <div class="container text-center mt-5">
+            <h2>Welcome!</h2>
+            <p>Please select your role in the system to continue.</p>
+            <form method="post">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Dentist" asp-action="Become">Become Dentist</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Become">Become Patient</a>
+            </form>
+        </div>
     }
 
 }
