@@ -34,6 +34,8 @@ namespace DentalManagementSystem.Common.Constants
             public const int AddressMinLength = 10;
             public const int AddressMaxLength = 70;
 
+            public const string DateOfBirthFormat = "dd/MM/yyyy";
+
             public const int LicenseNumberMinLength = 5;
             public const int LicenseNumberMaxLength = 20;
         }
@@ -48,6 +50,8 @@ namespace DentalManagementSystem.Common.Constants
 
             public const int AddressMinLength = 10;
             public const int AddressMaxLength = 70;
+
+            public const string DateOfBirthFormat = "dd/MM/yyyy";
         }
 
         public class Prescription
