@@ -2,16 +2,16 @@
 @model DentistDetailsViewModel
 
 @{
-    ViewData["Title"] = "All Dentists";
+    ViewData["Title"] = "Dentist Details";
 }
 
 <h2>Dr. @Model.Name - Details</h2>
 
 <p><strong>Name:</strong> @Model.Name</p>
-<p><strong>PhoneNumber:</strong> @Model.PhoneNumber</p>
+<p><strong>Phone number:</strong> @Model.PhoneNumber</p>
 <p><strong>Gender:</strong> @Model.Gender</p>
 <p><strong>Address:</strong> @Model.Address</p>
 <p><strong>Specialty:</strong> @Model.Specialty</p>
-<p><strong>LicenseNumber:</strong> @Model.LicenseNumber</p>
+<p><strong>License number:</strong> @Model.LicenseNumber</p>
 
 <a asp-action="Index" class="btn btn-secondary mt-3">Back to Dentists</a>
