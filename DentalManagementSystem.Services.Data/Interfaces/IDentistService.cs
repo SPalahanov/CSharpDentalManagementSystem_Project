@@ -24,5 +24,9 @@
         Task<IEnumerable<UserEmailViewModel>> GetUserEmailsAsync();
 
         Task<bool> CreateDentistFromUserAsync(string userId, AddDentistInputModel model);
+
+        Task<EditDentistFormModel?> GetDentistForEditByIdAsync(Guid id);
+
+        Task<bool> EditDentistAsync(EditDentistFormModel model);
     }
 }

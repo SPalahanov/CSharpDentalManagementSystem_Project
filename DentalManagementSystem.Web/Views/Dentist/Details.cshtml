@@ -15,4 +15,5 @@
 <p><strong>License number:</strong> @Model.LicenseNumber</p>
 
 <a asp-action="Index" class="btn btn-secondary mt-3">Back to Dentists</a>
-<a asp-action="Edit" class="btn btn-primary mt-3">Edit dentist</a>
+<a asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-warning mt-3">Edit</a>
+

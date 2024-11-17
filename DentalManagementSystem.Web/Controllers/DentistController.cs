@@ -122,5 +122,44 @@
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string? id)
+        {
+            Guid dentistGuid = Guid.Empty;
+
+            bool isIdValid = this.IsGuidValid(id, ref dentistGuid);
+
+            if (!isIdValid)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            EditDentistFormModel? formModel = await this.dentistService.GetDentistForEditByIdAsync(dentistGuid);
+
+            return this.View(formModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditDentistFormModel formModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.View(formModel);
+            }
+
+            bool result = await this.dentistService
+                .EditDentistAsync(formModel);
+
+            if (!result)
+            {
+                ModelState.AddModelError(string.Empty, "Unexpected error occurred while updating the dentist!");
+
+                return this.View(formModel);
+            }
+
+            return this.RedirectToAction(nameof(Details), "Dentist", new { id = formModel.Id });
+        }
+
     }
 }

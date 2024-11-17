@@ -175,5 +175,43 @@
 
             return viewModel;
         }
+
+        public async Task<EditDentistFormModel?> GetDentistForEditByIdAsync(Guid id)
+        {
+            EditDentistFormModel? dentistModel = await this.dentistRepository
+                .GetAllAttached()
+                .Select(d => new EditDentistFormModel()
+                {
+                    Id = d.DentistId.ToString(),
+                    Name = d.Name,
+                    PhoneNumber = d.PhoneNumber,
+                    Address = d.Address,
+                    Gender = d.Gender,
+                    Specialty = d.Specialty,
+                    LicenseNumber = d.LicenseNumber,
+                })
+                .FirstOrDefaultAsync(d => d.Id.ToLower() == id.ToString().ToLower());
+
+            return dentistModel;
+        }
+
+        public async Task<bool> EditDentistAsync(EditDentistFormModel model)
+        {
+            Dentist dentistEntity = await this.dentistRepository
+                .GetByIdAsync(Guid.Parse(model.Id));
+
+            dentistEntity.Name = model.Name;
+            dentistEntity.PhoneNumber = model.PhoneNumber;
+            dentistEntity.Address = model.Address;
+            dentistEntity.Gender = model.Gender;
+            dentistEntity.Specialty = model.Specialty;
+            dentistEntity.LicenseNumber = model.LicenseNumber;
+
+            bool result = await this.dentistRepository.UpdateAsync(dentistEntity);
+
+            return result;
+        }
+
+       
     }
 }
