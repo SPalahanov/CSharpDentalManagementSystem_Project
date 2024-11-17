@@ -12,8 +12,6 @@
         <tr>
             <th>Name</th>
             <th>Gender</th>
-            <th>PhoneNumber</th>
-            <th>DateOfBirth</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -23,12 +21,8 @@
             <tr>
                 <td>@patient.Name</td>
                 <td>@patient.Gender</td>
-                <td>@patient.PhoneNumber</td>
-                <td>@patient.DateOfBirth</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-info">Details</a>
-                    <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@patient.Id" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }
