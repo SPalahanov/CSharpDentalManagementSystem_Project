@@ -1,6 +1,5 @@
 ﻿namespace DentalManagementSystem.Web.Controllers
 {
-    using DentalManagementSystem.Services.Data;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Patient;
@@ -134,6 +133,44 @@
             }
 
             return this.View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string? id)
+        {
+            Guid patientGuid = Guid.Empty;
+
+            bool isIdValid = this.IsGuidValid(id, ref patientGuid);
+
+            if (!isIdValid)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            EditPatientFormModel? formModel = await this.patientService.GetPatientForEditByIdAsync(patientGuid);
+
+            return this.View(formModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditPatientFormModel formModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.View(formModel);
+            }
+
+            bool result = await this.patientService
+                .EditPatientAsync(formModel);
+
+            if (!result)
+            {
+                ModelState.AddModelError(string.Empty, "Unexpected error occurred while updating the patient!");
+
+                return this.View(formModel);
+            }
+
+            return this.RedirectToAction(nameof(Details), "Patient", new { id = formModel.Id });
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace DentalManagementSystem.Services.Data
 {
-    using DentalManagementSystem.Data;
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
@@ -178,6 +177,55 @@
             }
 
             return viewModel;
+        }
+
+        public async Task<EditPatientFormModel?> GetPatientForEditByIdAsync(Guid id)
+        {
+            EditPatientFormModel? patientModel = await this.patientRepository
+                .GetAllAttached()
+                .Select(p => new EditPatientFormModel()
+                {
+                    Id = p.PatientId.ToString(),
+                    Name = p.Name,
+                    PhoneNumber = p.PhoneNumber,
+                    Address = p.Address,
+                    Gender = p.Gender,
+                    DateOfBirth = p.DateOfBirth.ToString(DateOfBirthFormat),
+                    Allergies = p.Allergies,
+                    InsuranceNumber = p.InsuranceNumber,
+                    EmergencyContact = p.EmergencyContact,
+                })
+                .FirstOrDefaultAsync(p => p.Id.ToLower() == id.ToString().ToLower());
+
+            return patientModel;
+        }
+
+        public async Task<bool> EditPatientAsync(EditPatientFormModel model)
+        {
+            bool isDateOfBirth = DateTime
+                .TryParseExact(model.DateOfBirth, DateOfBirthFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                    out DateTime dateOfBirth);
+
+            if (!isDateOfBirth)
+            {
+                return false;
+            }
+
+            Patient? patientEntity = await this.patientRepository
+                .GetByIdAsync(Guid.Parse(model.Id));
+
+            patientEntity.Name = model.Name;
+            patientEntity.PhoneNumber = model.PhoneNumber;
+            patientEntity.Address = model.Address;
+            patientEntity.Gender = model.Gender;
+            patientEntity.DateOfBirth = dateOfBirth;
+            patientEntity.Allergies = model.Allergies;
+            patientEntity.InsuranceNumber = model.InsuranceNumber;
+            patientEntity.EmergencyContact = model.EmergencyContact;
+
+            bool result = await this.patientRepository.UpdateAsync(patientEntity);
+
+            return result;
         }
     }
 }
