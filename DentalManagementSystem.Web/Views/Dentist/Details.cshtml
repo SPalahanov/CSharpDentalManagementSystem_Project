@@ -1,27 +1,17 @@
 ﻿@using DentalManagementSystem.Web.ViewModels.Dentist
-@model IEnumerable<AllDentistIndexViewModel>
+@model DentistDetailsViewModel
 
 @{
     ViewData["Title"] = "All Dentists";
 }
 
-<h2>Dentist details</h2>
+<h2>Dr. @Model.Name - Details</h2>
 
-<div class="row">
-    @foreach (var dentist in Model)
-    {
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">@dentist.Name</h5>
-                    <p class="card-text">@dentist.Specialty</p>
-                    <p class="card-text">@dentist.Gender</p>
-                    <p class="card-text">@dentist.PhoneNumber</p>
-                    <p class="card-text">@dentist.Address</p>
-                    <a asp-action="Edit" asp-route-id="@dentist.Id" class="btn btn-info">Edit</a>
-                    <a asp-action="Index" class="btn btn-warning">Back to all dentist</a>
-                </div>
-            </div>
-        </div>
-    }
-</div>
+<p><strong>Name:</strong> @Model.Name</p>
+<p><strong>PhoneNumber:</strong> @Model.PhoneNumber</p>
+<p><strong>Gender:</strong> @Model.Gender</p>
+<p><strong>Address:</strong> @Model.Address</p>
+<p><strong>Specialty:</strong> @Model.Specialty</p>
+<p><strong>LicenseNumber:</strong> @Model.LicenseNumber</p>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Back to Dentists</a>

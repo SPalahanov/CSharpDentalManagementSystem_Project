@@ -15,6 +15,8 @@
 
         Task<bool> DentistExistsByLicenseNumberAsync(string phoneNumber);
 
+        Task<DentistDetailsViewModel?> GetDentistDetailsByIdAsync(Guid id);
+
         Task CreateDentistAsync(string userId, BecomeDentistFormModel model);
 
         Task<bool> IsUserDentist(string userId);

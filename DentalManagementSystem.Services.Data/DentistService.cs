@@ -11,6 +11,8 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Net;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Patient;
@@ -148,6 +150,30 @@
                 .AnyAsync(d => d.UserId.ToString().ToLower() == userId);
 
             return result;
+        }
+
+        public async Task<DentistDetailsViewModel?> GetDentistDetailsByIdAsync(Guid id)
+        {
+            Dentist? dentist = await this.dentistRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(d => d.DentistId == id);
+
+            DentistDetailsViewModel? viewModel = null;
+
+            if (dentist != null)
+            {
+                viewModel = new DentistDetailsViewModel()
+                {
+                    Name = dentist.Name,
+                    PhoneNumber = dentist.PhoneNumber,
+                    Address = dentist.Address,
+                    Gender = dentist.Gender,
+                    Specialty = dentist.Specialty,
+                    LicenseNumber = dentist.LicenseNumber,
+                };
+            }
+
+            return viewModel;
         }
     }
 }

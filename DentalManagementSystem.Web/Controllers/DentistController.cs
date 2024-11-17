@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    public class DentistController : Controller
+    public class DentistController : BaseController
     {
         private readonly IDentistService dentistService;
 
@@ -25,11 +25,26 @@
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details(string? id)
         {
-            IEnumerable<AllDentistIndexViewModel> viewModel = await this.dentistService.GetAllDentistsAsync();
+            Guid dentistGuid = Guid.Empty;
 
-            return View(viewModel);
+            bool isIdValid = this.IsGuidValid(id, ref dentistGuid);
+
+            if (!isIdValid)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            DentistDetailsViewModel? viewModel = await this.dentistService
+                .GetDentistDetailsByIdAsync(dentistGuid);
+
+            if (viewModel == null)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            return this.View(viewModel);
         }
 
         [HttpGet]
