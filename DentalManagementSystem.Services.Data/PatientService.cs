@@ -16,13 +16,10 @@
 
     public class PatientService : IPatientService
     {
-        private readonly DentalManagementSystemDbContext dbContext;
-
         private readonly IRepository<Patient, Guid> patientRepository;
 
-        public PatientService(IRepository<Patient, Guid> patientRepository, DentalManagementSystemDbContext dbContext)
+        public PatientService(IRepository<Patient, Guid> patientRepository)
         {
-            this.dbContext = dbContext;
             this.patientRepository = patientRepository;
         }
 
@@ -56,8 +53,8 @@
 
         public async Task<IEnumerable<AllPatientsIndexViewModel>> GetAllPatientsAsync()
         {
-            IEnumerable<AllPatientsIndexViewModel> allPatients = await this.dbContext
-                .Patients
+            IEnumerable<AllPatientsIndexViewModel> allPatients = await this.patientRepository
+                .GetAllAttached()
                 .Select(p => new AllPatientsIndexViewModel()
                 {
                     Id = p.PatientId.ToString(),
