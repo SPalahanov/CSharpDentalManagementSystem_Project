@@ -4,7 +4,9 @@
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Patient;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -17,10 +19,12 @@
     public class PatientService : IPatientService
     {
         private readonly IRepository<Patient, Guid> patientRepository;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public PatientService(IRepository<Patient, Guid> patientRepository)
+        public PatientService(IRepository<Patient, Guid> patientRepository, UserManager<ApplicationUser> userManager)
         {
             this.patientRepository = patientRepository;
+            this.userManager = userManager;
         }
 
         public async Task<bool> CreatePatientAsync(string userId, BecomePatientFormModel model)
@@ -95,6 +99,68 @@
 
             return result;
         }
+
+        public async Task<IEnumerable<UserEmailViewModel>> GetUserEmailsAsync()
+        {
+            var users = userManager.Users.ToList();
+
+            var userEmailViewModels = new List<UserEmailViewModel>();
+
+            foreach (var user in users)
+            {
+                userEmailViewModels.Add(new UserEmailViewModel
+                {
+                    Id = user.Id.ToString(),
+                    Email = user.Email
+                });
+            }
+
+            return userEmailViewModels;
+        }
+
+        public async Task<bool> CreatePatientFromUserAsync(string userId, AddPatientInputModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.SelectedUserId) || !Guid.TryParse(model.SelectedUserId, out Guid selectedUserGuid))
+            {
+                return false;
+            }
+
+            bool isAlreadyPatient = await patientRepository
+                .GetAllAttached()
+                .AnyAsync(p => p.UserId == selectedUserGuid);
+
+            if (isAlreadyPatient)
+            {
+                return false;
+            }
+
+            bool isDateOfBirthValid = DateTime
+                .TryParseExact(model.DateOfBirth, DateOfBirthFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                    out DateTime dateOfBirth);
+
+            if (!isDateOfBirthValid)
+            {
+                return false;
+            }
+
+            var patient = new Patient
+            {
+                UserId = selectedUserGuid,
+                Name = model.Name,
+                PhoneNumber = model.PhoneNumber,
+                Address = model.Address,
+                Gender = model.Gender,
+                DateOfBirth = dateOfBirth,
+                Allergies = model.Allergies,
+                InsuranceNumber = model.InsuranceNumber,
+                EmergencyContact = model.EmergencyContact,
+            };
+
+            await patientRepository.AddAsync(patient);
+
+            return true;
+        }
+
 
         /*public async Task<PatientDetailsViewModel?> GetPatientDetailsByIdAsync(Guid id)
         {

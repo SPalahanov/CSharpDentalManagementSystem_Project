@@ -19,5 +19,9 @@
         Task<bool> CreatePatientAsync(string userId, BecomePatientFormModel model);
 
         Task<bool> IsUserPatient(string userId);
+
+        Task<IEnumerable<UserEmailViewModel>> GetUserEmailsAsync();
+
+        Task<bool> CreatePatientFromUserAsync(string userId, AddPatientInputModel model);
     }
 }

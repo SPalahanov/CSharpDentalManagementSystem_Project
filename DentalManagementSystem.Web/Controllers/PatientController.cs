@@ -76,5 +76,43 @@
 
             return this.RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            IEnumerable<UserEmailViewModel> usersData = await patientService.GetUserEmailsAsync();
+
+            AddPatientInputModel model = new AddPatientInputModel
+            {
+                Emails = usersData
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(AddPatientInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Emails = await patientService.GetUserEmailsAsync();
+                return View(model);
+            }
+
+            var result = await patientService.CreatePatientFromUserAsync(model.SelectedUserId, model);
+
+            if (!result)
+            {
+                this.ModelState.AddModelError(string.Empty, "Failed to create patient. Please try again.");
+
+                model.Emails = await patientService.GetUserEmailsAsync();
+
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }
