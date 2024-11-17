@@ -61,7 +61,8 @@
                 .Select(p => new AllPatientsIndexViewModel()
                 {
                     Id = p.PatientId.ToString(),
-                    Name = p.Name
+                    Name = p.Name,
+                    Gender = p.Gender
 
                 })
                 .ToArrayAsync();
