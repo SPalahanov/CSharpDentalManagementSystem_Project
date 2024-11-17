@@ -10,7 +10,7 @@
     using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Patient;
 
     [Authorize]
-    public class PatientController : Controller
+    public class PatientController : BaseController
     {
         private readonly IPatientService patientService;
 
@@ -113,6 +113,27 @@
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(string? id)
+        {
+            Guid patientGuid = Guid.Empty;
 
+            bool isIdValid = this.IsGuidValid(id, ref patientGuid);
+
+            if (!isIdValid)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            PatientDetailsViewModel? viewModel = await this.patientService
+                .GetPatientDetailsByIdAsync(patientGuid);
+
+            if (viewModel == null)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            return this.View(viewModel);
+        }
     }
 }

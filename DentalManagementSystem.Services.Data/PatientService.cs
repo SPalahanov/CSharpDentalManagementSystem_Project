@@ -4,7 +4,6 @@
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
-    using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Patient;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -32,13 +31,13 @@
             bool isDateOfBirth = DateTime
                 .TryParseExact(model.DateOfBirth, DateOfBirthFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
                     out DateTime dateOfBirth);
-            
-            if (!isDateOfBirth) 
+
+            if (!isDateOfBirth)
             {
                 return false;
             }
 
-            Patient patient = new Patient() 
+            Patient patient = new Patient()
             {
                 UserId = Guid.Parse(userId),
                 Name = model.Name,
@@ -65,7 +64,7 @@
                     Name = p.Name,
                     PhoneNumber = p.PhoneNumber,
                     Address = p.Address,
-                    DateOfBirth = p.DateOfBirth.ToString(),
+                    DateOfBirth = p.DateOfBirth.ToString(DateOfBirthFormat),
                     Gender = p.Gender,
                     Allergies = p.Allergies,
                     InsuranceNumber = p.InsuranceNumber,
@@ -161,20 +160,30 @@
             return true;
         }
 
-
-        /*public async Task<PatientDetailsViewModel?> GetPatientDetailsByIdAsync(Guid id)
+        public async Task<PatientDetailsViewModel?> GetPatientDetailsByIdAsync(Guid id)
         {
-            Patient? movie = await this.patientRepository
-                .GetByIdAsync(id);
+            Patient? patient = await this.patientRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(d => d.PatientId == id);
 
             PatientDetailsViewModel? viewModel = null;
 
-            if (movie != null)
+            if (patient != null)
             {
-                //AutoMapperConfig.MapperInstance.Map(movie, viewModel);
+                viewModel = new PatientDetailsViewModel()
+                {
+                    Name = patient.Name,
+                    PhoneNumber = patient.PhoneNumber,
+                    Address = patient.Address,
+                    Gender = patient.Gender,
+                    DateOfBirth = patient.DateOfBirth.ToString(DateOfBirthFormat),
+                    Allergies = patient.Allergies,
+                    InsuranceNumber = patient.InsuranceNumber,
+                    EmergencyContact =patient.EmergencyContact,
+                };
             }
 
             return viewModel;
-        }*/
+        }
     }
 }

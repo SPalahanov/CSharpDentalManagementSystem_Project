@@ -1,26 +1,19 @@
 ﻿@using DentalManagementSystem.Web.ViewModels.Patient
-@model IEnumerable<AllPatientsIndexViewModel>
+@model PatientDetailsViewModel
 
 @{
-    ViewData["Title"] = "All Patients";
+    ViewData["Title"] = "Patient Details";
 }
 
-<h2>Patient details</h2>
+<h2>@Model.Name - Details</h2>
 
-<div class="row">
-    @foreach (var patient in Model)
-    {
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">@patient.Name</h5>
-                    <p class="card-text">@patient.Gender</p>
-                    <p class="card-text">@patient.PhoneNumber</p>
-                    <p class="card-text">@patient.Address</p>
-                    <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-info">Edit</a>
-                    <a asp-action="Index" class="btn btn-warning">Back to all dentist</a>
-                </div>
-            </div>
-        </div>
-    }
-</div>
+<p><strong>Name:</strong> @Model.Name</p>
+<p><strong>Phone number:</strong> @Model.PhoneNumber</p>
+<p><strong>Gender:</strong> @Model.Gender</p>
+<p><strong>Date of birth:</strong> @Model.DateOfBirth</p>
+<p><strong>Address:</strong> @Model.Address</p>
+<p><strong>Allergies:</strong> @(!string.IsNullOrEmpty(Model.Allergies) ? Model.Allergies : "None")</p>
+<p><strong>Insurance number:</strong> @(!string.IsNullOrEmpty(Model.InsuranceNumber) ? Model.InsuranceNumber : "None")</p>
+<p><strong>Emergency contact:</strong> @(!string.IsNullOrEmpty(Model.EmergencyContact) ? Model.EmergencyContact : "None")</p>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Back to Dentists</a>

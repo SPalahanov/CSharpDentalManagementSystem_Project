@@ -10,9 +10,7 @@
 
         Task<bool> PatientExistsByUserIdAsync(string userId);
 
-        //Task<bool> AddPatientAsync(AddPatientInputModel inputModel);
-
-        //Task<PatientDetailsViewModel?> GetPatientDetailsByIdAsync(Guid id);
+        Task<PatientDetailsViewModel?> GetPatientDetailsByIdAsync(Guid id);
 
         Task<bool> CreatePatientAsync(string userId, BecomePatientFormModel model);
 
