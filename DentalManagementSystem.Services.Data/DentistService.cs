@@ -5,21 +5,27 @@
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.ViewModels.Dentist;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Patient;
 
     public class DentistService : BaseService, IDentistService
     {
         private readonly DentalManagementSystemDbContext dbContext;
 
         private readonly IRepository<Dentist, Guid> dentistRepository;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public DentistService(IRepository<Dentist, Guid> dentistRepository, DentalManagementSystemDbContext dbContext)
+        public DentistService(IRepository<Dentist, Guid> dentistRepository, UserManager<ApplicationUser> userManager, DentalManagementSystemDbContext dbContext)
         {
             this.dentistRepository = dentistRepository;
+            this.userManager = userManager;
             this.dbContext = dbContext;
         }
 
@@ -39,6 +45,8 @@
             await this.dbContext.Dentists.AddAsync(dentist);
             await this.dbContext.SaveChangesAsync();
         }
+
+        
 
         public async Task<bool> DentistExistsByLicenseNumberAsync(string phoneNumber)
         {
@@ -76,6 +84,56 @@
                 .ToArrayAsync();
 
             return allDentists;
+        }
+
+        public async Task<IEnumerable<UserEmailViewModel>> GetUserEmailsAsync()
+        {
+            List<ApplicationUser> users = userManager.Users.ToList();
+
+            List<UserEmailViewModel> userModel = new List<UserEmailViewModel>();
+
+            foreach (var user in users)
+            {
+                userModel.Add(new UserEmailViewModel
+                {
+                    Id = user.Id.ToString(),
+                    Email = user.Email
+                });
+            }
+
+            return userModel;
+        }
+
+        public async Task<bool> CreateDentistFromUserAsync(string userId, AddDentistInputModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.SelectedUserId) || !Guid.TryParse(model.SelectedUserId, out Guid selectedUserGuid))
+            {
+                return false;
+            }
+
+            bool isAlreadyDentist = await dentistRepository
+                .GetAllAttached()
+                .AnyAsync(p => p.UserId == selectedUserGuid);
+
+            if (isAlreadyDentist)
+            {
+                return false;
+            }
+
+            var dentist = new Dentist
+            {
+                UserId = selectedUserGuid,
+                Name = model.Name,
+                PhoneNumber = model.PhoneNumber,
+                Address = model.Address,
+                Gender = model.Gender,
+                Specialty = model.Specialty,
+                LicenseNumber = model.LicenseNumber,
+            };
+
+            await dentistRepository.AddAsync(dentist);
+
+            return true;
         }
 
         public async Task<bool> IsUserDentist(string userId)

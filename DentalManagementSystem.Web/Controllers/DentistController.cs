@@ -3,7 +3,6 @@
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Dentist;
-    using DentalManagementSystem.Web.ViewModels.Patient;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -72,6 +71,41 @@
             await this.dentistService.CreateDentistAsync(userId, model);
 
             return this.RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            IEnumerable<UserEmailViewModel> usersData = await dentistService.GetUserEmailsAsync();
+
+            AddDentistInputModel model = new AddDentistInputModel
+            {
+                Emails = usersData
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(AddDentistInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Emails = await dentistService.GetUserEmailsAsync();
+                return View(model);
+            }
+
+            var result = await dentistService.CreateDentistFromUserAsync(model.SelectedUserId, model);
+
+            if (!result)
+            {
+                this.ModelState.AddModelError(string.Empty, "Failed to create patient. Please try again.");
+
+                model.Emails = await dentistService.GetUserEmailsAsync();
+
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
