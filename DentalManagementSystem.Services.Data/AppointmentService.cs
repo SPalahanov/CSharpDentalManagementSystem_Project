@@ -137,6 +137,7 @@
                     AppointmentDate = appointment.AppointmentDate.ToString("MM/dd/yyyy"),
                     PatientName = appointment.Patient != null ? appointment.Patient.Name : "N/A",
                     DentistName = appointment.Dentist != null ? appointment.Dentist.Name : "N/A",
+                    AppointmentStatus = appointment.AppointmentStatus.ToString(),
                     Procedures = appointment.AppointmentProcedures
                         .Where(ap => ap.IsDeleted == false)
                         .Select(ap => new AppointmentProcedureViewModel()

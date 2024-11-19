@@ -11,6 +11,8 @@
     {
         public string AppointmentDate { get; set; } = null!;
 
+        public string AppointmentStatus {  get; set; } = null!;
+
         public string PatientName { get; set; } = null!;
 
         public string DentistName { get; set; } = null!;
