@@ -5,9 +5,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     [Authorize]
     public class CreateAppointmentViewModel
@@ -32,5 +29,8 @@
         public IEnumerable<DentistAppointmentViewModel> Dentists { get; set; } = new List<DentistAppointmentViewModel>();
 
         public IEnumerable<AppointmentTypeViewModel> AppointmentTypes { get; set; } = new List<AppointmentTypeViewModel>();
+
+        public IEnumerable<ProcedureAppointmentViewModel> AvailableProcedures { get; set; } = new List<ProcedureAppointmentViewModel>();  // New property
+        public IEnumerable<int> SelectedProcedureIds { get; set; } = new List<int>();
     }
 }

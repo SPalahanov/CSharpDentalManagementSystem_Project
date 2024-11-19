@@ -24,6 +24,34 @@
         }
 
         [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            CreateAppointmentViewModel model = await this.appointmentService.GetCreateAppointmentModelAsync();
+
+            model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateAppointmentViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Patients = (await appointmentService.GetCreateAppointmentModelAsync()).Patients;
+                model.Dentists = (await appointmentService.GetCreateAppointmentModelAsync()).Dentists;
+                model.AppointmentTypes = (await appointmentService.GetCreateAppointmentModelAsync()).AppointmentTypes;
+                model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
+
+                return View(model);
+            }
+
+            await this.appointmentService.CreateAppointmentAsync(model);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Details(string? id)
         {
             Guid appointmentGuid = Guid.Empty;
@@ -44,31 +72,6 @@
             }
 
             return this.View(viewModel);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            var model = await this.appointmentService.GetCreateAppointmentModelAsync();
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateAppointmentViewModel model)
-        {
-            
-            if (!ModelState.IsValid)
-            {
-                model.Patients = (await appointmentService.GetCreateAppointmentModelAsync()).Patients;
-                model.Dentists = (await appointmentService.GetCreateAppointmentModelAsync()).Dentists;
-                model.AppointmentTypes = (await appointmentService.GetCreateAppointmentModelAsync()).AppointmentTypes;
-
-                return View(model);
-            }
-
-            await this.appointmentService.CreateAppointmentAsync(model);
-            return RedirectToAction(nameof(Index));
         }
     }
 }
