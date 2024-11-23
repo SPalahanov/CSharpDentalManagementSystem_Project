@@ -72,7 +72,6 @@
                 AvailableProcedures = procedures
             };
         }
-
         public async Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProceduresAsync()
         {
             IEnumerable<Procedure> procedures = await this.procedureRepository
@@ -87,7 +86,6 @@
 
             return procedureViewModels;
         }
-
         public async Task<bool> CreateAppointmentAsync(CreateAppointmentViewModel model)
         {
             Appointment appointment = new Appointment
@@ -151,6 +149,130 @@
             }
 
             return viewModel;
+        }
+
+
+        public async Task<EditAppointmentFormModel?> GetAppointmentDataForEditAsync(Guid id)
+        {
+            EditAppointmentFormModel? appointmentModel = await this.appointmentRepository
+                .GetAllAttached()
+                .Include(a => a.Patient)
+                .Include(a => a.Dentist)
+                .Include(a => a.AppointmentProcedures)
+                .ThenInclude(ap => ap.Procedure)
+                .Select(a => new EditAppointmentFormModel()
+                {
+                    Id = a.AppointmentId.ToString(),
+                    AppointmentDate = a.AppointmentDate,
+                    AppointmentStatus = a.AppointmentStatus,
+                    AppointmentTypeId = a.AppointmentTypeId,
+                    PatientId = a.PatientId,
+                    DentistId = a.DentistId,
+                })
+                .FirstOrDefaultAsync(a => a.Id.ToLower() == id.ToString().ToLower());
+
+            return appointmentModel;
+        }
+        public async Task<IEnumerable<PatientAppointmentViewModel>> GetPatientListAsync()
+        {
+            IEnumerable<PatientAppointmentViewModel> patientModel = await this.patientRepository
+                .GetAllAttached()
+                .Select(p => new PatientAppointmentViewModel { Id = p.PatientId, Name = p.Name })
+                .ToListAsync();
+
+            return patientModel;
+        }
+        public async Task<IEnumerable<DentistAppointmentViewModel>> GetDentistListAsync()
+        {
+            IEnumerable<DentistAppointmentViewModel> dentistModel = await this.dentistRepository
+                .GetAllAttached()
+                .Select(d => new DentistAppointmentViewModel { Id = d.DentistId, Name = d.Name })
+                .ToListAsync();
+
+            return dentistModel;
+        }
+        public async Task<IEnumerable<AppointmentTypeViewModel>> GetAppointmentTypeListAsync()
+        {
+            IEnumerable<AppointmentTypeViewModel> appointmentTypeModel = await this.appointmentTypeRepository
+                .GetAllAttached()
+                .Select(at => new AppointmentTypeViewModel { Id = at.Id, Name = at.Name })
+                .ToListAsync();
+
+            return appointmentTypeModel;
+        }
+        public async Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProcedureListAsync()
+        {
+            IEnumerable<ProcedureAppointmentViewModel> procedureEntity =  await this.procedureRepository
+                .GetAllAttached()
+                .Select(p => new ProcedureAppointmentViewModel { Id = p.ProcedureId, Name = p.Name })
+                .ToListAsync();
+
+            return procedureEntity;
+        }
+        public async Task<EditAppointmentFormModel?> GetAppointmentForEditByIdAsync(Guid id)
+        {
+            EditAppointmentFormModel? appointmentModel = await GetAppointmentDataForEditAsync(id);
+
+            if (appointmentModel == null)
+            {
+                return null;
+            }
+
+            EditAppointmentFormModel? editModel = new EditAppointmentFormModel
+            {
+                Id = appointmentModel.Id.ToString(),
+                AppointmentDate = appointmentModel.AppointmentDate,
+                AppointmentStatus = appointmentModel.AppointmentStatus,
+                AppointmentTypeId = appointmentModel.AppointmentTypeId,
+                PatientId = appointmentModel.PatientId,
+                DentistId = appointmentModel.DentistId,
+                Patients = await GetPatientListAsync(),
+                Dentists = await GetDentistListAsync(),
+                AppointmentTypes = await GetAppointmentTypeListAsync(),
+                AvailableProcedures = await GetAvailableProceduresAsync()
+            };
+
+            return editModel;
+        }
+        public async Task<bool> EditAppointmentAsync(EditAppointmentFormModel model)
+        {
+            Appointment? appointment = await this.appointmentRepository
+                .GetAllAttached()
+                .Include(a => a.AppointmentProcedures)
+                .FirstOrDefaultAsync(a => a.AppointmentId == Guid.Parse(model.Id));
+
+            if (appointment == null)
+            {
+                return false;
+            }
+
+            appointment.AppointmentDate = model.AppointmentDate;
+            appointment.AppointmentStatus = model.AppointmentStatus;
+            appointment.AppointmentTypeId = model.AppointmentTypeId;
+            appointment.PatientId = model.PatientId;
+            appointment.DentistId = model.DentistId;
+
+            IEnumerable<int> selectedProcedureIds = model.SelectedProcedureIds;
+
+            IEnumerable<int> existingProcedureIds = appointment.AppointmentProcedures.Select(ap => ap.ProcedureId);
+
+            IEnumerable<Procedure> newProcedures = await this.procedureRepository
+                .GetAllAttached()
+                .Where(p => selectedProcedureIds.Contains(p.ProcedureId) && !existingProcedureIds.Contains(p.ProcedureId))
+                .ToListAsync();
+
+            foreach (var procedure in newProcedures)
+            {
+                appointment.AppointmentProcedures.Add(new AppointmentProcedure
+                {
+                    ProcedureId = procedure.ProcedureId,
+                    IsDeleted = false
+                });
+            }
+
+            await this.appointmentRepository.UpdateAsync(appointment);
+
+            return true;
         }
     }
 }

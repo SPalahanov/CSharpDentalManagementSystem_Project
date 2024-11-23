@@ -11,5 +11,15 @@
         Task<bool> CreateAppointmentAsync(CreateAppointmentViewModel model);
 
         Task<AppointmentDetailsViewModel?> GetAppointmentDetailsByIdAsync(Guid id);
+
+        Task<EditAppointmentFormModel?> GetAppointmentDataForEditAsync(Guid id);
+        Task<IEnumerable<PatientAppointmentViewModel>> GetPatientListAsync();
+        Task<IEnumerable<DentistAppointmentViewModel>> GetDentistListAsync();
+        Task<IEnumerable<AppointmentTypeViewModel>> GetAppointmentTypeListAsync();
+        Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProcedureListAsync();
+        Task<EditAppointmentFormModel?> GetAppointmentForEditByIdAsync(Guid id);
+        Task<bool> EditAppointmentAsync(EditAppointmentFormModel model);
+
+
     }
 }

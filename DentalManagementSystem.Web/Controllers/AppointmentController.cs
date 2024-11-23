@@ -73,5 +73,52 @@
 
             return this.View(viewModel);
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit(string? id)
+        {
+            Guid appointmentGuid = Guid.Empty;
+
+            bool isIdValid = this.IsGuidValid(id, ref appointmentGuid);
+
+            if (!isIdValid)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            EditAppointmentFormModel? formModel = await this.appointmentService.GetAppointmentForEditByIdAsync(appointmentGuid);
+
+            return this.View(formModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(EditAppointmentFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Patients = await appointmentService.GetPatientListAsync();
+                model.Dentists = await appointmentService.GetDentistListAsync();
+                model.AppointmentTypes = await appointmentService.GetAppointmentTypeListAsync();
+                model.AvailableProcedures = await appointmentService.GetAvailableProcedureListAsync();
+
+                return View(model);
+            }
+
+            bool isSuccess = await this.appointmentService.EditAppointmentAsync(model);
+
+            if (!isSuccess)
+            {
+                model.Patients = await this.appointmentService.GetPatientListAsync();
+                model.Dentists = await this.appointmentService.GetDentistListAsync();
+                model.AppointmentTypes = await this.appointmentService.GetAppointmentTypeListAsync();
+                model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
+
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
