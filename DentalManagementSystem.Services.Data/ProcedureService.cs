@@ -13,8 +13,6 @@
 
     public class ProcedureService : IProcedureService
     {
-        private readonly DentalManagementSystemDbContext dbContext;
-
         private IRepository<Procedure, int> procedureRepository;
 
         public ProcedureService(IRepository<Procedure, int> procedureRepository)
