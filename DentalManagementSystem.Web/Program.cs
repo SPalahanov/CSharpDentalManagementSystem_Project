@@ -26,19 +26,12 @@ namespace DentalManagementSystem.Web
             builder.Services
                 .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
                 {
-                    options.SignIn.RequireConfirmedAccount = builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedAccount");
-
-                    options.Password.RequireNonAlphanumeric = builder.Configuration.GetValue<bool>("Identity:Password:RequireNonAlphanumeric");
-                    options.Password.RequireLowercase = builder.Configuration.GetValue<bool>("Identity:Password:RequireLowercase");
-                    options.Password.RequireUppercase = builder.Configuration.GetValue<bool>("Identity:Password:RequireUppercase");
-                    options.Password.RequireDigit = builder.Configuration.GetValue<bool>("Identity:Password:RequireDigit");
-                    options.Password.RequiredLength = builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
+                    ConfigureIdentity(builder, options);
                 })
                 .AddEntityFrameworkStores<DentalManagementSystemDbContext>()
                 .AddRoles<IdentityRole<Guid>>()
                 .AddSignInManager<SignInManager<ApplicationUser>>()
-                .AddUserManager<UserManager<ApplicationUser>>()
-                .AddDefaultTokenProviders();
+                .AddUserManager<UserManager<ApplicationUser>>();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -81,6 +74,21 @@ namespace DentalManagementSystem.Web
 
             app.ApplyMigrations();
             app.Run();
+        }
+
+        private static void ConfigureIdentity(WebApplicationBuilder builder, IdentityOptions options)
+        {
+            options.Password.RequireDigit = builder.Configuration.GetValue<bool>("Identity:Password:RequireDigits");
+            options.Password.RequireLowercase = builder.Configuration.GetValue<bool>("Identity:Password:RequireLowercase");
+            options.Password.RequireUppercase =builder.Configuration.GetValue<bool>("Identity:Password:RequireUppercase");
+            options.Password.RequireNonAlphanumeric = builder.Configuration.GetValue<bool>("Identity:Password:RequireNonAlphanumerical");
+            options.Password.RequiredLength = builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
+            options.Password.RequiredUniqueChars = builder.Configuration.GetValue<int>("Identity:Password:RequiredUniqueCharacters");
+
+            options.SignIn.RequireConfirmedAccount = builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedAccount");
+            options.SignIn.RequireConfirmedEmail = builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedEmail");
+
+            options.User.RequireUniqueEmail = builder.Configuration.GetValue<bool>("Identity:User:RequireUniqueEmail");
         }
     }
 }
