@@ -10,5 +10,7 @@ namespace DentalManagementSystem.Services.Data.Interfaces
     public interface IUserService
     {
         Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync();
+
+        Task<bool> UserExistsByIdAsync(Guid userId);
     }
 }

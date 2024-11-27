@@ -25,7 +25,7 @@
 
             foreach (var user in allUsers)
             {
-                IEnumerable<string> roles = await userManager.GetRolesAsync(user);
+                IEnumerable<string> roles = await this.userManager.GetRolesAsync(user);
 
                 allUsersViewModel.Add(new AllUsersViewModel 
                 { 
@@ -36,6 +36,13 @@
             }
 
             return allUsersViewModel;
+        }
+
+        public async Task<bool> UserExistsByIdAsync(Guid userId)
+        {
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId.ToString());
+
+            return user != null;
         }
     }
 }
