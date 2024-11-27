@@ -12,5 +12,7 @@ namespace DentalManagementSystem.Services.Data.Interfaces
         Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync();
 
         Task<bool> UserExistsByIdAsync(Guid userId);
+
+        Task<bool> AssignUserToRoleAsync(Guid userId, string roleName);
     }
 }

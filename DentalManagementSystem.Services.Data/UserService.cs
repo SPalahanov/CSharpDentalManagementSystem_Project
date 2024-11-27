@@ -11,10 +11,12 @@
     public class UserService : BaseService, IUserService
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<IdentityRole<Guid>> roleManager;
 
-        public UserService(UserManager<ApplicationUser> userManager)
+        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync()
@@ -43,6 +45,32 @@
             ApplicationUser? user = await this.userManager.FindByIdAsync(userId.ToString());
 
             return user != null;
+        }
+
+        public async Task<bool> AssignUserToRoleAsync(Guid userId, string roleName)
+        {
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId.ToString());
+
+            bool roleExists = await this.roleManager.RoleExistsAsync(roleName);
+
+            if (user == null || !roleExists)
+            {
+                return false;
+            }
+
+            bool alreadyInRole = await this.userManager.IsInRoleAsync(user, roleName);
+
+            if (!alreadyInRole)
+            {
+                IdentityResult? result = await this.userManager.AddToRoleAsync(user, roleName);
+
+                if (!result.Succeeded)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
