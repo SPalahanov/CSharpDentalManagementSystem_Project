@@ -25,5 +25,32 @@
 
             return this.View(allUsers);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(string userId, string role)
+        {
+            Guid userGuid = Guid.Empty;
+
+            if (this.IsGuidValid(userId, ref userGuid))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool userExists = await this.userService.UserExistsByIdAsync(userGuid);
+
+            if (!userExists)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool assignResult = await this.userService.AssignUserToRoleAsync(userGuid, role);
+
+            if (!assignResult)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
