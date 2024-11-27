@@ -2,15 +2,14 @@ namespace DentalManagementSystem.Web
 {
     using DentalManagementSystem.Data;
     using DentalManagementSystem.Data.Models;
-    using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Data.Repository;
+    using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Services.Mapping;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
+    using DentalManagementSystem.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using System.Reflection;
-    using DentalManagementSystem.Web.ViewModels.Home;
 
     public class Program
     {
@@ -18,10 +17,12 @@ namespace DentalManagementSystem.Web
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            
-            builder.Services.AddDbContext<DentalManagementSystemDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+            string adminEmail = builder.Configuration.GetValue<string>("Administrator:Email")!;
+            string adminUserName = builder.Configuration.GetValue<string>("Administrator:UserName")!;
+            string adminPassword = builder.Configuration.GetValue<string>("Administrator:Password")!;
+
+            builder.Services.AddDbContext<DentalManagementSystemDbContext>(options => options.UseSqlServer(connectionString));
 
             builder.Services
                 .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
@@ -43,13 +44,12 @@ namespace DentalManagementSystem.Web
 
             builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
 
-
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
             WebApplication app = builder.Build();
 
-            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);
 
             if (!app.Environment.IsDevelopment())
             {
@@ -65,6 +65,12 @@ namespace DentalManagementSystem.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.SeedAdministrator(adminEmail, adminUserName, adminPassword);
+
+            app.MapControllerRoute(
+                name: "Areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",
