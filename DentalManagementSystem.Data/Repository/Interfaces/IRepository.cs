@@ -1,7 +1,5 @@
 ﻿namespace DentalManagementSystem.Data.Repository.Interfaces
 {
-    using System.Linq.Expressions;
-
     public interface IRepository<TType, TId>
     {
         TType GetById(TId id);
@@ -9,9 +7,6 @@
         Task<TType> GetByIdAsync(TId id);
 
         Task<TType> GetByIdAsync(params TId[] ids);
-        TType FirstOrDefault(Func<TType, bool> predicate);
-
-        Task<TType> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate);
 
         IEnumerable<TType> GetAll();
 

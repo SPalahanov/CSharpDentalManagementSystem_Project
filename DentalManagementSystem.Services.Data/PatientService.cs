@@ -14,7 +14,7 @@
 
     using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Patient;
 
-    public class PatientService : BaseService, IPatientService
+    public class PatientService : IPatientService
     {
         private readonly IRepository<Patient, Guid> patientRepository;
         private readonly UserManager<ApplicationUser> userManager;
