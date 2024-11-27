@@ -2,7 +2,8 @@
 {
     using DentalManagementSystem.Data.Repository.Interfaces;
     using Microsoft.EntityFrameworkCore;
-    
+    using System.Linq.Expressions;
+
     public class BaseRepository<TType, TId> : IRepository<TType, TId> where TType : class
     {
         private readonly DentalManagementSystemDbContext dbContext;
@@ -77,6 +78,22 @@
         public async Task<IEnumerable<TType>> GetAllAsync()
         {
             return await this.dbSet.ToArrayAsync();
+        }
+
+        public TType FirstOrDefault(Func<TType, bool> predicate)
+        {
+            TType entity = this.dbSet
+                .FirstOrDefault(predicate);
+
+            return entity;
+        }
+
+        public async Task<TType> FirstOrDefaultAsync(Expression<Func<TType, bool>> predicate)
+        {
+            TType entity = await this.dbSet
+                .FirstOrDefaultAsync(predicate);
+
+            return entity;
         }
 
         public IQueryable<TType> GetAllAttached()
