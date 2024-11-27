@@ -9,10 +9,7 @@
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
-    using System.Net;
-    using System.Reflection;
     using System.Threading.Tasks;
 
     using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Patient;
