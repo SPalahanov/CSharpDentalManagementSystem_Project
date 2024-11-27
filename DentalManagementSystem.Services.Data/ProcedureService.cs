@@ -1,20 +1,15 @@
 ﻿namespace DentalManagementSystem.Services.Data
 {
-    using DentalManagementSystem.Data;
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
-    using DentalManagementSystem.Services.Mapping;
     using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.EntityFrameworkCore;
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class ProcedureService : IProcedureService
+    public class ProcedureService : BaseService, IProcedureService
     {
-        private readonly DentalManagementSystemDbContext dbContext;
-
         private IRepository<Procedure, int> procedureRepository;
 
         public ProcedureService(IRepository<Procedure, int> procedureRepository)
