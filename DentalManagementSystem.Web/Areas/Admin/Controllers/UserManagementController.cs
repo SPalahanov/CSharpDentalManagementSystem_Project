@@ -55,5 +55,32 @@
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveRole(string userId, string role)
+        {
+            Guid userGuid = Guid.Empty;
+
+            if (this.IsGuidValid(userId, ref userGuid))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool userExists = await this.userService.UserExistsByIdAsync(userGuid);
+
+            if (!userExists)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool removeResult = await this.userService.RemoveUserRoleAsync(userGuid, role);
+
+            if (!removeResult)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

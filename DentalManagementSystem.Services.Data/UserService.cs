@@ -73,5 +73,31 @@
 
             return true;
         }
+
+        public async Task<bool> RemoveUserRoleAsync(Guid userId, string roleName)
+        {
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId.ToString());
+
+            bool roleExists = await this.roleManager.RoleExistsAsync(roleName);
+
+            if (user == null || !roleExists)
+            {
+                return false;
+            }
+
+            bool alreadyInRole = await this.userManager.IsInRoleAsync(user, roleName);
+
+            if (alreadyInRole)
+            {
+                IdentityResult? result = await this.userManager.RemoveFromRoleAsync(user, roleName);
+
+                if (!result.Succeeded)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

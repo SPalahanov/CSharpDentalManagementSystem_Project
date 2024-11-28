@@ -14,5 +14,7 @@ namespace DentalManagementSystem.Services.Data.Interfaces
         Task<bool> UserExistsByIdAsync(Guid userId);
 
         Task<bool> AssignUserToRoleAsync(Guid userId, string roleName);
+
+        Task<bool> RemoveUserRoleAsync(Guid userId, string roleName);
     }
 }
