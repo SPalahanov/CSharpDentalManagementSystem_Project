@@ -2,6 +2,7 @@
 {
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.Controllers;
     using DentalManagementSystem.Web.ViewModels.Admin.UserManagement;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -11,7 +12,7 @@
 
     [Area(AdminRoleName)]
     [Authorize(Roles = AdminRoleName)]
-    public class UserManagementController : Controller
+    public class UserManagementController : BaseController
     {
         private readonly IUserService userService;
 
@@ -19,6 +20,8 @@
         {
             this.userService = userService;
         }
+
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             IEnumerable<AllUsersViewModel> allUsers = await this.userService.GetAllUsersAsync();
