@@ -99,5 +99,25 @@
 
             return true;
         }
+
+        public async Task<bool> DeleteUserAsync(Guid userId)
+        {
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId.ToString());
+
+            
+            if (user == null)
+            {
+                return false;
+            }
+
+            IdentityResult? result = await this.userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

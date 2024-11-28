@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using System.Data;
     using static DentalManagementSystem.Common.Constants.GeneralApplicationConstants;
 
     [Area(AdminRoleName)]
@@ -76,6 +77,33 @@
             bool removeResult = await this.userService.RemoveUserRoleAsync(userGuid, role);
 
             if (!removeResult)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            Guid userGuid = Guid.Empty;
+
+            if (this.IsGuidValid(userId, ref userGuid))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool userExists = await this.userService.UserExistsByIdAsync(userGuid);
+
+            if (!userExists)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool deleteResult = await this.userService.DeleteUserAsync(userGuid);
+
+            if (!deleteResult)
             {
                 return RedirectToAction(nameof(Index));
             }
