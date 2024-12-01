@@ -37,12 +37,14 @@
         {
             IEnumerable<AllAppointmentsIndexViewModel> appointments = await this.appointmentRepository
                 .GetAllAttached()
+                .OrderBy(a => a.AppointmentDate.ToString())
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
                     Id = a.AppointmentId.ToString(),
-                    AppointmentDate = a.AppointmentDate.ToString("MM/dd/yyyy"),
+                    AppointmentDate = a.AppointmentDate.ToString("MM/dd/yyyy HH:mm"),
                     AppointmentStatus = a.AppointmentStatus.ToString(),
                 })
+                
                 .ToArrayAsync();
 
             return appointments;
