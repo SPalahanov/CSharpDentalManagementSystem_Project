@@ -2,6 +2,7 @@
 {
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
+    using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Patient;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,22 @@
             IEnumerable<AllPatientsIndexViewModel> viewModel = await this.patientService.GetAllPatientsAsync();
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Dashboard()
+        {
+            string? userId = User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return View("Index");
+            }
+            Guid patientId = await patientService.GetPatientIdByUserIdAsync(Guid.Parse(userId));
+
+            IEnumerable<AppointmentDetailsViewModel> dentistDashboard = await patientService.GetPatientDashboardAsync(patientId);
+
+            return View(dentistDashboard);
         }
 
         [HttpGet]

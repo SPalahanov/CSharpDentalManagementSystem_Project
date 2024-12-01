@@ -3,7 +3,9 @@
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Patient;
+    using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -17,11 +19,13 @@
     public class PatientService : BaseService, IPatientService
     {
         private readonly IRepository<Patient, Guid> patientRepository;
+        private readonly IRepository<Appointment, Guid> appointmentRepository;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public PatientService(IRepository<Patient, Guid> patientRepository, UserManager<ApplicationUser> userManager)
+        public PatientService(IRepository<Patient, Guid> patientRepository, IRepository<Appointment, Guid> appointmentRepository, UserManager<ApplicationUser> userManager)
         {
             this.patientRepository = patientRepository;
+            this.appointmentRepository = appointmentRepository;
             this.userManager = userManager;
         }
 
@@ -227,5 +231,48 @@
 
             return result;
         }
+
+        public async Task<IEnumerable<AppointmentDetailsViewModel>> GetPatientDashboardAsync(Guid patientId)
+        {
+            var appointments = await this.appointmentRepository
+                .GetAllAttached()
+                .Where(a => a.PatientId == patientId)
+                .Include(a => a.Dentist)
+                .Include(a => a.AppointmentProcedures)
+                .ThenInclude(ap => ap.Procedure)
+                .OrderBy(a => a.AppointmentDate)
+                .Select(a => new AppointmentDetailsViewModel
+                {
+                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
+                    DentistName = a.Dentist.Name,
+                    AppointmentStatus = a.AppointmentStatus.ToString(),
+                    Procedures = a.AppointmentProcedures
+                        .Where(ap => !ap.IsDeleted)
+                        .Select(ap => new AppointmentProcedureViewModel
+                        {
+                            Name = ap.Procedure.Name,
+                            Price = ap.Procedure.Price,
+                            Description = ap.Procedure.Description
+                        }).ToList()
+                })
+                .ToListAsync();
+
+            return appointments;
+        }
+
+        public async Task<Guid> GetPatientIdByUserIdAsync(Guid userId)
+        {
+            Patient? patient = await patientRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(d => d.UserId == userId);
+
+            if (patient == null)
+            {
+                return Guid.Empty;
+            }
+
+            return patient.PatientId;
+        }
+
     }
 }

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<DentalManagementSystem.Web.ViewModels.Appointment.AppointmentDetailsViewModel>
+
+<h1>Patient Dashboard</h1>
+<h2>Your Appointments</h2>
+
+@if (Model.Any())
+{
+    @foreach (var appointment in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3>Appointment on @appointment.AppointmentDate</h3>
+                <p><strong>Dentist:</strong> Dr. @appointment.DentistName</p>
+            </div>
+            <div class="card-body">
+                <h4>Procedures:</h4>
+                @if (appointment.Procedures.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var procedure in appointment.Procedures)
+                        {
+                            <li class="list-group-item">
+                                <strong>@procedure.Name</strong><br />
+                                <small>Price: @procedure.Price</small><br />
+                                <small>Description: @procedure.Description</small>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No procedures assigned to this appointment.</p>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>No appointments found.</p>
+}
