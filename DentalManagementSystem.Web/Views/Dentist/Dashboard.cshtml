@@ -1,0 +1,80 @@
+﻿@using DentalManagementSystem.Services.Data.Interfaces
+@using DentalManagementSystem.Web.Infrastructure.Extensions
+@using DentalManagementSystem.Web.ViewModels.Dentist
+@using DentalManagementSystem.Web.ViewModels.Home
+@using DentalManagementSystem.Web.ViewModels.Procedure
+
+@model DentistDashboardViewModel
+
+@inject IDentistService dentistService
+@inject IPatientService patientService
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <h1>Dashboard</h1>
+
+    <div class="container mt-5">
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Today's Appointments</h5>
+                        <p class="display-4">@Model.TodayAppointmentCount</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Monthly Patients</h5>
+                        <p class="display-4">@Model.MonthlyPatientCount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <h4>Today's Appointments</h4>
+            @if (Model.TodayAppointments.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Appointment Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var appointment in Model.TodayAppointments)
+                        {
+                            <tr>
+                                <td>@appointment.PatientName</td>
+                                <td>@appointment.AppointmentDate</td>
+                                <td>@appointment.AppointmentStatus</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No appointments scheduled for today.</p>
+            }
+        </div>
+    </div>
+
+}
+
+<style>
+    .content {
+        color: black;
+        text-align: center;
+        padding: 80px;
+    }
+</style>

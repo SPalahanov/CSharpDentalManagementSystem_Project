@@ -1,4 +1,6 @@
-﻿namespace DentalManagementSystem.Web.ViewModels.Home
+﻿using DentalManagementSystem.Web.ViewModels.Home;
+
+namespace DentalManagementSystem.Web.ViewModels.Dentist
 {
     using System;
     using System.Collections.Generic;

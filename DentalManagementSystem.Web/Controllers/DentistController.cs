@@ -24,6 +24,23 @@
         }
 
         [HttpGet]
+        public async Task<IActionResult> Dashboard()
+        {
+            string? userId = User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return View("Index");
+            }
+
+            Guid dentistId = await dentistService.GetDentistIdByUserIdAsync(Guid.Parse(userId));
+
+            DentistDashboardViewModel dentistDashboard = await dentistService.GetDentistDashboardAsync(dentistId);
+
+            return View(dentistDashboard);
+        }
+
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Details(string? id)
         {

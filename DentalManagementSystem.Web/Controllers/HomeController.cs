@@ -2,6 +2,7 @@ namespace DentalManagementSystem.Web.Controllers
 {
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
+    using DentalManagementSystem.Web.ViewModels.Dentist;
     using DentalManagementSystem.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
@@ -29,7 +30,8 @@ namespace DentalManagementSystem.Web.Controllers
             {
                 DentistDashboardViewModel dentistDashboard = await dentistService.GetDentistDashboardAsync(dentistId);
 
-                return View("Index", dentistDashboard);
+                return RedirectToAction("Dashboard", "Dentist");
+            }
             }
 
             return View("Index");
