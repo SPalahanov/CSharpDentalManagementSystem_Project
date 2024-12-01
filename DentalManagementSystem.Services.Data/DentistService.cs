@@ -5,6 +5,7 @@
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.ViewModels.Dentist;
+    using DentalManagementSystem.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -19,13 +20,15 @@
         private readonly DentalManagementSystemDbContext dbContext;
 
         private readonly IRepository<Dentist, Guid> dentistRepository;
+        private readonly IRepository<Appointment, Guid> appointmentRepository;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public DentistService(IRepository<Dentist, Guid> dentistRepository, UserManager<ApplicationUser> userManager, DentalManagementSystemDbContext dbContext)
+        public DentistService(IRepository<Dentist, Guid> dentistRepository, UserManager<ApplicationUser> userManager, DentalManagementSystemDbContext dbContext, IRepository<Appointment, Guid> appointmentRepository)
         {
             this.dentistRepository = dentistRepository;
             this.userManager = userManager;
             this.dbContext = dbContext;
+            this.appointmentRepository = appointmentRepository;
         }
 
         public async Task CreateDentistAsync(string userId, BecomeDentistFormModel model)
@@ -45,7 +48,7 @@
             await this.dbContext.SaveChangesAsync();
         }
 
-        
+
 
         public async Task<bool> DentistExistsByLicenseNumberAsync(string phoneNumber)
         {
@@ -209,6 +212,48 @@
             return result;
         }
 
-       
+        public async Task<DentistDashboardViewModel> GetDentistDashboardAsync(Guid dentistId)
+        {
+            DateTime today = DateTime.Today;
+            DateTime tomorrow = today.AddDays(1);
+            DateTime monthStart = new DateTime(today.Year, today.Month, 1);
+
+            List<Appointment> todayAppointments = await appointmentRepository.GetAllAttached()
+                .Where(a => a.DentistId == dentistId && a.AppointmentDate >= today.Date && a.AppointmentDate < tomorrow.Date)
+                .Include(a => a.Patient)
+                .ToListAsync();
+
+            int monthlyPatientsCount = await appointmentRepository.GetAllAttached()
+                .Where(a => a.DentistId == dentistId && a.AppointmentDate >= monthStart && a.AppointmentDate < monthStart.AddMonths(1))
+                .Select(a => a.PatientId)
+                .Distinct()
+                .CountAsync();
+
+            return new DentistDashboardViewModel
+            {
+                TodayAppointments = todayAppointments.Select(a => new AppointmentViewModel
+                {
+                    PatientName = a.Patient.Name,
+                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy HH:mm"),
+                    AppointmentStatus = a.AppointmentStatus.ToString()
+                }).ToList(),
+                TodayAppointmentCount = todayAppointments.Count(),
+                MonthlyPatientCount = monthlyPatientsCount
+            }; 
+        }
+
+        public async Task<Guid> GetDentistIdByUserIdAsync(Guid userId)
+        {
+            Dentist? dentist = await dentistRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(d => d.UserId == userId);
+
+            if (dentist == null)
+            {
+                return Guid.Empty;
+            }
+
+            return dentist.DentistId;
+        }
     }
 }

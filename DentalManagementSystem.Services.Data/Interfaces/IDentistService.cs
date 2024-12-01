@@ -1,6 +1,7 @@
 ﻿namespace DentalManagementSystem.Services.Data.Interfaces
 {
     using DentalManagementSystem.Web.ViewModels.Dentist;
+    using DentalManagementSystem.Web.ViewModels.Home;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -8,6 +9,9 @@
     public interface IDentistService
     {
         Task<IEnumerable<AllDentistIndexViewModel>> GetAllDentistsAsync();
+
+        Task<DentistDashboardViewModel> GetDentistDashboardAsync(Guid dentistId);
+        Task<Guid> GetDentistIdByUserIdAsync(Guid userId);
 
         Task<bool> DentistExistsByUserIdAsync(string userId);
 

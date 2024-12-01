@@ -1,19 +1,38 @@
 namespace DentalManagementSystem.Web.Controllers
 {
+    using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
 
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        public HomeController()
+        private readonly IDentistService dentistService;
+        public HomeController(IDentistService dentistService)
         {
-            
+            this.dentistService = dentistService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            string? userId = User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return View("Index");
+            }
+
+            Guid dentistId = await dentistService.GetDentistIdByUserIdAsync(Guid.Parse(userId));
+
+            if (dentistId != Guid.Empty)
+            {
+                DentistDashboardViewModel dentistDashboard = await dentistService.GetDentistDashboardAsync(dentistId);
+
+                return View("Index", dentistDashboard);
+            }
+
+            return View("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
