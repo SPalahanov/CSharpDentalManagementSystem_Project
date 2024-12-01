@@ -10,6 +10,7 @@
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -234,7 +235,7 @@
                 TodayAppointments = todayAppointments.Select(a => new AppointmentViewModel
                 {
                     PatientName = a.Patient.Name,
-                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy HH:mm"),
+                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
                     AppointmentStatus = a.AppointmentStatus.ToString()
                 }).ToList(),
                 TodayAppointmentCount = todayAppointments.Count(),

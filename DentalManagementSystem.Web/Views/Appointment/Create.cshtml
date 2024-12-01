@@ -1,4 +1,5 @@
 ﻿@using DentalManagementSystem.Web.ViewModels.Appointment
+@using System.Globalization
 @model CreateAppointmentViewModel
 
 <h2>Create Appointment</h2>
@@ -6,25 +7,31 @@
 <form asp-action="Create" method="post">
     <div class="form-group">
         <label asp-for="AppointmentDate"></label>
-        <input asp-for="AppointmentDate" class="form-control" type="date" />
+        <input asp-for="AppointmentDate" class="form-control" value="@Model.AppointmentDate.ToString("dd/MMMM/yyyy hh:mm tt")"/>
         <span asp-validation-for="AppointmentDate" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="PatientId">Patient</label>
-        <select asp-for="PatientId" class="form-control" asp-items="@(new SelectList(Model.Patients, "Id", "Name"))"></select>
+        <select asp-for="PatientId" class="form-control" asp-items="@(new SelectList(Model.Patients, "Id", "Name"))">
+            <option value="" selected disabled>Select a patient</option>
+        </select>
         <span asp-validation-for="PatientId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="DentistId">Dentist</label>
-        <select asp-for="DentistId" class="form-control" asp-items="@(new SelectList(Model.Dentists, "Id", "Name"))"></select>
+        <select asp-for="DentistId" class="form-control" asp-items="@(new SelectList(Model.Dentists, "Id", "Name"))">
+            <option value="" selected disabled>Select a dentist</option>
+        </select>
         <span asp-validation-for="DentistId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="AppointmentTypeId">Appointment Type</label>
-        <select asp-for="AppointmentTypeId" class="form-control" asp-items="@(new SelectList(Model.AppointmentTypes, "Id", "Name"))"></select>
+        <select asp-for="AppointmentTypeId" class="form-control" asp-items="@(new SelectList(Model.AppointmentTypes, "Id", "Name"))">
+            <option value="" selected disabled>Select a appointment type</option>
+        </select>
         <span asp-validation-for="AppointmentTypeId" class="text-danger"></span>
     </div>
 

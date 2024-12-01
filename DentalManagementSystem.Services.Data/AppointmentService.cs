@@ -7,8 +7,10 @@
     using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.SqlServer.Server;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -41,7 +43,7 @@
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
                     Id = a.AppointmentId.ToString(),
-                    AppointmentDate = a.AppointmentDate.ToString("MM/dd/yyyy HH:mm"),
+                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
                     AppointmentStatus = a.AppointmentStatus.ToString(),
                 })
                 
@@ -134,7 +136,7 @@
             {
                 viewModel = new AppointmentDetailsViewModel()
                 {
-                    AppointmentDate = appointment.AppointmentDate.ToString("MM/dd/yyyy"),
+                    AppointmentDate = appointment.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
                     PatientName = appointment.Patient != null ? appointment.Patient.Name : "N/A",
                     DentistName = appointment.Dentist != null ? appointment.Dentist.Name : "N/A",
                     AppointmentStatus = appointment.AppointmentStatus.ToString(),
@@ -152,7 +154,6 @@
 
             return viewModel;
         }
-
 
         public async Task<EditAppointmentFormModel?> GetAppointmentDataForEditAsync(Guid id)
         {
