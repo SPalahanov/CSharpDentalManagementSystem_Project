@@ -1,5 +1,6 @@
 ﻿namespace DentalManagementSystem.Web.Controllers
 {
+    using DentalManagementSystem.Services.Data;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Appointment;
@@ -21,6 +22,18 @@
 
         public async Task<IActionResult> Index()
         {
+            string? userId = User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+            
+            if (await patientService.IsUserPatient(userId))
+            {
+                return this.RedirectToAction("Dashboard", "Patient");
+            }
+
             IEnumerable<AllPatientsIndexViewModel> viewModel = await this.patientService.GetAllPatientsAsync();
 
             return View(viewModel);
