@@ -1,5 +1,9 @@
-﻿@using DentalManagementSystem.Web.ViewModels.Appointment
+﻿@using DentalManagementSystem.Services.Data.Interfaces
+@using DentalManagementSystem.Web.Infrastructure.Extensions
+@using DentalManagementSystem.Web.ViewModels.Appointment
 @model IEnumerable<AllAppointmentsIndexViewModel>
+
+@inject IPatientService patientService
 
 @{
     ViewData["Title"] = "All Appointment";
@@ -23,8 +27,11 @@
                 <td>@appointment.AppointmentStatus</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@appointment.Id" class="btn btn-info">Details</a>
-                    <a asp-action="Edit" asp-route-id="@appointment.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@appointment.Id" class="btn btn-danger">Delete</a>
+                    @if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false)
+                    {
+                        <a asp-action="Edit" asp-route-id="@appointment.Id" class="btn btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@appointment.Id" class="btn btn-danger">Delete</a>
+                    }
                 </td>
             </tr>
         }

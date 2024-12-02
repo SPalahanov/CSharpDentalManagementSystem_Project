@@ -1,6 +1,8 @@
 ﻿namespace DentalManagementSystem.Web.Controllers
 {
+    using DentalManagementSystem.Services.Data;
     using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Appointment;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -9,10 +11,12 @@
     public class AppointmentController : BaseController
     {
         private readonly IAppointmentService appointmentService;
+        private readonly IPatientService patientService;
 
-        public AppointmentController(IAppointmentService appointmentService)
+        public AppointmentController(IAppointmentService appointmentService, IPatientService patientService)
         {
             this.appointmentService = appointmentService;
+            this.patientService = patientService;
         }
 
         [HttpGet]
@@ -87,6 +91,18 @@
                 return this.RedirectToAction(nameof(Index));
             }
 
+            string? userId = User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (await patientService.IsUserPatient(userId))
+            {
+                return this.RedirectToAction("Index", "Appointment");
+            }
+
             EditAppointmentFormModel? formModel = await this.appointmentService.GetAppointmentForEditByIdAsync(appointmentGuid);
 
             return this.View(formModel);
@@ -96,6 +112,18 @@
         [Authorize]
         public async Task<IActionResult> Edit(EditAppointmentFormModel model)
         {
+            string? userId = User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (await patientService.IsUserPatient(userId))
+            {
+                return this.RedirectToAction("Index", "Appointment");
+            }
+
             if (!ModelState.IsValid)
             {
                 model.Patients = await appointmentService.GetPatientListAsync();
