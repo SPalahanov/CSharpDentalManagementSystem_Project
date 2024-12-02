@@ -234,12 +234,15 @@
 
         public async Task<IEnumerable<AppointmentDetailsViewModel>> GetPatientDashboardAsync(Guid patientId)
         {
-            var appointments = await this.appointmentRepository
+            DateTime today = DateTime.Today;
+
+            IEnumerable<AppointmentDetailsViewModel> appointments = await this.appointmentRepository
                 .GetAllAttached()
                 .Where(a => a.PatientId == patientId)
                 .Include(a => a.Dentist)
                 .Include(a => a.AppointmentProcedures)
                 .ThenInclude(ap => ap.Procedure)
+                .Where(a => a.AppointmentDate < today.Date)
                 .OrderBy(a => a.AppointmentDate)
                 .Select(a => new AppointmentDetailsViewModel
                 {
