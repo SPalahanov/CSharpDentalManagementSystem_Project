@@ -21,7 +21,7 @@
 </div>
 
 
-@if (this.User.Identity?.IsAuthenticated ?? false)
+@if (this.User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 {
     <a asp-action="Create" class="btn btn-success mb-4">Add New Procedure</a>
 }
