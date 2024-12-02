@@ -9,10 +9,12 @@
     public class DentistController : BaseController
     {
         private readonly IDentistService dentistService;
+        private readonly IPatientService patientService;
 
-        public DentistController(IDentistService dentistService)
+        public DentistController(IDentistService dentistService, IPatientService patientService)
         {
             this.dentistService = dentistService;
+            this.patientService = patientService;
         }
 
         [HttpGet]
@@ -143,6 +145,18 @@
         [HttpGet]
         public async Task<IActionResult> Edit(string? id)
         {
+            string? userId = User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (await patientService.IsUserPatient(userId))
+            {
+                return this.RedirectToAction("Index", "Dentist");
+            }
+
             Guid dentistGuid = Guid.Empty;
 
             bool isIdValid = this.IsGuidValid(id, ref dentistGuid);

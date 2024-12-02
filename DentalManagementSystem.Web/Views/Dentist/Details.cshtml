@@ -1,5 +1,9 @@
-﻿@using DentalManagementSystem.Web.ViewModels.Dentist
+﻿@using DentalManagementSystem.Services.Data.Interfaces
+@using DentalManagementSystem.Web.Infrastructure.Extensions
+@using DentalManagementSystem.Web.ViewModels.Dentist
 @model DentistDetailsViewModel
+
+@inject IPatientService patientService
 
 @{
     ViewData["Title"] = "Dentist Details";
@@ -10,10 +14,19 @@
 <p><strong>Name:</strong> @Model.Name</p>
 <p><strong>Phone number:</strong> @Model.PhoneNumber</p>
 <p><strong>Gender:</strong> @Model.Gender</p>
-<p><strong>Address:</strong> @Model.Address</p>
-<p><strong>Specialty:</strong> @Model.Specialty</p>
-<p><strong>License number:</strong> @Model.LicenseNumber</p>
+
+@if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false)
+{
+    <p><strong>Address:</strong> @Model.Address</p>
+    <p><strong>Specialty:</strong> @Model.Specialty</p>
+    <p><strong>License number:</strong> @Model.LicenseNumber</p>
+}
+
 
 <a asp-action="Index" class="btn btn-secondary mt-3">Back to Dentists</a>
-<a asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-warning mt-3">Edit</a>
+@if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false)
+{
+    <a asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-warning mt-3">Edit</a>
+}
+
 
