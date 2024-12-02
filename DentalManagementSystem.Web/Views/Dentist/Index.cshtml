@@ -1,5 +1,10 @@
-﻿@using DentalManagementSystem.Web.ViewModels.Dentist
+﻿@using DentalManagementSystem.Services.Data.Interfaces
+@using DentalManagementSystem.Web.Infrastructure.Extensions
+@using DentalManagementSystem.Web.ViewModels.Dentist
 @model IEnumerable<AllDentistIndexViewModel>
+
+@inject IPatientService patientService
+@inject IDentistService dentistService
 
 @{
     ViewData["Title"] = "All Dentists";
@@ -49,5 +54,10 @@
         </tbody>
     }
 </table>
-
-<a asp-action="Create" class="btn btn-primary">Add New Dentist</a>
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    @if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false && await this.dentistService.IsUserDentist(this.User.GetUserId()!) == false)
+    {
+        <a asp-action="Create" class="btn btn-primary">Add New Dentist</a>
+    }
+}

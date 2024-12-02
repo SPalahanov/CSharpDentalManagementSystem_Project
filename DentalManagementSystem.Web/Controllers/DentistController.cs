@@ -107,6 +107,8 @@
             return this.RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             IEnumerable<UserEmailViewModel> usersData = await dentistService.GetUserEmailsAsync();
@@ -120,6 +122,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(AddDentistInputModel model)
         {
             if (!ModelState.IsValid)
@@ -143,20 +146,9 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string? id)
         {
-            string? userId = User.GetUserId();
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return this.RedirectToAction("Index", "Home");
-            }
-
-            if (await patientService.IsUserPatient(userId))
-            {
-                return this.RedirectToAction("Index", "Dentist");
-            }
-
             Guid dentistGuid = Guid.Empty;
 
             bool isIdValid = this.IsGuidValid(id, ref dentistGuid);
@@ -172,6 +164,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(EditDentistFormModel formModel)
         {
             if (!ModelState.IsValid)

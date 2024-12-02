@@ -4,6 +4,7 @@
 @model DentistDetailsViewModel
 
 @inject IPatientService patientService
+@inject IDentistService dentistService
 
 @{
     ViewData["Title"] = "Dentist Details";
@@ -24,7 +25,7 @@
 
 
 <a asp-action="Index" class="btn btn-secondary mt-3">Back to Dentists</a>
-@if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false)
+@if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false && await this.dentistService.IsUserDentist(this.User.GetUserId()!) == false)
 {
     <a asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-warning mt-3">Edit</a>
 }
