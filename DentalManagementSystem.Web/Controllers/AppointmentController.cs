@@ -148,5 +148,34 @@
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string? id)
+        {
+            string? userId = User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (await patientService.IsUserPatient(userId))
+            {
+                return this.RedirectToAction("Index", "Appointment");
+            }
+
+            Guid appointmentGuid = Guid.Empty;
+
+            bool isIdValid = this.IsGuidValid(id, ref appointmentGuid);
+
+            if (!isIdValid)
+            {
+                return this.RedirectToAction("Index", "Appointment");
+            }
+
+            //TODO: Implementing Delete..........
+
+            return this.RedirectToAction("Index", "Appointment");
+        }
     }
 }
