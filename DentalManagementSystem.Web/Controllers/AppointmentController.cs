@@ -12,19 +12,50 @@
     {
         private readonly IAppointmentService appointmentService;
         private readonly IPatientService patientService;
+        private readonly IDentistService dentistService;
 
-        public AppointmentController(IAppointmentService appointmentService, IPatientService patientService)
+        public AppointmentController(IAppointmentService appointmentService, IPatientService patientService, IDentistService dentistService)
         {
             this.appointmentService = appointmentService;
             this.patientService = patientService;
+            this.dentistService = dentistService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<AllAppointmentsIndexViewModel> procedures = await this.appointmentService.GetAllAppointmentsAsync();
+            string? userId = User.GetUserId();
 
-            return View(procedures);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            Guid userGuid = Guid.Parse(userId);
+
+            IEnumerable<AllAppointmentsIndexViewModel> appointments;
+
+            if (await patientService.IsUserPatient(userId))
+            {
+                Guid patientId = await patientService.GetPatientIdByUserIdAsync(userGuid);
+
+                appointments = await appointmentService.GetAppointmentsByPatientIdAsync(patientId);
+
+                return View(appointments);
+            }
+
+            if (await dentistService.IsUserDentist(userId))
+            {
+                Guid dentistId = await dentistService.GetDentistIdByUserIdAsync(userGuid);
+
+                appointments = await appointmentService.GetAppointmentsByDentistIdAsync(dentistId);
+
+                return View(appointments);
+            }
+
+            appointments = await this.appointmentService.GetAllAppointmentsAsync();
+
+            return View(appointments);
         }
 
         [HttpGet]

@@ -46,8 +46,41 @@
                     AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
                     AppointmentStatus = a.AppointmentStatus.ToString(),
                 })
-                
                 .ToArrayAsync();
+
+            return appointments;
+        }
+
+        public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByPatientIdAsync(Guid patientId)
+        {
+            IEnumerable<AllAppointmentsIndexViewModel> appointments = await this.appointmentRepository
+                .GetAllAttached()
+                .Where(a => a.PatientId == patientId)
+                .OrderBy(a => a.AppointmentDate)
+                .Select(a => new AllAppointmentsIndexViewModel
+                {
+                    Id = a.AppointmentId.ToString(),
+                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
+                    AppointmentStatus = a.AppointmentStatus.ToString(),
+                })
+                .ToListAsync();
+
+            return appointments;
+        }
+
+        public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByDentistIdAsync(Guid dentistId)
+        {
+            IEnumerable<AllAppointmentsIndexViewModel> appointments = await this.appointmentRepository
+                .GetAllAttached()
+                .Where(a => a.DentistId == dentistId)
+                .OrderBy(a => a.AppointmentDate)
+                .Select(a => new AllAppointmentsIndexViewModel
+                {
+                    Id = a.AppointmentId.ToString(),
+                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
+                    AppointmentStatus = a.AppointmentStatus.ToString(),
+                })
+                .ToListAsync();
 
             return appointments;
         }

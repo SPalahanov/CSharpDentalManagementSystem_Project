@@ -5,6 +5,8 @@
     public interface IAppointmentService
     {
         Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAllAppointmentsAsync();
+        Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByPatientIdAsync(Guid patientId);
+        Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByDentistIdAsync(Guid patientId);
 
         Task<CreateAppointmentViewModel> GetCreateAppointmentModelAsync();
         Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProceduresAsync();
