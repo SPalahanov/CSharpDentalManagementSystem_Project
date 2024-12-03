@@ -46,9 +46,12 @@ namespace DentalManagementSystem.Web.Controllers
                 return RedirectToAction("Dashboard", "Patient");
             }
 
+            if (User.IsInRole("Admin"))
+            {
+                return Redirect("/Admin");
+            }
+
             return View("Index");
-
-
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
