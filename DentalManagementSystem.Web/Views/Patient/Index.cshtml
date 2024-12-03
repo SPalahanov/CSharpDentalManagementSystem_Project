@@ -29,4 +29,7 @@
     </tbody>
 </table>
 
-<a asp-action="Create" class="btn btn-primary">Add New Patient</a>
+@if (this.User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-primary">Add New Patient</a>
+}

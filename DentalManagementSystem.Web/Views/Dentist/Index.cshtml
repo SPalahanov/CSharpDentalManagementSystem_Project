@@ -54,10 +54,8 @@
         </tbody>
     }
 </table>
-@if (User.Identity?.IsAuthenticated ?? false)
+
+@if (this.User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 {
-    @if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false && await this.dentistService.IsUserDentist(this.User.GetUserId()!) == false)
-    {
-        <a asp-action="Create" class="btn btn-primary">Add New Dentist</a>
-    }
+    <a asp-action="Create" class="btn btn-primary">Add New Dentist</a>
 }

@@ -16,18 +16,17 @@
 <p><strong>Phone number:</strong> @Model.PhoneNumber</p>
 <p><strong>Gender:</strong> @Model.Gender</p>
 
-@if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false)
+@if(this.User.Identity.IsAuthenticated && User.IsInRole("Admin") || await this.dentistService.IsUserDentist(this.User.GetUserId()!) == true)
 {
     <p><strong>Address:</strong> @Model.Address</p>
     <p><strong>Specialty:</strong> @Model.Specialty</p>
     <p><strong>License number:</strong> @Model.LicenseNumber</p>
 }
 
-
 <a asp-action="Index" class="btn btn-secondary mt-3">Back to Dentists</a>
-@if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false && await this.dentistService.IsUserDentist(this.User.GetUserId()!) == false)
+
+@if (this.User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 {
     <a asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-warning mt-3">Edit</a>
 }
-
 

@@ -109,6 +109,21 @@
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            string? userId = this.User.GetUserId();
+
+            bool isPatient = await patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await patientService.PatientExistsByUserIdAsync(userId);
+
+            if (isPatient)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !User.IsInRole("Admin"))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
             IEnumerable<UserEmailViewModel> usersData = await patientService.GetUserEmailsAsync();
 
             AddPatientInputModel model = new AddPatientInputModel
