@@ -53,9 +53,12 @@
 
         public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByPatientIdAsync(Guid patientId)
         {
+            DateTime today = DateTime.Today;
+
             IEnumerable<AllAppointmentsIndexViewModel> appointments = await this.appointmentRepository
                 .GetAllAttached()
                 .Where(a => a.PatientId == patientId)
+                .Where(a => a.AppointmentDate >= today.Date)
                 .OrderBy(a => a.AppointmentDate)
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
@@ -73,7 +76,7 @@
             IEnumerable<AllAppointmentsIndexViewModel> appointments = await this.appointmentRepository
                 .GetAllAttached()
                 .Where(a => a.DentistId == dentistId)
-                .OrderBy(a => a.AppointmentDate)
+                .OrderByDescending(a => a.AppointmentDate)
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
                     Id = a.AppointmentId.ToString(),
