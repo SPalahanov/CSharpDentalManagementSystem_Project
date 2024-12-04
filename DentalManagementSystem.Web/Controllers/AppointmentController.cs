@@ -33,9 +33,13 @@
 
             Guid userGuid = Guid.Parse(userId);
 
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
             IEnumerable<AllAppointmentsIndexViewModel> appointments;
 
-            if (await patientService.IsUserPatient(userId))
+            if (isPatient)
             {
                 Guid patientId = await patientService.GetPatientIdByUserIdAsync(userGuid);
 
@@ -44,13 +48,18 @@
                 return View(appointments);
             }
 
-            if (await dentistService.IsUserDentist(userId))
+            if (isDentist)
             {
                 Guid dentistId = await dentistService.GetDentistIdByUserIdAsync(userGuid);
 
                 appointments = await appointmentService.GetAppointmentsByDentistIdAsync(dentistId);
 
                 return View(appointments);
+            }
+
+            if(!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
             }
 
             appointments = await this.appointmentService.GetAllAppointmentsAsync();
@@ -61,6 +70,22 @@
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            string? userId = this.User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
             CreateAppointmentViewModel model = await this.appointmentService.GetCreateAppointmentModelAsync();
 
             model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
@@ -71,11 +96,27 @@
         [HttpPost]
         public async Task<IActionResult> Create(CreateAppointmentViewModel model)
         {
-            if (!ModelState.IsValid)
+            string? userId = this.User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
             {
-                model.Patients = (await appointmentService.GetCreateAppointmentModelAsync()).Patients;
-                model.Dentists = (await appointmentService.GetCreateAppointmentModelAsync()).Dentists;
-                model.AppointmentTypes = (await appointmentService.GetCreateAppointmentModelAsync()).AppointmentTypes;
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                model.Patients = (await this.appointmentService.GetCreateAppointmentModelAsync()).Patients;
+                model.Dentists = (await this.appointmentService.GetCreateAppointmentModelAsync()).Dentists;
+                model.AppointmentTypes = (await this.appointmentService.GetCreateAppointmentModelAsync()).AppointmentTypes;
                 model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
 
                 return View(model);
@@ -92,6 +133,22 @@
             Guid appointmentGuid = Guid.Empty;
 
             bool isIdValid = this.IsGuidValid(id, ref appointmentGuid);
+
+            string? userId = this.User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
 
             if (!isIdValid)
             {
@@ -129,9 +186,18 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            if (await patientService.IsUserPatient(userId))
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient)
             {
                 return this.RedirectToAction("Index", "Appointment");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
             }
 
             EditAppointmentFormModel? formModel = await this.appointmentService.GetAppointmentForEditByIdAsync(appointmentGuid);
@@ -150,17 +216,26 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            if (await patientService.IsUserPatient(userId))
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient)
             {
                 return this.RedirectToAction("Index", "Appointment");
             }
 
-            if (!ModelState.IsValid)
+            if (!isPatient && !isDentist && !isAdmin)
             {
-                model.Patients = await appointmentService.GetPatientListAsync();
-                model.Dentists = await appointmentService.GetDentistListAsync();
-                model.AppointmentTypes = await appointmentService.GetAppointmentTypeListAsync();
-                model.AvailableProcedures = await appointmentService.GetAvailableProcedureListAsync();
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                model.Patients = await this.appointmentService.GetPatientListAsync();
+                model.Dentists = await this.appointmentService.GetDentistListAsync();
+                model.AppointmentTypes = await this.appointmentService.GetAppointmentTypeListAsync();
+                model.AvailableProcedures = await this.appointmentService.GetAvailableProcedureListAsync();
 
                 return View(model);
             }
@@ -183,21 +258,30 @@
         [HttpGet]
         public async Task<IActionResult> Delete(string? id)
         {
-            string? userId = User.GetUserId();
+            Guid appointmentGuid = Guid.Empty;
+
+            bool isIdValid = this.IsGuidValid(id, ref appointmentGuid);
+
+            string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
             {
                 return this.RedirectToAction("Index", "Home");
             }
 
-            if (await patientService.IsUserPatient(userId))
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient)
             {
                 return this.RedirectToAction("Index", "Appointment");
             }
 
-            Guid appointmentGuid = Guid.Empty;
-
-            bool isIdValid = this.IsGuidValid(id, ref appointmentGuid);
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
 
             if (!isIdValid)
             {

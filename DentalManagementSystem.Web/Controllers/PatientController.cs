@@ -14,24 +14,35 @@
     public class PatientController : BaseController
     {
         private readonly IPatientService patientService;
+        private readonly IDentistService dentistService;
 
-        public PatientController(IPatientService patientService)
+        public PatientController(IPatientService patientService, IDentistService dentistService)
         {
             this.patientService = patientService;
+            this.dentistService = dentistService;
         }
 
         public async Task<IActionResult> Index()
         {
-            string? userId = User.GetUserId();
+            string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
             {
                 return this.RedirectToAction("Index", "Home");
             }
             
-            if (await patientService.IsUserPatient(userId))
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (await this.patientService.IsUserPatient(userId))
             {
                 return this.RedirectToAction("Dashboard", "Patient");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
             }
 
             IEnumerable<AllPatientsIndexViewModel> viewModel = await this.patientService.GetAllPatientsAsync();
@@ -42,7 +53,7 @@
         [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
-            string? userId = User.GetUserId();
+            string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -50,9 +61,25 @@
             }
             Guid patientId = await patientService.GetPatientIdByUserIdAsync(Guid.Parse(userId));
 
-            IEnumerable<AppointmentDetailsViewModel> dentistDashboard = await patientService.GetPatientDashboardAsync(patientId);
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
 
-            return View(dentistDashboard);
+            if (isDentist || isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+        }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            Guid patientId = await this.patientService.GetPatientIdByUserIdAsync(Guid.Parse(userId));
+
+            IEnumerable<AppointmentDetailsViewModel> dentistDashboard = await this.patientService.GetPatientDashboardAsync(patientId);
+
+            return this.View(dentistDashboard);
         }
 
         [HttpGet]
@@ -61,12 +88,17 @@
         {
             string? userId = this.User.GetUserId();
 
-            bool isPatient = await patientService.PatientExistsByUserIdAsync(userId);
-
-            if (isPatient)
+            if (string.IsNullOrEmpty(userId))
             {
-                //this.TempData[ErrorMessage] = "You are already an dentist";
+                return this.View("Index");
+            }
 
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient || isDentist || isAdmin)
+            {
                 return this.RedirectToAction("Index", "Home");
             }
 
@@ -79,12 +111,17 @@
         {
             string? userId = this.User.GetUserId();
 
-            bool isPatient = await patientService.PatientExistsByUserIdAsync(userId);
-
-            if (isPatient)
+            if (string.IsNullOrEmpty(userId))
             {
-                //this.TempData[ErrorMessage] = "You are already an patient";
+                return this.View("Index");
+            }
 
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient || isDentist || isAdmin)
+            {
                 return this.RedirectToAction("Index", "Home");
             }
 
@@ -111,15 +148,16 @@
         {
             string? userId = this.User.GetUserId();
 
-            bool isPatient = await patientService.PatientExistsByUserIdAsync(userId);
-            bool isDentist = await patientService.PatientExistsByUserIdAsync(userId);
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
 
             if (isPatient)
             {
                 return this.RedirectToAction("Index", "Home");
             }
 
-            if (!isPatient && !isDentist && !User.IsInRole("Admin"))
+            if (!isPatient && !isDentist && !isAdmin)
             {
                 return this.RedirectToAction("Index", "Home");
             }
@@ -137,7 +175,23 @@
         [HttpPost]
         public async Task<IActionResult> Create(AddPatientInputModel model)
         {
-            if (!ModelState.IsValid)
+            string? userId = this.User.GetUserId();
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!this.ModelState.IsValid)
             {
                 model.Emails = await patientService.GetUserEmailsAsync();
                 return View(model);
@@ -166,7 +220,23 @@
 
             if (!isIdValid)
             {
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction("Index", "Patient");
+            }
+
+            string? userId = this.User.GetUserId();
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
             }
 
             PatientDetailsViewModel? viewModel = await this.patientService
@@ -189,7 +259,23 @@
 
             if (!isIdValid)
             {
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction("Index", "Patient");
+            }
+
+            string? userId = this.User.GetUserId();
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
             }
 
             EditPatientFormModel? formModel = await this.patientService.GetPatientForEditByIdAsync(patientGuid);
@@ -200,7 +286,23 @@
         [HttpPost]
         public async Task<IActionResult> Edit(EditPatientFormModel formModel)
         {
-            if (!ModelState.IsValid)
+            string? userId = this.User.GetUserId();
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!this.ModelState.IsValid)
             {
                 return this.View(formModel);
             }
