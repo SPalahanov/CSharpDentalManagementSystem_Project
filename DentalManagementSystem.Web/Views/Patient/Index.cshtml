@@ -1,5 +1,10 @@
-﻿@using DentalManagementSystem.Web.ViewModels.Patient
+﻿@using DentalManagementSystem.Services.Data.Interfaces
+@using DentalManagementSystem.Web.Infrastructure.Extensions
+@using DentalManagementSystem.Web.ViewModels.Patient
 @model IEnumerable<AllPatientsIndexViewModel>
+
+@inject IPatientService patientService
+@inject IDentistService dentistService
 
 @{
     ViewData["Title"] = "All Patients";
@@ -12,7 +17,11 @@
         <tr>
             <th>Name</th>
             <th>Gender</th>
-            <th>Actions</th>
+            @if (await this.dentistService.IsUserDentist(this.User.GetUserId()!) == true || this.User.Identity!.IsAuthenticated && this.User.IsInRole("Admin"))
+            {
+                <th>Actions</th>
+            }
+            
         </tr>
     </thead>
     <tbody>
@@ -21,9 +30,13 @@
             <tr>
                 <td>@patient.Name</td>
                 <td>@patient.Gender</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-info">Details</a>
-                </td>
+                @if (await this.dentistService.IsUserDentist(this.User.GetUserId()!) == true || this.User.Identity!.IsAuthenticated && this.User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-info">Details</a>
+                    </td>
+                }
+                
             </tr>
         }
     </tbody>

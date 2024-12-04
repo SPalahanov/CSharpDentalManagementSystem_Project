@@ -3,6 +3,7 @@
 @using static DentalManagementSystem.Common.Constants.GeneralApplicationConstants;
 
 @inject IPatientService patientService
+@inject IDentistService dentistService
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +32,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Dentist" asp-action="Index">Dentists</a>
                             </li>
 
-                            @if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == false)
+                            @if (await this.dentistService.IsUserDentist(this.User.GetUserId()!) == true || User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patients</a>
@@ -41,9 +42,13 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Procedure" asp-action="Index">Procedures</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Appointment" asp-action="Index">Appointments</a>
-                            </li>
+
+                            @if (await this.patientService.IsUserPatient(this.User.GetUserId()!) == true || await this.dentistService.IsUserDentist(this.User.GetUserId()!) == true || User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Appointment" asp-action="Index">Appointments</a>
+                                </li>
+                            }
                         }
                         else
                         {
