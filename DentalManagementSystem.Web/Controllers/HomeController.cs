@@ -21,43 +21,43 @@ namespace DentalManagementSystem.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string? userId = User.GetUserId();
+            string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
             {
-                return View("Index");
+                return this.View("Index");
             }
 
-            Guid dentistId = await dentistService.GetDentistIdByUserIdAsync(Guid.Parse(userId));
+            Guid dentistId = await this.dentistService.GetDentistIdByUserIdAsync(Guid.Parse(userId));
 
             if (dentistId != Guid.Empty)
             {
-                DentistDashboardViewModel dentistDashboard = await dentistService.GetDentistDashboardAsync(dentistId);
+                DentistDashboardViewModel dentistDashboard = await this.dentistService.GetDentistDashboardAsync(dentistId);
 
-                return RedirectToAction("Dashboard", "Dentist");
+                return this.RedirectToAction("Dashboard", "Dentist");
             }
 
-            Guid patientId = await patientService.GetPatientIdByUserIdAsync(Guid.Parse(userId));
+            Guid patientId = await this.patientService.GetPatientIdByUserIdAsync(Guid.Parse(userId));
 
             if (patientId != Guid.Empty)
             {
-                IEnumerable<AppointmentDetailsViewModel> patientDashboard = await patientService.GetPatientDashboardAsync(patientId);
+                IEnumerable<AppointmentDetailsViewModel> patientDashboard = await this.patientService.GetPatientDashboardAsync(patientId);
 
-                return RedirectToAction("Dashboard", "Patient");
+                return this.RedirectToAction("Dashboard", "Patient");
             }
 
-            if (User.IsInRole("Admin"))
+            if (this.User.IsInRole("Admin"))
             {
-                return Redirect("/Admin");
+                return this.Redirect("/Admin");
             }
 
-            return View("Index");
+            return this.View("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

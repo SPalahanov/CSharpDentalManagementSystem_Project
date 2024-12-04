@@ -17,17 +17,16 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ProcedureIndexViewModel> procedures =
-                await this.procedureService.IndexGetAllAsync();
+            IEnumerable<ProcedureIndexViewModel> procedures = await this.procedureService.IndexGetAllAsync();
 
-            return View(procedures);
+            return this.View(procedures);
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
-            return View();
+            return this.View();
         }
 
         [HttpPost]
@@ -52,16 +51,14 @@
                 return this.RedirectToAction(nameof(Index));
             }
 
-            ProcedureDetailsViewModel? viewModel = await this.procedureService
-                .GetProcedureDetailsByIdAsync(id);
+            ProcedureDetailsViewModel? viewModel = await this.procedureService.GetProcedureDetailsByIdAsync(id);
 
             if (viewModel == null)
             {
                 return this.RedirectToAction(nameof(Index));
             }
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
-
     }
 }

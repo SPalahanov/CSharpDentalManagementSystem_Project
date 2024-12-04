@@ -22,14 +22,14 @@
         {
             IEnumerable<AllDentistIndexViewModel> viewModel = await this.dentistService.GetAllDentistsAsync();
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Dashboard()
         {
-            string? userId = User.GetUserId();
+            string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -50,11 +50,11 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            Guid dentistId = await dentistService.GetDentistIdByUserIdAsync(Guid.Parse(userId));
+            Guid dentistId = await this.dentistService.GetDentistIdByUserIdAsync(Guid.Parse(userId));
 
-            DentistDashboardViewModel dentistDashboard = await dentistService.GetDentistDashboardAsync(dentistId);
+            DentistDashboardViewModel dentistDashboard = await this.dentistService.GetDentistDashboardAsync(dentistId);
 
-            return View(dentistDashboard);
+            return this.View(dentistDashboard);
         }
 
         [HttpGet]
@@ -67,15 +67,14 @@
 
             if (!isIdValid)
             {
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction("Index", "Dentist");
             }
 
-            DentistDetailsViewModel? viewModel = await this.dentistService
-                .GetDentistDetailsByIdAsync(dentistGuid);
+            DentistDetailsViewModel? viewModel = await this.dentistService.GetDentistDetailsByIdAsync(dentistGuid);
 
             if (viewModel == null)
             {
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction("Index", "Dentist");
             }
 
             return this.View(viewModel);
@@ -101,7 +100,7 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            return View();
+            return this.View();
         }
 
         [HttpPost]
@@ -126,7 +125,7 @@
 
             if (!this.ModelState.IsValid)
             {
-                return View(model);
+                return this.View(model);
             }
 
             await this.dentistService.CreateDentistAsync(userId, model);
@@ -135,7 +134,7 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             string? userId = this.User.GetUserId();
@@ -166,31 +165,32 @@
                 Emails = usersData
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(AddDentistInputModel model)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                model.Emails = await dentistService.GetUserEmailsAsync();
-                return View(model);
+                model.Emails = await this.dentistService.GetUserEmailsAsync();
+
+                return this.View(model);
             }
 
-            var result = await dentistService.CreateDentistFromUserAsync(model.SelectedUserId, model);
+            var result = await this.dentistService.CreateDentistFromUserAsync(model.SelectedUserId, model);
 
             if (!result)
             {
                 this.ModelState.AddModelError(string.Empty, "Failed to create patient. Please try again.");
 
-                model.Emails = await dentistService.GetUserEmailsAsync();
+                model.Emails = await this.dentistService.GetUserEmailsAsync();
 
-                return View(model);
+                return this.View(model);
             }
 
-            return RedirectToAction(nameof(Index));
+            return this.RedirectToAction("Index", "Dentist");
         }
 
         [HttpGet]
@@ -224,7 +224,7 @@
 
             if (!isIdValid)
             {
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction("Index", "Dentist");
             }
 
             EditDentistFormModel? formModel = await this.dentistService.GetDentistForEditByIdAsync(dentistGuid);
@@ -236,17 +236,16 @@
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(EditDentistFormModel formModel)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
                 return this.View(formModel);
             }
 
-            bool result = await this.dentistService
-                .EditDentistAsync(formModel);
+            bool result = await this.dentistService.EditDentistAsync(formModel);
 
             if (!result)
             {
-                ModelState.AddModelError(string.Empty, "Unexpected error occurred while updating the dentist!");
+                this.ModelState.AddModelError(string.Empty, "Unexpected error occurred while updating the dentist!");
 
                 return this.View(formModel);
             }

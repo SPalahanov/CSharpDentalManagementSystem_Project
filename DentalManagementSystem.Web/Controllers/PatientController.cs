@@ -22,6 +22,7 @@
             this.dentistService = dentistService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             string? userId = this.User.GetUserId();
@@ -30,7 +31,7 @@
             {
                 return this.RedirectToAction("Index", "Home");
             }
-            
+
             bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
             bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
             bool isAdmin = this.User.IsInRole("Admin");
@@ -47,7 +48,7 @@
 
             IEnumerable<AllPatientsIndexViewModel> viewModel = await this.patientService.GetAllPatientsAsync();
 
-            return View(viewModel);
+            return this.View(viewModel);
         }
 
         [HttpGet]
@@ -57,9 +58,8 @@
 
             if (string.IsNullOrEmpty(userId))
             {
-                return View("Index");
+                return this.View("Index");
             }
-            Guid patientId = await patientService.GetPatientIdByUserIdAsync(Guid.Parse(userId));
 
             bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
             bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
@@ -68,7 +68,7 @@
             if (isDentist || isAdmin)
             {
                 return this.RedirectToAction("Index", "Home");
-        }
+            }
 
             if (!isPatient && !isDentist && !isAdmin)
             {
@@ -83,7 +83,6 @@
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Become()
         {
             string? userId = this.User.GetUserId();
@@ -102,11 +101,10 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            return View();
+            return this.View();
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Become(BecomePatientFormModel model)
         {
             string? userId = this.User.GetUserId();
@@ -162,14 +160,14 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            IEnumerable<UserEmailViewModel> usersData = await patientService.GetUserEmailsAsync();
+            IEnumerable<UserEmailViewModel> usersData = await this.patientService.GetUserEmailsAsync();
 
             AddPatientInputModel model = new AddPatientInputModel
             {
                 Emails = usersData
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [HttpPost]
@@ -193,22 +191,23 @@
 
             if (!this.ModelState.IsValid)
             {
-                model.Emails = await patientService.GetUserEmailsAsync();
-                return View(model);
+                model.Emails = await this.patientService.GetUserEmailsAsync();
+
+                return this.View(model);
             }
 
-            var result = await patientService.CreatePatientFromUserAsync(model.SelectedUserId, model);
+            var result = await this.patientService.CreatePatientFromUserAsync(model.SelectedUserId, model);
 
             if (!result)
             {
                 this.ModelState.AddModelError(string.Empty, "Failed to create patient. Please try again.");
 
-                model.Emails = await patientService.GetUserEmailsAsync();
+                model.Emails = await this.patientService.GetUserEmailsAsync();
 
-                return View(model);
+                return this.View(model);
             }
 
-            return RedirectToAction(nameof(Index));
+            return this.RedirectToAction("Index", "Patient");
         }
 
         [HttpGet]
@@ -239,12 +238,11 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            PatientDetailsViewModel? viewModel = await this.patientService
-                .GetPatientDetailsByIdAsync(patientGuid);
+            PatientDetailsViewModel? viewModel = await this.patientService.GetPatientDetailsByIdAsync(patientGuid);
 
             if (viewModel == null)
             {
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction("Index", "Patient");
             }
 
             return this.View(viewModel);
@@ -307,12 +305,11 @@
                 return this.View(formModel);
             }
 
-            bool result = await this.patientService
-                .EditPatientAsync(formModel);
+            bool result = await this.patientService.EditPatientAsync(formModel);
 
             if (!result)
             {
-                ModelState.AddModelError(string.Empty, "Unexpected error occurred while updating the patient!");
+                this.ModelState.AddModelError(string.Empty, "Unexpected error occurred while updating the patient!");
 
                 return this.View(formModel);
             }

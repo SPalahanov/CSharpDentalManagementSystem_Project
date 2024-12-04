@@ -24,11 +24,11 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            string? userId = User.GetUserId();
+            string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToAction("Index", "Home");
             }
 
             Guid userGuid = Guid.Parse(userId);
@@ -41,11 +41,11 @@
 
             if (isPatient)
             {
-                Guid patientId = await patientService.GetPatientIdByUserIdAsync(userGuid);
+                Guid patientId = await this.patientService.GetPatientIdByUserIdAsync(userGuid);
 
-                appointments = await appointmentService.GetAppointmentsByPatientIdAsync(patientId);
+                appointments = await this.appointmentService.GetAppointmentsByPatientIdAsync(patientId);
 
-                return View(appointments);
+                return this.View(appointments);
             }
 
             if (isDentist)
@@ -54,7 +54,7 @@
 
                 appointments = await appointmentService.GetAppointmentsByDentistIdAsync(dentistId);
 
-                return View(appointments);
+                return this.View(appointments);
             }
 
             if(!isPatient && !isDentist && !isAdmin)
@@ -64,7 +64,7 @@
 
             appointments = await this.appointmentService.GetAllAppointmentsAsync();
 
-            return View(appointments);
+            return this.View(appointments);
         }
 
         [HttpGet]
@@ -90,7 +90,7 @@
 
             model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
 
-            return View(model);
+            return this.View(model);
         }
 
         [HttpPost]
@@ -119,12 +119,12 @@
                 model.AppointmentTypes = (await this.appointmentService.GetCreateAppointmentModelAsync()).AppointmentTypes;
                 model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
 
-                return View(model);
+                return this.View(model);
             }
 
             await this.appointmentService.CreateAppointmentAsync(model);
 
-            return RedirectToAction(nameof(Index));
+            return this.RedirectToAction("Index", "Appointment");
         }
 
         [HttpGet]
@@ -152,22 +152,20 @@
 
             if (!isIdValid)
             {
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction("Index", "Appointment");
             }
 
-            AppointmentDetailsViewModel? viewModel = await this.appointmentService
-                .GetAppointmentDetailsByIdAsync(appointmentGuid);
+            AppointmentDetailsViewModel? viewModel = await this.appointmentService.GetAppointmentDetailsByIdAsync(appointmentGuid);
 
             if (viewModel == null)
             {
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction("Index", "Appointment");
             }
 
             return this.View(viewModel);
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Edit(string? id)
         {
             Guid appointmentGuid = Guid.Empty;
@@ -176,10 +174,10 @@
 
             if (!isIdValid)
             {
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction("Index", "Appointment");
             }
 
-            string? userId = User.GetUserId();
+            string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -206,10 +204,9 @@
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Edit(EditAppointmentFormModel model)
         {
-            string? userId = User.GetUserId();
+            string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -237,7 +234,7 @@
                 model.AppointmentTypes = await this.appointmentService.GetAppointmentTypeListAsync();
                 model.AvailableProcedures = await this.appointmentService.GetAvailableProcedureListAsync();
 
-                return View(model);
+                return this.View(model);
             }
 
             bool isSuccess = await this.appointmentService.EditAppointmentAsync(model);
@@ -249,10 +246,10 @@
                 model.AppointmentTypes = await this.appointmentService.GetAppointmentTypeListAsync();
                 model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
 
-                return View(model);
+                return this.View(model);
             }
 
-            return RedirectToAction(nameof(Index));
+            return this.RedirectToAction("Index", "Appointment");
         }
 
         [HttpGet]
