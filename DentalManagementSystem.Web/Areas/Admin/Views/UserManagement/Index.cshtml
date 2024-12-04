@@ -6,6 +6,10 @@
 @inject RoleManager<IdentityRole<Guid>> roleManager;
 
 @{
+    ViewData["Title"] = "User Management";
+}
+
+@{
     IEnumerable<string> allRoles = await this.roleManager.Roles
         .Select(r => r.Name)
         .ToArrayAsync();

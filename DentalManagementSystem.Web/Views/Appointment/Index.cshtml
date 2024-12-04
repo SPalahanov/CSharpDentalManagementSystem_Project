@@ -6,7 +6,7 @@
 @inject IPatientService patientService
 
 @{
-    ViewData["Title"] = "All Appointment";
+    ViewData["Title"] = "Appointments";
 }
 
 <h2>All Appointment</h2>
@@ -38,5 +38,4 @@
     </tbody>
 </table>
 
-@*Only Dentist can add new appointments*@
 <a asp-action="Create" class="btn btn-primary">Add New Appointment</a>

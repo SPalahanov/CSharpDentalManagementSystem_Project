@@ -1,4 +1,8 @@
-﻿<div class="container mt-5">
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5">
     <div class="text-center">
         <h1 class="display-4 mb-4 text-primary">Welcome to the Admin Dashboard</h1>
         <p class="lead mb-5 text-muted">Manage your application using the sections below:</p>
@@ -24,7 +28,7 @@
                     <i class="fas fa-film fa-3x text-secondary mb-3"></i>
                     <h5 class="card-title">Manage Appointments</h5>
                     <p class="card-text text-muted">Create, update, and delete appointment entries.</p>
-                    <a asp-area="Admin" asp-controller="AppointmentManagement" asp-action="Index" class="btn btn-secondary mt-auto w-100">
+                    <a asp-area="" asp-controller="Appointment" asp-action="Index" class="btn btn-secondary mt-auto w-100">
                         Go to Appointments
                     </a>
                 </div>
@@ -39,7 +43,7 @@
                     <i class="fas fa-video fa-3x text-info mb-3"></i>
                     <h5 class="card-title">Manage Patients</h5>
                     <p class="card-text text-muted">Add new patient, edit details, or remove them.</p>
-                    <a asp-area="Admin" asp-controller="PatientManagement" asp-action="Index" class="btn btn-info mt-auto w-100">
+                    <a asp-area="" asp-controller="Patient" asp-action="Index" class="btn btn-info mt-auto w-100">
                         Go to Patients
                     </a>
                 </div>

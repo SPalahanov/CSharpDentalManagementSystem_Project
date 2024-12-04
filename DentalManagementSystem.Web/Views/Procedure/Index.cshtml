@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<DentalManagementSystem.Web.ViewModels.Procedure.ProcedureIndexViewModel>
 
 @{
-    ViewData["Title"] = "All Procedures";
+    ViewData["Title"] = "Procedures";
 }
 
 <h2>Procedures</h2>
@@ -19,7 +19,6 @@
         </div>
     }
 </div>
-
 
 @if (this.User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 {

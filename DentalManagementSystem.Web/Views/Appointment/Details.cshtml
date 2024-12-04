@@ -2,6 +2,10 @@
 @using DentalManagementSystem.Web.ViewModels.Procedure
 @model AppointmentDetailsViewModel
 
+@{
+    ViewData["Title"] = "Appointment Details";
+}
+
 <h2>Appointment on @Model.AppointmentDate</h2>
 
 <p><strong>Patient Name:</strong> @Model.PatientName</p>
