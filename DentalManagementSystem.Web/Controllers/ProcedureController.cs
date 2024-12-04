@@ -1,6 +1,7 @@
 ﻿namespace DentalManagementSystem.Web.Controllers
 {
     using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,14 @@
     public class ProcedureController : Controller
     {
         private readonly IProcedureService procedureService;
+        private readonly IPatientService patientService;
+        private readonly IDentistService dentistService;
 
-        public ProcedureController(IProcedureService procedureService)
+        public ProcedureController(IProcedureService procedureService, IPatientService patientService, IDentistService dentistService)
         {
             this.procedureService = procedureService;
+            this.patientService = patientService;
+            this.dentistService = dentistService;
         }
 
         [HttpGet]
@@ -23,9 +28,24 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
+            string? userId = this.User.GetUserId();
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient || isDentist)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
             return this.View();
         }
 
@@ -33,6 +53,22 @@
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(AddProcedureFormModel model)
         {
+            string? userId = this.User.GetUserId();
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient || isDentist)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 return this.View(model);
