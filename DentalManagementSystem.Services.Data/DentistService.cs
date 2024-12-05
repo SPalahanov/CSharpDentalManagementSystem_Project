@@ -14,8 +14,6 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Patient;
-
     public class DentistService : BaseService, IDentistService
     {
         private readonly DentalManagementSystemDbContext dbContext;
@@ -30,6 +28,72 @@
             this.userManager = userManager;
             this.dbContext = dbContext;
             this.appointmentRepository = appointmentRepository;
+        }
+        public async Task<Guid> GetDentistIdByUserIdAsync(Guid userId)
+        {
+            Dentist? dentist = await this.dentistRepository
+                .GetAllAttached()
+                .Where(d => d.IsDeleted == false)
+                .FirstOrDefaultAsync(d => d.UserId == userId);
+
+            if (dentist == null)
+            {
+                return Guid.Empty;
+            }
+
+            return dentist.DentistId;
+        }
+
+        public async Task<IEnumerable<AllDentistIndexViewModel>> GetAllDentistsAsync()
+        {
+            IEnumerable<AllDentistIndexViewModel> allDentists = await this.dentistRepository
+                .GetAllAttached()
+                .Where(d => d.IsDeleted == false)
+                .Select(d => new AllDentistIndexViewModel()
+                {
+                    Id = d.DentistId.ToString(),
+                    Name = d.Name,
+                    PhoneNumber = d.PhoneNumber,
+                    Address = d.Address,
+                    Gender = d.Gender,
+                    Specialty = d.Specialty,
+                    LicenseNumber = d.LicenseNumber
+
+                })
+                .ToArrayAsync();
+
+            return allDentists;
+        }
+        public async Task<DentistDashboardViewModel> GetDentistDashboardAsync(Guid dentistId)
+        {
+            DateTime today = DateTime.Today;
+            DateTime tomorrow = today.AddDays(1);
+            DateTime monthStart = new DateTime(today.Year, today.Month, 1);
+
+            List<Appointment> todayAppointments = await this.appointmentRepository.GetAllAttached()
+                .Where(a => a.IsDeleted == false)
+                .Where(a => a.DentistId == dentistId && a.AppointmentDate >= today.Date && a.AppointmentDate < tomorrow.Date)
+                .Include(a => a.Patient)
+                .ToListAsync();
+
+            int monthlyPatientsCount = await this.appointmentRepository.GetAllAttached()
+                .Where(a => a.IsDeleted == false)
+                .Where(a => a.DentistId == dentistId && a.AppointmentDate >= monthStart && a.AppointmentDate < monthStart.AddMonths(1))
+                .Select(a => a.PatientId)
+                .Distinct()
+                .CountAsync();
+
+            return new DentistDashboardViewModel
+            {
+                TodayAppointments = todayAppointments.Select(a => new AppointmentViewModel
+                {
+                    PatientName = a.Patient.Name,
+                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
+                    AppointmentStatus = a.AppointmentStatus.ToString()
+                }).ToList(),
+                TodayAppointmentCount = todayAppointments.Count(),
+                MonthlyPatientCount = monthlyPatientsCount
+            };
         }
 
         public async Task CreateDentistAsync(string userId, BecomeDentistFormModel model)
@@ -47,52 +111,46 @@
 
             await this.dbContext.Dentists.AddAsync(dentist);
             await this.dbContext.SaveChangesAsync();
+
+            //await this.dentistRepository.AddAsync(dentist);
+            //return true;
         }
-
-
-
-        public async Task<bool> DentistExistsByLicenseNumberAsync(string phoneNumber)
+        public async Task<bool> CreateDentistFromUserAsync(string userId, AddDentistInputModel model)
         {
-            bool result = await this.dbContext
-                .Dentists
-                .AnyAsync(a => a.PhoneNumber == phoneNumber);
+            if (string.IsNullOrWhiteSpace(model.SelectedUserId) || !Guid.TryParse(model.SelectedUserId, out Guid selectedUserGuid))
+            {
+                return false;
+            }
 
-            return result;
-        }
-
-        public async Task<bool> DentistExistsByUserIdAsync(string userId)
-        {
-            bool result = await this.dbContext
-                .Dentists
-                .AnyAsync(a => a.UserId.ToString() == userId);
-
-            return result;
-        }
-
-        public async Task<IEnumerable<AllDentistIndexViewModel>> GetAllDentistsAsync()
-        {
-            IEnumerable<AllDentistIndexViewModel> allDentists = await this.dentistRepository
+            bool isAlreadyDentist = await this.dentistRepository
                 .GetAllAttached()
                 .Where(d => d.IsDeleted == false)
-                .Select(d => new AllDentistIndexViewModel()
-                {
-                    Id = p.DentistId.ToString(),
-                    Name = p.Name,
-                    PhoneNumber = p.PhoneNumber,
-                    Address = p.Address,
-                    Gender = p.Gender,
-                    Specialty = p.Specialty,
-                    LicenseNumber = p.LicenseNumber
+                .AnyAsync(d => d.UserId == selectedUserGuid);
 
-                })
-                .ToArrayAsync();
+            if (isAlreadyDentist)
+            {
+                return false;
+            }
 
-            return allDentists;
+            Dentist dentist = new Dentist
+            {
+                UserId = selectedUserGuid,
+                Name = model.Name,
+                PhoneNumber = model.PhoneNumber,
+                Address = model.Address,
+                Gender = model.Gender,
+                Specialty = model.Specialty,
+                LicenseNumber = model.LicenseNumber,
+            };
+
+            await this.dentistRepository.AddAsync(dentist);
+
+            return true;
         }
 
         public async Task<IEnumerable<UserEmailViewModel>> GetUserEmailsAsync()
         {
-            List<ApplicationUser> users = userManager.Users.ToList();
+            List<ApplicationUser> users = this.userManager.Users.ToList();
 
             List<UserEmailViewModel> userModel = new List<UserEmailViewModel>();
 
@@ -107,40 +165,6 @@
 
             return userModel;
         }
-
-        public async Task<bool> CreateDentistFromUserAsync(string userId, AddDentistInputModel model)
-        {
-            if (string.IsNullOrWhiteSpace(model.SelectedUserId) || !Guid.TryParse(model.SelectedUserId, out Guid selectedUserGuid))
-            {
-                return false;
-            }
-
-            bool isAlreadyDentist = await dentistRepository
-                .GetAllAttached()
-                .Where(d => d.IsDeleted == false)
-                .AnyAsync(d => d.UserId == selectedUserGuid);
-
-            if (isAlreadyDentist)
-            {
-                return false;
-            }
-
-            var dentist = new Dentist
-            {
-                UserId = selectedUserGuid,
-                Name = model.Name,
-                PhoneNumber = model.PhoneNumber,
-                Address = model.Address,
-                Gender = model.Gender,
-                Specialty = model.Specialty,
-                LicenseNumber = model.LicenseNumber,
-            };
-
-            await dentistRepository.AddAsync(dentist);
-
-            return true;
-        }
-
         public async Task<bool> IsUserDentist(string userId)
         {
             if (String.IsNullOrWhiteSpace(userId))
@@ -152,6 +176,23 @@
                 .GetAllAttached()
                 .Where(d => d.IsDeleted == false)
                 .AnyAsync(d => d.UserId.ToString().ToLower() == userId);
+
+            return result;
+        }
+
+        public async Task<bool> DentistExistsByLicenseNumberAsync(string phoneNumber)
+        {
+            bool result = await this.dentistRepository
+                .GetAllAttached()
+                .AnyAsync(a => a.PhoneNumber == phoneNumber);
+
+            return result;
+        }
+        public async Task<bool> DentistExistsByUserIdAsync(string userId)
+        {
+            bool result = await this.dentistRepository
+                .GetAllAttached()
+                .AnyAsync(a => a.UserId.ToString() == userId);
 
             return result;
         }
@@ -200,7 +241,6 @@
 
             return dentistModel;
         }
-
         public async Task<bool> EditDentistAsync(EditDentistFormModel model)
         {
             Dentist dentistEntity = await this.dentistRepository
@@ -216,50 +256,6 @@
             bool result = await this.dentistRepository.UpdateAsync(dentistEntity);
 
             return result;
-        }
-
-        public async Task<DentistDashboardViewModel> GetDentistDashboardAsync(Guid dentistId)
-        {
-            DateTime today = DateTime.Today;
-            DateTime tomorrow = today.AddDays(1);
-            DateTime monthStart = new DateTime(today.Year, today.Month, 1);
-
-            List<Appointment> todayAppointments = await appointmentRepository.GetAllAttached()
-                .Where(a => a.DentistId == dentistId && a.AppointmentDate >= today.Date && a.AppointmentDate < tomorrow.Date)
-                .Include(a => a.Patient)
-                .ToListAsync();
-
-            int monthlyPatientsCount = await appointmentRepository.GetAllAttached()
-                .Where(a => a.DentistId == dentistId && a.AppointmentDate >= monthStart && a.AppointmentDate < monthStart.AddMonths(1))
-                .Select(a => a.PatientId)
-                .Distinct()
-                .CountAsync();
-
-            return new DentistDashboardViewModel
-            {
-                TodayAppointments = todayAppointments.Select(a => new AppointmentViewModel
-                {
-                    PatientName = a.Patient.Name,
-                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
-                    AppointmentStatus = a.AppointmentStatus.ToString()
-                }).ToList(),
-                TodayAppointmentCount = todayAppointments.Count(),
-                MonthlyPatientCount = monthlyPatientsCount
-            }; 
-        }
-
-        public async Task<Guid> GetDentistIdByUserIdAsync(Guid userId)
-        {
-            Dentist? dentist = await dentistRepository
-                .GetAllAttached()
-                .FirstOrDefaultAsync(d => d.UserId == userId);
-
-            if (dentist == null)
-            {
-                return Guid.Empty;
-            }
-
-            return dentist.DentistId;
         }
 
         public async Task<DeleteDentistViewModel?> GetDentistForDeleteByIdAsync(Guid id)
@@ -281,11 +277,10 @@
 
             return dentistModel;
         }
-
         public async Task<bool> SoftDeleteDentistAsync(Guid id)
         {
             Dentist dentistToDelete = await this.dentistRepository
-                .FirstOrDefaultAsync(p => p.DentistId.ToString().ToLower() == id.ToString().ToLower());
+                .FirstOrDefaultAsync(d => d.DentistId.ToString().ToLower() == id.ToString().ToLower());
 
             if (dentistToDelete == null)
             {

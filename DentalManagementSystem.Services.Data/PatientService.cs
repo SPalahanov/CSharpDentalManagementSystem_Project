@@ -28,33 +28,18 @@
             this.appointmentRepository = appointmentRepository;
             this.userManager = userManager;
         }
-
-        public async Task<bool> CreatePatientAsync(string userId, BecomePatientFormModel model)
+        public async Task<Guid> GetPatientIdByUserIdAsync(Guid userId)
         {
-            bool isDateOfBirth = DateTime
-                .TryParseExact(model.DateOfBirth, DateOfBirthFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
-                    out DateTime dateOfBirth);
+            Patient? patient = await this.patientRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(p => p.UserId == userId);
 
-            if (!isDateOfBirth)
+            if (patient == null)
             {
-                return false;
+                return Guid.Empty;
             }
 
-            Patient patient = new Patient()
-            {
-                UserId = Guid.Parse(userId),
-                Name = model.Name,
-                PhoneNumber = model.PhoneNumber,
-                Address = model.Address,
-                Gender = model.Gender,
-                DateOfBirth = dateOfBirth,
-                Allergies = model.Allergies,
-                InsuranceNumber = model.InsuranceNumber,
-                EmergencyContact = model.EmergencyContact,
-            };
-
-            await this.patientRepository.AddAsync(patient);
-            return true;
+            return patient.PatientId;
         }
 
         public async Task<IEnumerable<AllPatientsIndexViewModel>> GetAllPatientsAsync()
@@ -67,52 +52,40 @@
                     Id = p.PatientId.ToString(),
                     Name = p.Name,
                     Gender = p.Gender
-
                 })
                 .ToArrayAsync();
 
             return allPatients;
         }
-
-        public async Task<bool> IsUserPatient(string userId)
+        public async Task<IEnumerable<AppointmentDetailsViewModel>> GetPatientDashboardAsync(Guid patientId)
         {
-            if (String.IsNullOrWhiteSpace(userId))
-            {
-                return false;
-            }
+            DateTime today = DateTime.Today;
 
-            bool result = await this.patientRepository
+            IEnumerable<AppointmentDetailsViewModel> appointments = await this.appointmentRepository
                 .GetAllAttached()
                 .Where(a => a.PatientId == patientId)
-
-            return result;
-        }
-
-        public async Task<bool> PatientExistsByUserIdAsync(string userId)
-        {
-            bool result = await this.patientRepository
-                .GetAllAttached()
-                .AnyAsync(a => a.UserId.ToString() == userId);
-
-                        .Where(ap => !ap.IsDeleted)
-        }
-
-        public async Task<IEnumerable<UserEmailViewModel>> GetUserEmailsAsync()
-        {
-            var users = userManager.Users.ToList();
-
-            var userEmailViewModels = new List<UserEmailViewModel>();
-
-            foreach (var user in users)
-            {
-                userEmailViewModels.Add(new UserEmailViewModel
+                .Include(a => a.Dentist)
+                .Include(a => a.AppointmentProcedures)
+                .ThenInclude(ap => ap.Procedure)
+                .Where(a => a.AppointmentDate < today.Date)
+                .OrderBy(a => a.AppointmentDate)
+                .Select(a => new AppointmentDetailsViewModel
                 {
-                    Id = user.Id.ToString(),
-                    Email = user.Email
-                });
-            }
+                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
+                    DentistName = a.Dentist.Name,
+                    AppointmentStatus = a.AppointmentStatus.ToString(),
+                    Procedures = a.AppointmentProcedures
+                        .Where(ap => !ap.IsDeleted)
+                        .Select(ap => new AppointmentProcedureViewModel
+                        {
+                            Name = ap.Procedure.Name,
+                            Price = ap.Procedure.Price,
+                            Description = ap.Procedure.Description
+                        }).ToList()
+                })
+                .ToListAsync();
 
-            return userEmailViewModels;
+            return appointments;
         }
 
         public async Task<bool> CreatePatientFromUserAsync(string userId, AddPatientInputModel model)
@@ -122,7 +95,7 @@
                 return false;
             }
 
-            bool isAlreadyPatient = await patientRepository
+            bool isAlreadyPatient = await this.patientRepository
                 .GetAllAttached()
                 .Where(p => p.IsDeleted == false)
                 .AnyAsync(p => p.UserId == selectedUserGuid);
@@ -154,9 +127,77 @@
                 EmergencyContact = model.EmergencyContact,
             };
 
-            await patientRepository.AddAsync(patient);
+            await this.patientRepository.AddAsync(patient);
 
             return true;
+        }
+        public async Task<bool> CreatePatientAsync(string userId, BecomePatientFormModel model)
+        {
+            bool isDateOfBirth = DateTime
+                .TryParseExact(model.DateOfBirth, DateOfBirthFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                    out DateTime dateOfBirth);
+
+            if (!isDateOfBirth)
+            {
+                return false;
+            }
+
+            Patient patient = new Patient()
+            {
+                UserId = Guid.Parse(userId),
+                Name = model.Name,
+                PhoneNumber = model.PhoneNumber,
+                Address = model.Address,
+                Gender = model.Gender,
+                DateOfBirth = dateOfBirth,
+                Allergies = model.Allergies,
+                InsuranceNumber = model.InsuranceNumber,
+                EmergencyContact = model.EmergencyContact,
+            };
+
+            await this.patientRepository.AddAsync(patient);
+            return true;
+        }
+
+        public async Task<IEnumerable<UserEmailViewModel>> GetUserEmailsAsync()
+        {
+            var users = this.userManager.Users.ToList();
+
+            var userEmailViewModels = new List<UserEmailViewModel>();
+
+            foreach (var user in users)
+            {
+                userEmailViewModels.Add(new UserEmailViewModel
+                {
+                    Id = user.Id.ToString(),
+                    Email = user.Email
+                });
+            }
+
+            return userEmailViewModels;
+        }
+        public async Task<bool> IsUserPatient(string userId)
+        {
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                return false;
+            }
+
+            bool result = await this.patientRepository
+                .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
+                .AnyAsync(p => p.UserId.ToString().ToLower() == userId);
+
+            return result;
+        }
+
+        public async Task<bool> PatientExistsByUserIdAsync(string userId)
+        {
+            bool result = await this.patientRepository
+                .GetAllAttached()
+                .AnyAsync(p => p.UserId.ToString() == userId);
+
+            return result;
         }
 
         public async Task<PatientDetailsViewModel?> GetPatientDetailsByIdAsync(Guid id)
@@ -164,6 +205,7 @@
             Patient? patient = await this.patientRepository
                 .GetAllAttached()
                 .Where(p => p.IsDeleted == false)
+                .FirstOrDefaultAsync(p => p.PatientId == id);
 
             PatientDetailsViewModel? viewModel = null;
 
@@ -206,7 +248,6 @@
 
             return patientModel;
         }
-
         public async Task<bool> EditPatientAsync(EditPatientFormModel model)
         {
             bool isDateOfBirth = DateTime
@@ -235,51 +276,6 @@
             return result;
         }
 
-        public async Task<IEnumerable<AppointmentDetailsViewModel>> GetPatientDashboardAsync(Guid patientId)
-        {
-            DateTime today = DateTime.Today;
-
-            IEnumerable<AppointmentDetailsViewModel> appointments = await this.appointmentRepository
-                .GetAllAttached()
-                .Where(a => a.PatientId == patientId)
-                .Include(a => a.Dentist)
-                .Include(a => a.AppointmentProcedures)
-                .ThenInclude(ap => ap.Procedure)
-                .Where(a => a.AppointmentDate < today.Date)
-                .OrderBy(a => a.AppointmentDate)
-                .Select(a => new AppointmentDetailsViewModel
-                {
-                    AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
-                    DentistName = a.Dentist.Name,
-                    AppointmentStatus = a.AppointmentStatus.ToString(),
-                    Procedures = a.AppointmentProcedures
-                        .Where(ap => !ap.IsDeleted)
-                        .Select(ap => new AppointmentProcedureViewModel
-                        {
-                            Name = ap.Procedure.Name,
-                            Price = ap.Procedure.Price,
-                            Description = ap.Procedure.Description
-                        }).ToList()
-                })
-                .ToListAsync();
-
-            return appointments;
-        }
-
-        public async Task<Guid> GetPatientIdByUserIdAsync(Guid userId)
-        {
-            Patient? patient = await patientRepository
-                .GetAllAttached()
-                .FirstOrDefaultAsync(d => d.UserId == userId);
-
-            if (patient == null)
-            {
-                return Guid.Empty;
-            }
-
-            return patient.PatientId;
-        }
-
         public async Task<DeletePatientViewModel?> GetPatientForDeleteByIdAsync(Guid id)
         {
             DeletePatientViewModel? patientToDelete = await this.patientRepository
@@ -301,7 +297,6 @@
 
             return patientToDelete;
         }
-
         public async Task<bool> SoftDeletePatientAsync(Guid id)
         {
             Patient patientToDelete = await this.patientRepository

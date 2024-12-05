@@ -3,7 +3,6 @@
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
-    using DentalManagementSystem.Web.ViewModels.Patient;
     using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
@@ -17,7 +16,30 @@
         {
             this.procedureRepository = procedureRepository;
         }
+        public async Task<bool> ProcedureExistsAsync(int id)
+        {
+            bool result = await this.procedureRepository
+                .GetAllAttached()
                 .Where(p => p.IsDeleted == false)
+                .AnyAsync(p => p.ProcedureId == id);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<ProcedureIndexViewModel>> IndexGetAllAsync()
+        {
+            IEnumerable<ProcedureIndexViewModel> procedures = await this.procedureRepository
+                .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
+                .Select(p => new ProcedureIndexViewModel
+                {
+                    Id = p.ProcedureId,
+                    Name = p.Name
+                })
+                .ToArrayAsync();
+
+            return procedures;
+        }
 
         public async Task AddProcedureAsync(AddProcedureFormModel model)
         {
@@ -37,7 +59,7 @@
                 .GetAllAttached()
                 .Where(p => p.IsDeleted == false)
                 .Include(p => p.AppointmentProcedures)
-                .ThenInclude(ap => ap.Appointment)
+                .ThenInclude(p => p.Appointment)
                 .FirstOrDefaultAsync(p => p.ProcedureId == id);
 
             ProcedureDetailsViewModel? viewModel = null;
@@ -53,29 +75,6 @@
             };
 
             return viewModel;
-        }
-
-        public async Task<IEnumerable<ProcedureIndexViewModel>> IndexGetAllAsync()
-        {
-            IEnumerable<ProcedureIndexViewModel> procedures = await this.procedureRepository
-                .GetAllAttached()
-                .Select(p => new ProcedureIndexViewModel
-                {
-                    Id = p.ProcedureId,
-                    Name = p.Name
-                })
-                .ToArrayAsync();
-
-            return procedures;
-        }
-
-        public async Task<bool> ProcedureExistsAsync(int id)
-        {
-            bool result = await this.procedureRepository
-                .GetAllAttached()
-                .AnyAsync(p => p.ProcedureId == id);
-
-            return result;
         }
 
         public async Task<DeleteProcedureViewModel?> GetProcedureForDeleteByIdAsync(int id)
@@ -94,7 +93,6 @@
 
             return procedureToDelete;
         }
-
         public async Task<bool> SoftDeleteProcedureAsync(int id)
         {
             Procedure procedureToDelete = await this.procedureRepository

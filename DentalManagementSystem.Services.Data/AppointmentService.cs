@@ -331,22 +331,21 @@
                 .Where(a => a.IsDeleted == false)
                 .Select(a => new DeleteAppointmentViewModel()
                 {
-                    Id = p.AppointmentId.ToString(),
-                    AppointmentDate = p.AppointmentDate,
-                    AppointmentStatus = p.AppointmentStatus,
-                    AppointmentTypeId = p.AppointmentTypeId,
-                    PatientId = p.PatientId,
-                    DentistId = p.DentistId,
+                    Id = a.AppointmentId.ToString(),
+                    AppointmentDate = a.AppointmentDate,
+                    AppointmentStatus = a.AppointmentStatus,
+                    AppointmentTypeId = a.AppointmentTypeId,
+                    PatientId = a.PatientId,
+                    DentistId = a.DentistId,
                 })
                 .FirstOrDefaultAsync(p => p.Id.ToLower() == id.ToString().ToLower());
 
             return patientToDelete;
         }
-
         public async Task<bool> SoftDeleteAppointmentAsync(Guid id)
         {
             Appointment appointmentToDelete = await this.appointmentRepository
-                .FirstOrDefaultAsync(p => p.AppointmentId.ToString().ToLower() == id.ToString().ToLower());
+                .FirstOrDefaultAsync(a => a.AppointmentId.ToString().ToLower() == id.ToString().ToLower());
 
             if (appointmentRepository == null)
             {
