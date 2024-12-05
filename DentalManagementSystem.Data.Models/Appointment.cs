@@ -26,6 +26,9 @@
         public virtual AppointmentType AppointmentType { get; set; } = null!;
 
         [Required]
+        public bool IsDeleted { get; set; }
+
+        [Required]
         public Guid PatientId { get; set; }
         public virtual Patient Patient { get; set; } = null!;
 

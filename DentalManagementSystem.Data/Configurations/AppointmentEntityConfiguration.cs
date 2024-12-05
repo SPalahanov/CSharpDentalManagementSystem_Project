@@ -31,6 +31,11 @@
                 .HasForeignKey(p => p.DentistId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder
+                .Property(a => a.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false);
+
             builder.HasData(GenerateAppointment());
         }
 

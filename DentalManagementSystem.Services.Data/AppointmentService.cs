@@ -7,7 +7,6 @@
     using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.SqlServer.Server;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -310,6 +309,42 @@
             }
 
             await this.appointmentRepository.UpdateAsync(appointment);
+
+            return true;
+        }
+
+        public async Task<DeleteAppointmentViewModel?> GetAppointmentForDeleteByIdAsync(Guid id)
+        {
+            DeleteAppointmentViewModel? patientToDelete = await this.appointmentRepository
+                .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
+                .Select(p => new DeleteAppointmentViewModel()
+                {
+                    Id = p.AppointmentId.ToString(),
+                    AppointmentDate = p.AppointmentDate,
+                    AppointmentStatus = p.AppointmentStatus,
+                    AppointmentTypeId = p.AppointmentTypeId,
+                    PatientId = p.PatientId,
+                    DentistId = p.DentistId,
+                })
+                .FirstOrDefaultAsync(p => p.Id.ToLower() == id.ToString().ToLower());
+
+            return patientToDelete;
+        }
+
+        public async Task<bool> SoftDeleteAppointmentAsync(Guid id)
+        {
+            Appointment appointmentToDelete = await this.appointmentRepository
+                .FirstOrDefaultAsync(p => p.AppointmentId.ToString().ToLower() == id.ToString().ToLower());
+
+            if (appointmentRepository == null)
+            {
+                return false;
+            }
+
+            appointmentToDelete.IsDeleted = true;
+
+            await this.appointmentRepository.UpdateAsync(appointmentToDelete);
 
             return true;
         }

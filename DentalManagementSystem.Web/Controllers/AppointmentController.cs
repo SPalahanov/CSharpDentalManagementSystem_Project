@@ -1,6 +1,5 @@
 ﻿namespace DentalManagementSystem.Web.Controllers
 {
-    using DentalManagementSystem.Services.Data;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Appointment;
@@ -57,7 +56,7 @@
                 return this.View(appointments);
             }
 
-            if(!isPatient && !isDentist && !isAdmin)
+            if (!isPatient && !isDentist && !isAdmin)
             {
                 return this.RedirectToAction("Index", "Home");
             }
@@ -259,6 +258,11 @@
 
             bool isIdValid = this.IsGuidValid(id, ref appointmentGuid);
 
+            if (!isIdValid)
+            {
+                return this.RedirectToAction("Index", "Appointment");
+            }
+
             string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
@@ -280,12 +284,49 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            if (!isIdValid)
+            DeleteAppointmentViewModel? appointmentToDeleteViewModel = await this.appointmentService.GetAppointmentForDeleteByIdAsync(appointmentGuid);
+
+            return this.View(appointmentToDeleteViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SoftDeleteConfirmed(DeleteAppointmentViewModel appointment)
+        {
+            Guid appointmentGuid = Guid.Empty;
+
+            if (!this.IsGuidValid(appointment.Id, ref appointmentGuid))
             {
                 return this.RedirectToAction("Index", "Appointment");
             }
 
-            //TODO: Implementing Delete..........
+            string? userId = this.User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient)
+            {
+                return this.RedirectToAction("Index", "Appointment");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            bool isDeleted = await this.appointmentService.SoftDeleteAppointmentAsync(appointmentGuid);
+
+            if (!isDeleted)
+            {
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to delete the appointment! Please contact system administrator!";
+                return this.RedirectToAction(nameof(Delete), new { id = appointment.Id });
+            }
 
             return this.RedirectToAction("Index", "Appointment");
         }

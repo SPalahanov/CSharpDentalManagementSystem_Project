@@ -22,6 +22,7 @@
         Task<EditAppointmentFormModel?> GetAppointmentForEditByIdAsync(Guid id);
         Task<bool> EditAppointmentAsync(EditAppointmentFormModel model);
 
-
+        Task<DeleteAppointmentViewModel?> GetAppointmentForDeleteByIdAsync(Guid id);
+        Task<bool> SoftDeleteAppointmentAsync(Guid id);
     }
 }

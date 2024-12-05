@@ -1,0 +1,24 @@
+﻿@using DentalManagementSystem.Web.ViewModels.Appointment
+@model DeleteAppointmentViewModel
+
+@{
+    ViewBag.Title = "Delete Appointment";
+}
+
+<h2>Delete Appointment</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<p>Are you sure you want to delete the appointment?</p>
+
+<form asp-action="SoftDeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Details" class="btn btn-secondary">Cancel</a>
+</form>
