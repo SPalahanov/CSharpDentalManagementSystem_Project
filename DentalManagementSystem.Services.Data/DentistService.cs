@@ -71,9 +71,10 @@
 
         public async Task<IEnumerable<AllDentistIndexViewModel>> GetAllDentistsAsync()
         {
-            IEnumerable<AllDentistIndexViewModel> allDentists = await this.dbContext
-                .Dentists
-                .Select(p => new AllDentistIndexViewModel()
+            IEnumerable<AllDentistIndexViewModel> allDentists = await this.dentistRepository
+                .GetAllAttached()
+                .Where(d => d.IsDeleted == false)
+                .Select(d => new AllDentistIndexViewModel()
                 {
                     Id = p.DentistId.ToString(),
                     Name = p.Name,
@@ -116,7 +117,8 @@
 
             bool isAlreadyDentist = await dentistRepository
                 .GetAllAttached()
-                .AnyAsync(p => p.UserId == selectedUserGuid);
+                .Where(d => d.IsDeleted == false)
+                .AnyAsync(d => d.UserId == selectedUserGuid);
 
             if (isAlreadyDentist)
             {
@@ -148,6 +150,7 @@
 
             bool result = await this.dentistRepository
                 .GetAllAttached()
+                .Where(d => d.IsDeleted == false)
                 .AnyAsync(d => d.UserId.ToString().ToLower() == userId);
 
             return result;
@@ -157,6 +160,7 @@
         {
             Dentist? dentist = await this.dentistRepository
                 .GetAllAttached()
+                .Where(d => d.IsDeleted == false)
                 .FirstOrDefaultAsync(d => d.DentistId == id);
 
             DentistDetailsViewModel? viewModel = null;
@@ -181,6 +185,7 @@
         {
             EditDentistFormModel? dentistModel = await this.dentistRepository
                 .GetAllAttached()
+                .Where(d => d.IsDeleted == false)
                 .Select(d => new EditDentistFormModel()
                 {
                     Id = d.DentistId.ToString(),
@@ -261,6 +266,7 @@
         {
             DeleteDentistViewModel? dentistModel = await this.dentistRepository
                 .GetAllAttached()
+                .Where(d => d.IsDeleted == false)
                 .Select(d => new DeleteDentistViewModel()
                 {
                     Id = d.DentistId.ToString(),

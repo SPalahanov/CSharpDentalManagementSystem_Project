@@ -61,6 +61,7 @@
         {
             IEnumerable<AllPatientsIndexViewModel> allPatients = await this.patientRepository
                 .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
                 .Select(p => new AllPatientsIndexViewModel()
                 {
                     Id = p.PatientId.ToString(),
@@ -82,7 +83,7 @@
 
             bool result = await this.patientRepository
                 .GetAllAttached()
-                .AnyAsync(p => p.UserId.ToString().ToLower() == userId);
+                .Where(a => a.PatientId == patientId)
 
             return result;
         }
@@ -93,7 +94,7 @@
                 .GetAllAttached()
                 .AnyAsync(a => a.UserId.ToString() == userId);
 
-            return result;
+                        .Where(ap => !ap.IsDeleted)
         }
 
         public async Task<IEnumerable<UserEmailViewModel>> GetUserEmailsAsync()
@@ -123,6 +124,7 @@
 
             bool isAlreadyPatient = await patientRepository
                 .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
                 .AnyAsync(p => p.UserId == selectedUserGuid);
 
             if (isAlreadyPatient)
@@ -161,7 +163,7 @@
         {
             Patient? patient = await this.patientRepository
                 .GetAllAttached()
-                .FirstOrDefaultAsync(d => d.PatientId == id);
+                .Where(p => p.IsDeleted == false)
 
             PatientDetailsViewModel? viewModel = null;
 
@@ -187,6 +189,7 @@
         {
             EditPatientFormModel? patientModel = await this.patientRepository
                 .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
                 .Select(p => new EditPatientFormModel()
                 {
                     Id = p.PatientId.ToString(),

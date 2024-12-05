@@ -17,6 +17,7 @@
         {
             this.procedureRepository = procedureRepository;
         }
+                .Where(p => p.IsDeleted == false)
 
         public async Task AddProcedureAsync(AddProcedureFormModel model)
         {
@@ -34,6 +35,7 @@
         {
             Procedure? procedure = await this.procedureRepository
                 .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
                 .Include(p => p.AppointmentProcedures)
                 .ThenInclude(ap => ap.Appointment)
                 .FirstOrDefaultAsync(p => p.ProcedureId == id);

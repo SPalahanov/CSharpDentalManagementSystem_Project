@@ -38,6 +38,7 @@
         {
             IEnumerable<AllAppointmentsIndexViewModel> appointments = await this.appointmentRepository
                 .GetAllAttached()
+                .Where(a => a.IsDeleted == false)
                 .OrderBy(a => a.AppointmentDate.ToString())
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
@@ -58,6 +59,7 @@
                 .GetAllAttached()
                 .Where(a => a.PatientId == patientId)
                 .Where(a => a.AppointmentDate >= today.Date)
+                .Where(a => a.IsDeleted == false)
                 .OrderBy(a => a.AppointmentDate)
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
@@ -75,6 +77,7 @@
             IEnumerable<AllAppointmentsIndexViewModel> appointments = await this.appointmentRepository
                 .GetAllAttached()
                 .Where(a => a.DentistId == dentistId)
+                .Where(a => a.IsDeleted == false)
                 .OrderByDescending(a => a.AppointmentDate)
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
@@ -114,7 +117,9 @@
         public async Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProceduresAsync()
         {
             IEnumerable<Procedure> procedures = await this.procedureRepository
-                .GetAllAsync();
+                .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
+                .ToListAsync();
 
             List<ProcedureAppointmentViewModel> procedureViewModels = procedures
                 .Select(p => new ProcedureAppointmentViewModel
@@ -139,6 +144,7 @@
 
             List<Procedure> selectedProcedures = await this.procedureRepository
                 .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
                 .Where(p => model.SelectedProcedureIds.Contains(p.ProcedureId))
                 .ToListAsync();
 
@@ -159,6 +165,7 @@
         {
             Appointment? appointment = await this.appointmentRepository
                 .GetAllAttached()
+                .Where(a => a.IsDeleted == false)
                 .Include(a => a.Patient)
                 .Include(a => a.Dentist)
                 .Include(a => a.AppointmentProcedures)
@@ -194,6 +201,7 @@
         {
             EditAppointmentFormModel? appointmentModel = await this.appointmentRepository
                 .GetAllAttached()
+                .Where(a => a.IsDeleted == false)
                 .Include(a => a.Patient)
                 .Include(a => a.Dentist)
                 .Include(a => a.AppointmentProcedures)
@@ -215,6 +223,7 @@
         {
             IEnumerable<PatientAppointmentViewModel> patientModel = await this.patientRepository
                 .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
                 .Select(p => new PatientAppointmentViewModel { Id = p.PatientId, Name = p.Name })
                 .ToListAsync();
 
@@ -224,6 +233,7 @@
         {
             IEnumerable<DentistAppointmentViewModel> dentistModel = await this.dentistRepository
                 .GetAllAttached()
+                .Where(d => d.IsDeleted == false)
                 .Select(d => new DentistAppointmentViewModel { Id = d.DentistId, Name = d.Name })
                 .ToListAsync();
 
@@ -242,6 +252,7 @@
         {
             IEnumerable<ProcedureAppointmentViewModel> procedureEntity =  await this.procedureRepository
                 .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
                 .Select(p => new ProcedureAppointmentViewModel { Id = p.ProcedureId, Name = p.Name })
                 .ToListAsync();
 
@@ -317,8 +328,8 @@
         {
             DeleteAppointmentViewModel? patientToDelete = await this.appointmentRepository
                 .GetAllAttached()
-                .Where(p => p.IsDeleted == false)
-                .Select(p => new DeleteAppointmentViewModel()
+                .Where(a => a.IsDeleted == false)
+                .Select(a => new DeleteAppointmentViewModel()
                 {
                     Id = p.AppointmentId.ToString(),
                     AppointmentDate = p.AppointmentDate,
