@@ -28,4 +28,5 @@
 @if (this.User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 {
     <a asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-warning mt-3">Edit</a>
+    <a asp-action="Delete" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-danger mt-3">Delete</a>
 }

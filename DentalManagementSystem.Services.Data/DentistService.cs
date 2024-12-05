@@ -256,5 +256,41 @@
 
             return dentist.DentistId;
         }
+
+        public async Task<DeleteDentistViewModel?> GetDentistForDeleteByIdAsync(Guid id)
+        {
+            DeleteDentistViewModel? dentistModel = await this.dentistRepository
+                .GetAllAttached()
+                .Select(d => new DeleteDentistViewModel()
+                {
+                    Id = d.DentistId.ToString(),
+                    Name = d.Name,
+                    PhoneNumber = d.PhoneNumber,
+                    Address = d.Address,
+                    Gender = d.Gender,
+                    Specialty = d.Specialty,
+                    LicenseNumber = d.LicenseNumber,
+                })
+                .FirstOrDefaultAsync(d => d.Id.ToLower() == id.ToString().ToLower());
+
+            return dentistModel;
+        }
+
+        public async Task<bool> SoftDeleteDentistAsync(Guid id)
+        {
+            Dentist dentistToDelete = await this.dentistRepository
+                .FirstOrDefaultAsync(p => p.DentistId.ToString().ToLower() == id.ToString().ToLower());
+
+            if (dentistToDelete == null)
+            {
+                return false;
+            }
+
+            dentistToDelete.IsDeleted = true;
+
+            await this.dentistRepository.UpdateAsync(dentistToDelete);
+
+            return true;
+        }
     }
 }

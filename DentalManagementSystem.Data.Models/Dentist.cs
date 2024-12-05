@@ -38,6 +38,9 @@
         [MaxLength(LicenseNumberMaxLength)]
         public string LicenseNumber { get; set; } = null!;
 
+        [Required]
+        public bool IsDeleted { get; set; }
+
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
 

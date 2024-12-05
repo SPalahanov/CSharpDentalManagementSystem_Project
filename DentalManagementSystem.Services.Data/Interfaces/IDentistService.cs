@@ -29,5 +29,8 @@
         Task<EditDentistFormModel?> GetDentistForEditByIdAsync(Guid id);
 
         Task<bool> EditDentistAsync(EditDentistFormModel model);
+
+        Task<DeleteDentistViewModel?> GetDentistForDeleteByIdAsync(Guid id);
+        Task<bool> SoftDeleteDentistAsync(Guid id);
     }
 }

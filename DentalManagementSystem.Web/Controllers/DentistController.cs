@@ -201,6 +201,11 @@
 
             bool isIdValid = this.IsGuidValid(id, ref dentistGuid);
 
+            if (!isIdValid)
+            {
+                return this.RedirectToAction("Index", "Dentist");
+            }
+
             string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
@@ -220,11 +225,6 @@
             if (!isPatient && !isDentist && !isAdmin)
             {
                 return this.RedirectToAction("Index", "Home");
-            }
-
-            if (!isIdValid)
-            {
-                return this.RedirectToAction("Index", "Dentist");
             }
 
             EditDentistFormModel? formModel = await this.dentistService.GetDentistForEditByIdAsync(dentistGuid);
@@ -253,5 +253,86 @@
             return this.RedirectToAction(nameof(Details), "Dentist", new { id = formModel.Id });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(string? id)
+        {
+            Guid dentistGuid = Guid.Empty;
+
+            bool isIdValid = this.IsGuidValid(id, ref dentistGuid);
+
+            if (!isIdValid)
+            {
+                return this.RedirectToAction("Index", "Dentist");
+            }
+
+            string? userId = this.User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.View("Index");
+            }
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient || isDentist)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            DeleteDentistViewModel? dentistToDeleteViewModel = await this.dentistService.GetDentistForDeleteByIdAsync(dentistGuid);
+
+            return this.View(dentistToDeleteViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SoftDeleteConfirmed(DeleteDentistViewModel dentist)
+        {
+            Guid dentistGuid = Guid.Empty;
+
+            bool isIdValid = this.IsGuidValid(dentist.Id, ref dentistGuid);
+
+            if (!this.IsGuidValid(dentist.Id, ref dentistGuid))
+            {
+                return this.RedirectToAction("Index", "Dentist");
+            }
+
+            string? userId = this.User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.View("Index");
+            }
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient || isDentist)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            bool isDeleted = await this.dentistService.SoftDeleteDentistAsync(dentistGuid);
+
+            if (!isDeleted)
+            {
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to delete the patient! Please contact system administrator!";
+                return this.RedirectToAction(nameof(Delete), new { id = dentist.Id });
+            }
+
+            return this.RedirectToAction("Index", "Dentist");
+        }
     }
 }
