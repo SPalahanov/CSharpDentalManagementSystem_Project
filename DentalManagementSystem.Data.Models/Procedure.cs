@@ -21,6 +21,9 @@
         [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; } = null!;
 
+        [Required]
+        public bool IsDeleted { get; set; }
+
         public virtual ICollection<AppointmentProcedure> AppointmentProcedures { get; set; } =
             new HashSet<AppointmentProcedure>();
 

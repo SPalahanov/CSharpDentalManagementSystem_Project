@@ -1,0 +1,24 @@
+﻿@using DentalManagementSystem.Web.ViewModels.Procedure
+@model DeleteProcedureViewModel
+
+@{
+    ViewBag.Title = "Delete Procedure";
+}
+
+<h2>Delete Procedure</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<p>Are you sure you want to delete the dentist: <strong>@Model.Name</strong>?</p>
+
+<form asp-action="SoftDeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Details" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-secondary">Cancel</a>
+</form>

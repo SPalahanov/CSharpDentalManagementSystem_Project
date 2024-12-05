@@ -3,6 +3,7 @@
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.ViewModels.Patient;
     using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
@@ -64,6 +65,49 @@
                 .ToArrayAsync();
 
             return procedures;
+        }
+
+        public async Task<bool> ProcedureExistsAsync(int id)
+        {
+            bool result = await this.procedureRepository
+                .GetAllAttached()
+                .AnyAsync(p => p.ProcedureId == id);
+
+            return result;
+        }
+
+        public async Task<DeleteProcedureViewModel?> GetProcedureForDeleteByIdAsync(int id)
+        {
+            DeleteProcedureViewModel? procedureToDelete = await this.procedureRepository
+                .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
+                .Select(p => new DeleteProcedureViewModel()
+                {
+                    Id = p.ProcedureId,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Description = p.Description,
+                })
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            return procedureToDelete;
+        }
+
+        public async Task<bool> SoftDeleteProcedureAsync(int id)
+        {
+            Procedure procedureToDelete = await this.procedureRepository
+                .FirstOrDefaultAsync(p => p.ProcedureId == id);
+
+            if (procedureToDelete == null)
+            {
+                return false;
+            }
+
+            procedureToDelete.IsDeleted = true;
+
+            await this.procedureRepository.UpdateAsync(procedureToDelete);
+
+            return true;
         }
     }
 }

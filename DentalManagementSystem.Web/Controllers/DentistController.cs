@@ -328,7 +328,8 @@
 
             if (!isDeleted)
             {
-                TempData["ErrorMessage"] = "Unexpected error occurred while trying to delete the patient! Please contact system administrator!";
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to delete the dentist! Please contact system administrator!";
+
                 return this.RedirectToAction(nameof(Delete), new { id = dentist.Id });
             }
 

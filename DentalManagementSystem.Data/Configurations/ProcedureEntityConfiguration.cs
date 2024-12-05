@@ -13,6 +13,11 @@
     {
         public void Configure(EntityTypeBuilder<Procedure> builder)
         {
+            builder
+                .Property(c => c.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false);
+
             builder.HasData(GenerateProcedure());
         }
 

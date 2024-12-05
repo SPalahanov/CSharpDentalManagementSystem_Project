@@ -96,5 +96,80 @@
 
             return this.View(viewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            bool isIdExists = await this.procedureService.ProcedureExistsAsync(id);
+
+            if (!isIdExists)
+            {
+                return this.RedirectToAction("Index", "Procedure");
+            }
+
+            string? userId = this.User.GetUserId();
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient || isDentist)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            DeleteProcedureViewModel? procedureToDeleteViewModel = await this.procedureService.GetProcedureForDeleteByIdAsync(id);
+
+            return this.View(procedureToDeleteViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SoftDeleteConfirmed(DeleteProcedureViewModel procedure)
+        {
+            if (procedure == null || procedure.Id <= 0)
+            {
+                return this.RedirectToAction("Index", "Procedure");
+            }
+
+            bool isIdExists = await this.procedureService.ProcedureExistsAsync(procedure.Id);
+
+            if (!isIdExists)
+            {
+                return this.RedirectToAction("Index", "Procedure");
+            }
+
+            string? userId = this.User.GetUserId();
+
+            bool isPatient = await this.patientService.PatientExistsByUserIdAsync(userId);
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (isPatient || isDentist)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            if (!isPatient && !isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            bool isDeleted = await this.procedureService.SoftDeleteProcedureAsync(procedure.Id);
+
+            if (!isDeleted)
+            {
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to delete the procedure! Please contact system administrator!";
+
+                return this.RedirectToAction(nameof(Delete), new { id = procedure.Id });
+            }
+
+            return this.RedirectToAction("Index", "Procedure");
+        }
     }
 }
