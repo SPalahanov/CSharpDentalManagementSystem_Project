@@ -27,5 +27,9 @@
         Task<EditPatientFormModel?> GetPatientForEditByIdAsync(Guid id);
 
         Task<bool> EditPatientAsync(EditPatientFormModel model);
+
+        Task<DeletePatientViewModel?> GetPatientForDeleteByIdAsync(Guid id);
+
+        Task<bool> SoftDeletePatientAsync(Guid id);
     }
 }

@@ -40,6 +40,9 @@
 
         public string? EmergencyContact { get; set; }
 
+        [Required]
+        public bool IsDeleted { get; set; }
+
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
 

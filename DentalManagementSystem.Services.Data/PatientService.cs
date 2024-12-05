@@ -277,5 +277,42 @@
             return patient.PatientId;
         }
 
+        public async Task<DeletePatientViewModel?> GetPatientForDeleteByIdAsync(Guid id)
+        {
+            DeletePatientViewModel? patientToDelete = await this.patientRepository
+                .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
+                .Select(p => new DeletePatientViewModel()
+                {
+                    Id = p.PatientId.ToString(),
+                    Name = p.Name,
+                    PhoneNumber = p.PhoneNumber,
+                    Address = p.Address,
+                    Gender = p.Gender,
+                    DateOfBirth = p.DateOfBirth.ToString(DateOfBirthFormat),
+                    Allergies = p.Allergies,
+                    InsuranceNumber = p.InsuranceNumber,
+                    EmergencyContact = p.EmergencyContact,
+                })
+                .FirstOrDefaultAsync(p => p.Id.ToLower() == id.ToString().ToLower());
+
+            return patientToDelete;
+        }
+
+        public async Task<bool> SoftDeletePatientAsync(Guid id)
+        {
+            Patient patientToDelete = await this.patientRepository
+                .FirstOrDefaultAsync(p => p.PatientId.ToString().ToLower() == id.ToString().ToLower());
+
+            if (patientToDelete == null)
+            {
+                return false;
+            }
+            patientToDelete.IsDeleted = true;
+
+            await this.patientRepository.UpdateAsync(patientToDelete);
+
+            return true;
+        }
     }
 }
