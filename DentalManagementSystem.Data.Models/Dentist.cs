@@ -47,9 +47,6 @@
         public virtual ICollection<Appointment> Appointments { get; set; } =
             new HashSet<Appointment>();
 
-        public virtual ICollection<Procedure> Procedures { get; set; } =
-            new HashSet<Procedure>();
-
         public virtual ICollection<Prescription> Prescriptions { get; set; } =
             new HashSet<Prescription>();
     }
