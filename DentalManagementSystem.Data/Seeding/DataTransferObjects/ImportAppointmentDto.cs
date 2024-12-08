@@ -21,7 +21,7 @@
         public string AppointmentDate { get; set; } = null!;
 
         [Required]
-        public AppointmentStatus AppointmentStatus { get; set; } 
+        public string AppointmentStatus { get; set; } = null!;
 
         [Required]
         public int AppointmentTypeId { get; set; }

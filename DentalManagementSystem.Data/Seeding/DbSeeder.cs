@@ -1,5 +1,6 @@
 ﻿namespace DentalManagementSystem.Data.Seeding
 {
+    using DentalManagementSystem.Common.Enums;
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Seeding.DataTransferObjects;
     using Microsoft.AspNetCore.Identity;
@@ -314,6 +315,11 @@
                         continue;
                     }
 
+                    if (!Enum.TryParse<AppointmentStatus>(appointmentDto.AppointmentStatus, true, out var status))
+                    {
+                        continue;
+                    }
+
                     if (allAppointments.Any(p => p.AppointmentId.ToString().ToLowerInvariant() == appointmentGuid.ToString().ToLowerInvariant()))
                     {
                         continue;
@@ -324,8 +330,8 @@
                         
                         AppointmentId = appointmentGuid,
                         AppointmentDate = appointmentDate,
-                        AppointmentStatus = appointmentDto.AppointmentStatus,
-                        AppointmentTypeId = int.Parse(appointmentDto.AppointmentId),
+                        AppointmentStatus = status,
+                        AppointmentTypeId = appointmentDto.AppointmentTypeId,
                         IsDeleted = appointmentDto.IsDeleted,
                         PatientId = patientGuid,
                         DentistId = dentistGuid,
