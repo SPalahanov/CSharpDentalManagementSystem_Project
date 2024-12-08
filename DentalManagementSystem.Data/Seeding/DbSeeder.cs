@@ -264,6 +264,84 @@
             }
         }
 
+        public static async Task SeedAppointmentsAsync(IServiceProvider services, string jsonPath)
+        {
+            await using DentalManagementSystemDbContext dbContext = services.GetRequiredService<DentalManagementSystemDbContext>();
+
+            ICollection<Appointment> allAppointments = await dbContext
+                .Appointments
+                .ToArrayAsync();
+
+            try
+            {
+                string jsonInput = await File.ReadAllTextAsync(jsonPath, Encoding.ASCII, CancellationToken.None);
+
+                ImportAppointmentDto[]? appointmentDtos = JsonConvert.DeserializeObject<ImportAppointmentDto[]>(jsonInput);
+
+                foreach (var appointmentDto in appointmentDtos)
+                {
+                    if (!IsValid(appointmentDto))
+                    {
+                        continue;
+                    }
+
+                    Guid appointmentGuid = Guid.Empty;
+
+                    if (!IsGuidValid(appointmentDto.AppointmentId, ref appointmentGuid))
+                    {
+                        continue;
+                    }
+
+                    Guid dentistGuid = Guid.Empty;
+
+                    if (!IsGuidValid(appointmentDto.DentistId, ref dentistGuid))
+                    {
+                        continue;
+                    }
+
+                    Guid patientGuid = Guid.Empty;
+
+                    if (!IsGuidValid(appointmentDto.PatientId, ref patientGuid))
+                    {
+                        continue;
+                    }
+
+                    bool isAppointmentDateValid = DateTime
+                        .TryParse(appointmentDto.AppointmentDate, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime appointmentDate);
+
+                    if (!isAppointmentDateValid)
+                    {
+                        continue;
+                    }
+
+                    if (allAppointments.Any(p => p.AppointmentId.ToString().ToLowerInvariant() == appointmentGuid.ToString().ToLowerInvariant()))
+                    {
+                        continue;
+                    }
+
+                    Appointment appointment = new Appointment
+                    {
+                        
+                        AppointmentId = appointmentGuid,
+                        AppointmentDate = appointmentDate,
+                        AppointmentStatus = appointmentDto.AppointmentStatus,
+                        AppointmentTypeId = int.Parse(appointmentDto.AppointmentId),
+                        IsDeleted = appointmentDto.IsDeleted,
+                        PatientId = patientGuid,
+                        DentistId = dentistGuid,
+                    };
+
+                    await dbContext.Appointments.AddAsync(appointment);
+                }
+
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error occurred while seeding the appointments in the database!");
+            }
+        }
+
         private static bool IsValid(object obj)
         {
             List<ValidationResult> validationResults = new List<ValidationResult>();
