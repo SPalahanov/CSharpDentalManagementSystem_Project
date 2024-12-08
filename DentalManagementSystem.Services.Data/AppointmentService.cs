@@ -139,7 +139,7 @@
                 AppointmentTypeId = model.AppointmentTypeId,
                 PatientId = model.PatientId,
                 DentistId = model.DentistId,
-                AppointmentStatus = AppointmentStatus.Schedule
+                AppointmentStatus = AppointmentStatus.Scheduled
             };
 
             List<Procedure> selectedProcedures = await this.procedureRepository

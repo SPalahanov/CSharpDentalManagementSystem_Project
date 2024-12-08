@@ -48,7 +48,7 @@
             appointment = new Appointment()
             {
                 AppointmentDate = DateTime.UtcNow,
-                AppointmentStatus = Common.Enums.AppointmentStatus.Schedule,
+                AppointmentStatus = Common.Enums.AppointmentStatus.Scheduled,
                 AppointmentTypeId = 1,
                 PatientId = Guid.Parse("D6C3BEDB-81E7-4315-8E55-841B06BDD51F"),
                 DentistId = Guid.Parse("FFA779BE-A8D5-4662-95F2-D5771AE8A22A"),
