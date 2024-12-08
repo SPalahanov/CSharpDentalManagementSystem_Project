@@ -2,6 +2,7 @@
 {
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Seeding.DataTransferObjects;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
@@ -55,6 +56,52 @@
             catch (Exception)
             {
                 Console.WriteLine("Error occurred while seeding the procedures in the database!");
+            }
+        }
+
+        public static async Task SeedUsersAsync(IServiceProvider services, string jsonPath)
+        {
+            UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+            try
+            {
+                string jsonInput = await File.ReadAllTextAsync(jsonPath, Encoding.UTF8);
+
+                ImportUserDto[] userDtos = JsonConvert.DeserializeObject<ImportUserDto[]>(jsonInput);
+
+                foreach (var userDto in userDtos)
+                {
+                    if (!IsValid(userDto))
+                    {
+                        continue;
+                    }
+
+                    Guid userGuid = Guid.Empty;
+
+                    if (!IsGuidValid(userDto.Id, ref userGuid))
+                    {
+                        continue;
+                    }
+                    
+                    if (await userManager.FindByEmailAsync(userDto.Email) != null)
+                    {
+                        continue;
+                    }
+
+                    ApplicationUser user = new ApplicationUser
+                    {
+                        Id = userGuid,
+                        UserName = userDto.Username,
+                        Email = userDto.Email,
+                        EmailConfirmed = true
+                    };
+
+                    IdentityResult result = await userManager.CreateAsync(user, userDto.Password);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error occurred while seeding the users in the database!");
             }
         }
 

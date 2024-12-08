@@ -22,7 +22,8 @@ namespace DentalManagementSystem.Web
             string adminEmail = builder.Configuration.GetValue<string>("Administrator:Email")!;
             string adminUserName = builder.Configuration.GetValue<string>("Administrator:UserName")!;
             string adminPassword = builder.Configuration.GetValue<string>("Administrator:Password")!;
-            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetValue<string>("Seed:ProceduresJson")!);
+            string proceduresJsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetValue<string>("Seed:ProceduresJson")!);
+            string usersJsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetValue<string>("Seed:UsersJson")!);
 
             builder.Services.AddDbContext<DentalManagementSystemDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -71,7 +72,8 @@ namespace DentalManagementSystem.Web
             if (app.Environment.IsDevelopment())
             {
                 app.SeedAdministrator(adminEmail, adminUserName, adminPassword);
-                app.SeedProcedures(jsonPath);
+                app.SeedProcedures(proceduresJsonPath);
+                app.SeedUsers(usersJsonPath);
             }
 
             app.MapControllerRoute(

@@ -9,8 +9,5 @@
         {
             this.Id = Guid.NewGuid();
         }
-
-        //[Required]
-        //public string Role { get; set; } = null!;
     }
 }

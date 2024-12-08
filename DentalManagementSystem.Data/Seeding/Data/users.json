@@ -1,0 +1,152 @@
+[
+  {
+    "Id": "ede10de9-0fb5-48cd-a28f-5fc580469e5a",
+    "Username": "Meri",
+    "Email": "meri@dentist.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "0a116063-736f-4104-a5d3-2a516239463c",
+    "Username": "Ivo",
+    "Email": "ivo@dentist.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "70d6cddb-1787-4e7c-822b-b4b8929f1c82",
+    "Username": "Georgi",
+    "Email": "georgi@dentist.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "5865bc20-bfcf-4e89-93b7-ebc2894e0ec7",
+    "Username": "Desislava",
+    "Email": "desislava@dentist.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "f9def860-7d70-42ba-a905-1baecc7f3865",
+    "Username": "Elena",
+    "Email": "elena@dentist.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "9bdb04a4-4416-4b4e-876d-4d82e29f7199",
+    "Username": "Hristo",
+    "Email": "hristo@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "eb3d7f22-efbb-4f81-be5e-e220ac5f36f5",
+    "Username": "Sofiya",
+    "Email": "sofiya@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "639ec2f4-efbc-4b54-a95b-02c18e72b146",
+    "Username": "Dimitar",
+    "Email": "dimitar@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "193be807-447f-4b8b-ae68-5a2f04f325de",
+    "Username": "Borislava",
+    "Email": "borislava@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "af4d0f15-09ce-428c-837a-14bb374080ec",
+    "Username": "Nikolay",
+    "Email": "nikolay@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "f69c9df6-a179-4b46-aa0d-842d65ed97d8",
+    "Username": "Emiliya",
+    "Email": "emiliya@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "239e2396-4c20-46bf-b79e-e9f430cd573d",
+    "Username": "Vasil",
+    "Email": "vasil@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "7debf38a-1252-4763-94b2-75ad800bfb1e",
+    "Username": "Anna",
+    "Email": "anna@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "6a9aea92-5164-4c33-8ed9-bd7a91ca33ed",
+    "Username": "Yordan",
+    "Email": "yordan@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "43fee626-631a-431a-8339-f574674d1f1c",
+    "Username": "Mila",
+    "Email": "mila@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "e5e45d12-af0c-4cd8-85db-5d3c8fb119a0",
+    "Username": "Boyan",
+    "Email": "boyan@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "202516ed-895b-4ddc-9ff8-ef5facc11c11",
+    "Username": "Krasimira",
+    "Email": "krasimira@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "3be2a7d5-8ad5-4069-89a5-005562b6da9d",
+    "Username": "Vladimir",
+    "Email": "vladimir@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "9402d657-39ef-4292-a481-01895c05fbdb",
+    "Username": "Albena",
+    "Email": "albena@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "38548438-4026-4df0-90e9-1f46b84aa170",
+    "Username": "Lyubomir",
+    "Email": "lyubomir@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "5a36fb6f-3157-40ab-88a7-8e04fd59a84d",
+    "Username": "Ivanka",
+    "Email": "ivanka@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "3c90c427-06e6-4d0d-bba5-b95dc5da3cdc",
+    "Username": "Miroslav",
+    "Email": "miroslav@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "3408ab0e-cecf-4a42-95b0-f3e50e2e370a",
+    "Username": "Radoslava",
+    "Email": "radoslava@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "0569e2b2-ad0f-4ac1-af31-4f33351e1db5",
+    "Username": "Petar",
+    "Email": "petar@patient.com",
+    "Password": "123456"
+  },
+  {
+    "Id": "3cfc6e0c-fd69-4fea-82b3-894dc44b9282",
+    "Username": "Gabriela",
+    "Email": "gabriela@patient.com",
+    "Password": "123456"
+  }
+]
