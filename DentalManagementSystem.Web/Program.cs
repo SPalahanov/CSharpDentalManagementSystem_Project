@@ -79,7 +79,10 @@ namespace DentalManagementSystem.Web
                 app.SeedUsers(usersJsonPath);
                 app.SeedDentists(dentistsJsonPath);
                 app.SeedPatients(patientsJsonPath);
+<<<<<<<<< Temporary merge branch 1
+=========
                 app.SeedAppointments(appointmentsJsonPath);
+>>>>>>>>> Temporary merge branch 2
             }
 
             app.MapControllerRoute(
