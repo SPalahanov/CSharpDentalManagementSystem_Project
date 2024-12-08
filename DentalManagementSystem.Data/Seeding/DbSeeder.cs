@@ -348,6 +348,58 @@
             }
         }
 
+        public static async Task SeedAppointmentProceduresAsync(IServiceProvider services, string jsonPath)
+        {
+            await using DentalManagementSystemDbContext dbContext = services.GetRequiredService<DentalManagementSystemDbContext>();
+
+            ICollection<AppointmentProcedure> allAppointmentProcedures = await dbContext
+                .AppointmentProcedures
+                .ToArrayAsync();
+
+            try
+            {
+                string jsonInput = await File.ReadAllTextAsync(jsonPath, Encoding.ASCII, CancellationToken.None);
+
+                ImportAppointmentProcedureDto[]? appointmentProcedureDtos = JsonConvert.DeserializeObject<ImportAppointmentProcedureDto[]>(jsonInput);
+
+                foreach (var appointmentProcedureDto in appointmentProcedureDtos)
+                {
+                    if (!IsValid(appointmentProcedureDto))
+                    {
+                        continue;
+                    }
+
+                    Guid appointmentProcedureGuid = Guid.Empty;
+
+                    if (!IsGuidValid(appointmentProcedureDto.AppointmentId, ref appointmentProcedureGuid))
+                    {
+                        continue;
+                    }
+
+                    if (allAppointmentProcedures.Any(ap => ap.AppointmentId.ToString().ToLowerInvariant() == appointmentProcedureGuid.ToString().ToLowerInvariant()))
+                    {
+                        continue;
+                    }
+
+                    AppointmentProcedure appointmentProcedures = new AppointmentProcedure
+                    {
+
+                        AppointmentId = appointmentProcedureGuid,
+                        ProcedureId = appointmentProcedureDto.ProcedureId,
+                        IsDeleted = appointmentProcedureDto.IsDeleted,
+                    };
+
+                    await dbContext.AppointmentProcedures.AddAsync(appointmentProcedures);
+                }
+
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error occurred while seeding the appointment procedures in the database!");
+            }
+        }
+
         private static bool IsValid(object obj)
         {
             List<ValidationResult> validationResults = new List<ValidationResult>();

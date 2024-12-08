@@ -70,5 +70,10 @@ namespace DentalManagementSystem.Common.Constants
             public const int IdMaxLength = 36;
         }
 
+        public class AppointmentProcedures
+        {
+            public const int IdMinLength = 36;
+            public const int IdMaxLength = 36;
+        }
     }
 }
