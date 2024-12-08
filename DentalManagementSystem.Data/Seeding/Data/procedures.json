@@ -1,0 +1,56 @@
+[
+  {
+    "Name": "Teeth Cleaning",
+    "Price": 30.00,
+    "Description": "Professional cleaning to remove tartar and plaque using an ultrasonic scaler.",
+    "IsDeleted": false
+  },
+  {
+    "Name": "Cavity Filling",
+    "Price": 70.00,
+    "Description": "Treatment of dental cavities with high-quality composite filling to restore the tooth's function and aesthetics.",
+    "IsDeleted": false
+  },
+  {
+    "Name": "Tooth Extraction",
+    "Price": 80.00,
+    "Description": "Removal of a tooth due to damage, infection, or orthodontic reasons.",
+    "IsDeleted": false
+  },
+  {
+    "Name": "Teeth Whitening",
+    "Price": 150.00,
+    "Description": "Professional whitening procedure using special gels and lamps to achieve a brighter smile.",
+    "IsDeleted": false
+  },
+  {
+    "Name": "Veneers",
+    "Price": 250.00,
+    "Description": "Placement of thin porcelain veneers to improve the appearance of front teeth, giving them a natural and attractive look.",
+    "IsDeleted": false
+  },
+  {
+    "Name": "Full Mouth X-Ray",
+    "Price": 170.00,
+    "Description": "Panoramic x-ray is a two-dimensional (2-D) dental x-ray examination that captures the entire mouth in a single image, including the teeth, upper and lower jaws.",
+    "IsDeleted": false
+  },
+  {
+    "Name": "Dental Crown",
+    "Price": 300.00,
+    "Description": "Custom-made cap placed over a damaged tooth to restore its shape, strength, and function.",
+    "IsDeleted": false
+  },
+  {
+    "Name": "Orthodontic Braces",
+    "Price": 100.00,
+    "Description": "Application of braces to correct misaligned teeth and improve bite over time.",
+    "IsDeleted": false
+  },
+  {
+    "Name": "Dental Implant",
+    "Price": 1200.00,
+    "Description": "Surgical placement of an implant to replace a missing tooth, providing a natural-looking and functional solution.",
+    "IsDeleted": false
+  }
+]

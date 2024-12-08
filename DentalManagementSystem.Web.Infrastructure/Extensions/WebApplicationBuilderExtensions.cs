@@ -2,6 +2,7 @@
 {
     using DentalManagementSystem.Data;
     using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Data.Seeding;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -93,6 +94,22 @@
                 .GetAwaiter()
                 .GetResult();
 
+            return app;
+        }
+
+        public static IApplicationBuilder SeedProcedures(this IApplicationBuilder app, string jsonPath)
+        {
+            using IServiceScope serviceScope = app.ApplicationServices.CreateAsyncScope();
+
+            IServiceProvider serviceProvider = serviceScope.ServiceProvider;
+
+            Task.Run(async () =>
+            {
+                await DbSeeder.SeedProceduresAsync(serviceProvider, jsonPath);
+            })
+                .GetAwaiter()
+                .GetResult();
+            
             return app;
         }
 

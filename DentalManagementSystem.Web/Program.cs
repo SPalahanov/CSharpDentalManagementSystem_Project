@@ -4,6 +4,7 @@ namespace DentalManagementSystem.Web
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository;
     using DentalManagementSystem.Data.Repository.Interfaces;
+    using DentalManagementSystem.Data.Seeding.DataTransferObjects;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Services.Mapping;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
@@ -21,6 +22,7 @@ namespace DentalManagementSystem.Web
             string adminEmail = builder.Configuration.GetValue<string>("Administrator:Email")!;
             string adminUserName = builder.Configuration.GetValue<string>("Administrator:UserName")!;
             string adminPassword = builder.Configuration.GetValue<string>("Administrator:Password")!;
+            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetValue<string>("Seed:ProceduresJson")!);
 
             builder.Services.AddDbContext<DentalManagementSystemDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -49,7 +51,7 @@ namespace DentalManagementSystem.Web
 
             WebApplication app = builder.Build();
 
-            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);
+            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly, typeof(ImportProcedureDto).Assembly);
 
             if (!app.Environment.IsDevelopment())
             {
@@ -66,7 +68,11 @@ namespace DentalManagementSystem.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.SeedAdministrator(adminEmail, adminUserName, adminPassword);
+            if (app.Environment.IsDevelopment())
+            {
+                app.SeedAdministrator(adminEmail, adminUserName, adminPassword);
+                app.SeedProcedures(jsonPath);
+            }
 
             app.MapControllerRoute(
                 name: "Areas",
