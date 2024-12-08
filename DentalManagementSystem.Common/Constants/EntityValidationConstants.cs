@@ -25,6 +25,9 @@ namespace DentalManagementSystem.Common.Constants
 
         public class Dentist
         {
+            public const int IdMinLength = 36;
+            public const int IdMaxLength = 36;
+
             public const int NameMinLength = 2;
             public const int NameMaxLength = 40;
 
@@ -36,8 +39,9 @@ namespace DentalManagementSystem.Common.Constants
 
             public const string DateOfBirthFormat = "dd/MM/yyyy";
 
-            public const int LicenseNumberMinLength = 5;
-            public const int LicenseNumberMaxLength = 20;
+            public const int LicenseNumberMinLength = 9;
+            public const int LicenseNumberMaxLength = 9;
+            public const string LicenseNumberRegex = "^[A-Z]{2}-\\d{3}-[A-Z]{2}$";
         }
 
         public class Patient

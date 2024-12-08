@@ -1,0 +1,52 @@
+[
+  {
+    "DentistId": "93e0c32c-553c-4f61-a767-31eb09e85ad5",
+    "Name": "Meri Peneva",
+    "PhoneNumber": "+359876543210",
+    "Address": "bul. Vitosha 15",
+    "Gender": "Female",
+    "Specialty": "Surgeon",
+    "LicenseNumber": "XX-005-XX",
+    "UserId": "ede10de9-0fb5-48cd-a28f-5fc580469e5a"
+  },
+  {
+    "DentistId": "385ee459-337a-4df2-ba1b-b2f01c451b17",
+    "Name": "Ivo Ivanov",
+    "PhoneNumber": "+359876543211",
+    "Address": "ul. Maritsa 23",
+    "Gender": "Male",
+    "Specialty": "Pedodontist",
+    "LicenseNumber": "XX-006-XX",
+    "UserId": "0a116063-736f-4104-a5d3-2a516239463c"
+  },
+  {
+    "DentistId": "6844f781-c5bc-4da7-bf11-349fd5bbe9c0",
+    "Name": "Georgi Petrov",
+    "PhoneNumber": "+359876543212",
+    "Address": "ul. Slivnitsa 42",
+    "Gender": "Male",
+    "Specialty": "Endodontics",
+    "LicenseNumber": "XX-007-XX",
+    "UserId": "70d6cddb-1787-4e7c-822b-b4b8929f1c82"
+  },
+  {
+    "DentistId": "05e829fb-8ba6-45d6-8afe-a6338d3ba6a8",
+    "Name": "Desislava Stoyanova",
+    "PhoneNumber": "+359876543213",
+    "Address": "ul. Aleksandrovska 7",
+    "Gender": "Female",
+    "Specialty": "Ortodontics",
+    "LicenseNumber": "XX-008-XX",
+    "UserId": "5865bc20-bfcf-4e89-93b7-ebc2894e0ec7"
+  },
+  {
+    "DentistId": "3835771b-a973-4f82-8683-036a522ab503",
+    "Name": "Elena Todorova",
+    "PhoneNumber": "+359876543214",
+    "Address": "bul. Lipnik 18",
+    "Gender": "Female",
+    "Specialty": "Prosthodontics",
+    "LicenseNumber": "XX-009-XX",
+    "UserId": "f9def860-7d70-42ba-a905-1baecc7f3865"
+  }
+]

@@ -9,7 +9,9 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Reflection;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     public static class DbSeeder
@@ -102,6 +104,79 @@
             catch (Exception)
             {
                 Console.WriteLine("Error occurred while seeding the users in the database!");
+            }
+        }
+
+        public static async Task SeedDentistsAsync(IServiceProvider services, string jsonPath)
+        {
+            await using DentalManagementSystemDbContext dbContext = services.GetRequiredService<DentalManagementSystemDbContext>();
+
+            UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+            ICollection<Dentist> allDentists = await dbContext
+                .Dentists
+                .ToArrayAsync();
+
+            try
+            {
+                string jsonInput = await File.ReadAllTextAsync(jsonPath, Encoding.ASCII, CancellationToken.None);
+
+                ImportDentistDto[]? dentistDtos = JsonConvert.DeserializeObject<ImportDentistDto[]>(jsonInput);
+
+                foreach (var dentistDto in dentistDtos)
+                {
+                    if (!IsValid(dentistDto))
+                    {
+                        continue;
+                    }
+
+                    Guid dentistGuid = Guid.Empty;
+
+                    if (!IsGuidValid(dentistDto.DentistId, ref dentistGuid))
+                    {
+                        continue;
+                    }
+
+                    Guid userGuid = Guid.Empty;
+
+                    if (!IsGuidValid(dentistDto.UserId, ref userGuid))
+                    {
+                        continue;
+                    }
+
+                    var userExists = await userManager.FindByIdAsync(userGuid.ToString()) != null;
+
+                    if (!userExists)
+                    {
+                        continue;
+                    }
+
+                    if (allDentists.Any(d => d.LicenseNumber == dentistDto.LicenseNumber))
+                    {
+                        continue;
+                    }
+
+                    Dentist dentist = new Dentist
+                    {
+                        DentistId = dentistGuid,
+                        Name = dentistDto.Name,
+                        PhoneNumber = dentistDto.PhoneNumber,
+                        Address = dentistDto.Address,
+                        Gender = dentistDto.Gender,
+                        Specialty = dentistDto.Specialty,
+                        LicenseNumber = dentistDto.LicenseNumber,
+                        UserId = userGuid,
+                        IsDeleted = dentistDto.IsDeleted
+                    };
+
+                    await dbContext.Dentists.AddAsync(dentist);
+                }
+
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error occurred while seeding the dentists in the database!");
             }
         }
 
