@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
     using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -177,6 +178,89 @@
             catch (Exception)
             {
                 Console.WriteLine("Error occurred while seeding the dentists in the database!");
+            }
+        }
+
+        public static async Task SeedPatientsAsync(IServiceProvider services, string jsonPath)
+        {
+            await using DentalManagementSystemDbContext dbContext = services.GetRequiredService<DentalManagementSystemDbContext>();
+
+            UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+            ICollection<Patient> allPatients = await dbContext
+                .Patients
+                .ToArrayAsync();
+
+            try
+            {
+                string jsonInput = await File.ReadAllTextAsync(jsonPath, Encoding.ASCII, CancellationToken.None);
+
+                ImportPatientDto[]? patientDtos = JsonConvert.DeserializeObject<ImportPatientDto[]>(jsonInput);
+
+                foreach (var patientDto in patientDtos)
+                {
+                    if (!IsValid(patientDto))
+                    {
+                        continue;
+                    }
+
+                    Guid patientGuid = Guid.Empty;
+
+                    if (!IsGuidValid(patientDto.PatientId, ref patientGuid))
+                    {
+                        continue;
+                    }
+
+                    Guid userGuid = Guid.Empty;
+
+                    if (!IsGuidValid(patientDto.UserId, ref userGuid))
+                    {
+                        continue;
+                    }
+
+                    bool isDateOfBirthValid = DateTime
+                        .TryParse(patientDto.DateOfBirth, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateOfBirth);
+
+                    if (!isDateOfBirthValid)
+                    {
+                        continue;
+                    }
+
+                    var userExists = await userManager.FindByIdAsync(userGuid.ToString()) != null;
+
+                    if (!userExists)
+                    {
+                        continue;
+                    }
+
+                    if (allPatients.Any(p => p.PatientId.ToString().ToLowerInvariant() == patientGuid.ToString().ToLowerInvariant()))
+                    {
+                        continue;
+                    }
+
+                    Patient patient = new Patient
+                    {
+                        PatientId = patientGuid,
+                        Name = patientDto.Name,
+                        PhoneNumber = patientDto.PhoneNumber,
+                        Address = patientDto.Address,
+                        DateOfBirth = dateOfBirth,
+                        Gender = patientDto.Gender,
+                        Allergies = patientDto.Allergies,
+                        InsuranceNumber = patientDto.InsuranceNumber,
+                        EmergencyContact = patientDto.EmergencyContact,
+                        UserId = userGuid,
+                        IsDeleted = patientDto.IsDeleted
+                    };
+
+                    await dbContext.Patients.AddAsync(patient);
+                }
+
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error occurred while seeding the patients in the database!");
             }
         }
 
