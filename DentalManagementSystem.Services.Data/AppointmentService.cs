@@ -11,7 +11,10 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+
+    using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Appointment;
 
     public class AppointmentService : BaseService, IAppointmentService
     {
@@ -34,12 +37,43 @@
             this.procedureRepository = procedureRepository;
         }
 
-        public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAllAppointmentsAsync()
+        public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAllAppointmentsAsync(AllAppointmentsFilterViewModel inputModel)
         {
-            IEnumerable<AllAppointmentsIndexViewModel> appointments = await this.appointmentRepository
-                .GetAllAttached()
-                .Where(a => a.IsDeleted == false)
-                .OrderBy(a => a.AppointmentDate.ToString())
+            IQueryable<Appointment> allAppointmentsQuery = this.appointmentRepository
+                .GetAllAttached();
+
+            if (!String.IsNullOrWhiteSpace(inputModel.YearFilter))
+            {
+                Match rangeMatch = Regex.Match(inputModel.YearFilter, YearFilterRangeRegex);
+
+                if (rangeMatch.Success)
+                {
+                    int startYear = int.Parse(rangeMatch.Groups[1].Value);
+                    int endYear = int.Parse(rangeMatch.Groups[2].Value);
+
+                    allAppointmentsQuery = allAppointmentsQuery
+                        .Where(m => m.AppointmentDate.Year >= startYear && m.AppointmentDate.Year <= endYear);
+                }
+                else
+                {
+                    bool isValidNumber = int.TryParse(inputModel.YearFilter, out int year);
+
+                    if (isValidNumber)
+                    {
+                        allAppointmentsQuery = allAppointmentsQuery
+                            .Where(m => m.AppointmentDate.Year == year);
+                    }
+                }
+            }
+
+            if (inputModel.CurrentPage.HasValue && inputModel.EntitiesPerPage.HasValue)
+            {
+                allAppointmentsQuery = allAppointmentsQuery
+                    .Skip(inputModel.EntitiesPerPage.Value * (inputModel.CurrentPage.Value - 1))
+                    .Take(inputModel.EntitiesPerPage.Value);
+            }
+
+            return await allAppointmentsQuery
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
                     Id = a.AppointmentId.ToString(),
@@ -47,8 +81,6 @@
                     AppointmentStatus = a.AppointmentStatus.ToString(),
                 })
                 .ToArrayAsync();
-
-            return appointments;
         }
 
         public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByPatientIdAsync(Guid patientId)
@@ -357,6 +389,21 @@
             await this.appointmentRepository.UpdateAsync(appointmentToDelete);
 
             return true;
+        }
+
+        public async Task<int> GetAppointmentsCountByFilterAsync(AllAppointmentsFilterViewModel inputModel)
+        {
+            AllAppointmentsFilterViewModel inputModelCopy = new AllAppointmentsFilterViewModel()
+            {
+                CurrentPage = null,
+                EntitiesPerPage = null,
+                YearFilter = inputModel.YearFilter,
+            };
+
+            int appointmentCount = (await this.GetAllAppointmentsAsync(inputModelCopy))
+                .Count();
+
+            return appointmentCount;
         }
     }
 }

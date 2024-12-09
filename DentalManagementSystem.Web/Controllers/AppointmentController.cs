@@ -21,7 +21,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(AllAppointmentsFilterViewModel inputModel)
         {
             string? userId = this.User.GetUserId();
 
@@ -37,6 +37,7 @@
             bool isAdmin = this.User.IsInRole("Admin");
 
             IEnumerable<AllAppointmentsIndexViewModel> appointments;
+            int totalAppointmentsCount;
 
             if (isPatient)
             {
@@ -44,7 +45,17 @@
 
                 appointments = await this.appointmentService.GetAppointmentsByPatientIdAsync(patientId);
 
-                return this.View(appointments);
+                totalAppointmentsCount = appointments.Count();
+
+                AllAppointmentsFilterViewModel viewModel = new AllAppointmentsFilterViewModel
+                {
+                    Appointments = appointments,
+                    CurrentPage = inputModel.CurrentPage ?? 1,
+                    EntitiesPerPage = inputModel.EntitiesPerPage ?? 10,
+                    TotalPages = (int)Math.Ceiling((double)totalAppointmentsCount / (inputModel.EntitiesPerPage ?? 10)),
+                };
+
+                return this.View(viewModel);
             }
 
             if (isDentist)
@@ -53,7 +64,17 @@
 
                 appointments = await appointmentService.GetAppointmentsByDentistIdAsync(dentistId);
 
-                return this.View(appointments);
+                totalAppointmentsCount = appointments.Count();
+
+                AllAppointmentsFilterViewModel viewModel = new AllAppointmentsFilterViewModel
+                {
+                    Appointments = appointments,
+                    CurrentPage = inputModel.CurrentPage ?? 1,
+                    EntitiesPerPage = inputModel.EntitiesPerPage ?? 10,
+                    TotalPages = (int)Math.Ceiling((double)totalAppointmentsCount / (inputModel.EntitiesPerPage ?? 10)),
+                };
+
+                return this.View(viewModel);
             }
 
             if (!isPatient && !isDentist && !isAdmin)
@@ -61,9 +82,20 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            appointments = await this.appointmentService.GetAllAppointmentsAsync();
+            appointments = await this.appointmentService.GetAllAppointmentsAsync(inputModel);
 
-            return this.View(appointments);
+            totalAppointmentsCount = await this.appointmentService.GetAppointmentsCountByFilterAsync(inputModel);
+
+            AllAppointmentsFilterViewModel adminViewModel = new AllAppointmentsFilterViewModel
+            {
+                Appointments = appointments,
+                CurrentPage = inputModel.CurrentPage ?? 1,
+                EntitiesPerPage = inputModel.EntitiesPerPage ?? 10,
+                TotalPages = (int)Math.Ceiling((double)totalAppointmentsCount / (inputModel.EntitiesPerPage ?? 10)),
+                YearFilter = inputModel.YearFilter,
+            };
+
+            return this.View(adminViewModel);
         }
 
         [HttpGet]

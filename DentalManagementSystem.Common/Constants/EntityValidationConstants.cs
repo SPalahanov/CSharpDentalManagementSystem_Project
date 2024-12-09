@@ -68,6 +68,8 @@ namespace DentalManagementSystem.Common.Constants
         {
             public const int IdMinLength = 36;
             public const int IdMaxLength = 36;
+
+            public const string YearFilterRangeRegex = "^(\\d{4})\\s*\\-\\s*(\\d{4})$";
         }
 
         public class AppointmentProcedures
