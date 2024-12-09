@@ -16,8 +16,6 @@
 
     public class DentistService : BaseService, IDentistService
     {
-        private readonly DentalManagementSystemDbContext dbContext;
-
         private readonly IRepository<Dentist, Guid> dentistRepository;
         private readonly IRepository<Appointment, Guid> appointmentRepository;
         private readonly UserManager<ApplicationUser> userManager;
@@ -26,7 +24,6 @@
         {
             this.dentistRepository = dentistRepository;
             this.userManager = userManager;
-            this.dbContext = dbContext;
             this.appointmentRepository = appointmentRepository;
         }
         public async Task<Guid> GetDentistIdByUserIdAsync(Guid userId)
@@ -108,7 +105,7 @@
             };
         }
 
-        public async Task CreateDentistAsync(string userId, BecomeDentistFormModel model)
+        public async Task<bool> CreateDentistAsync(string userId, BecomeDentistFormModel model)
         {
             Dentist dentist = new Dentist()
             {
@@ -121,11 +118,8 @@
                 UserId = Guid.Parse(userId)
             };
 
-            await this.dbContext.Dentists.AddAsync(dentist);
-            await this.dbContext.SaveChangesAsync();
-
-            //await this.dentistRepository.AddAsync(dentist);
-            //return true;
+            await this.dentistRepository.AddAsync(dentist);
+            return true;
         }
         public async Task<bool> CreateDentistFromUserAsync(string userId, AddDentistInputModel model)
         {

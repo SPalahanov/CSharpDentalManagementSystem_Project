@@ -19,7 +19,7 @@
 
         Task<DentistDetailsViewModel?> GetDentistDetailsByIdAsync(Guid id);
 
-        Task CreateDentistAsync(string userId, BecomeDentistFormModel model);
+        Task<bool> CreateDentistAsync(string userId, BecomeDentistFormModel model);
 
         Task<bool> IsUserDentist(string userId);
 
