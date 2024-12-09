@@ -18,9 +18,20 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(AllDentistsSearchViewModel inputModel)
         {
-            IEnumerable<AllDentistIndexViewModel> viewModel = await this.dentistService.GetAllDentistsAsync();
+            IEnumerable<AllDentistIndexViewModel> dentists = await this.dentistService.GetAllDentistsAsync(inputModel);
+
+            int totalDentistsCount = await this.dentistService.GetDentistsCountByFilterAsync(inputModel);
+
+            AllDentistsSearchViewModel viewModel = new AllDentistsSearchViewModel
+            {
+                Dentists = dentists,
+                SearchQuery = inputModel.SearchQuery,
+                CurrentPage = inputModel.CurrentPage ?? 1,
+                EntitiesPerPage = inputModel.EntitiesPerPage ?? 10,
+                TotalPages = (int)Math.Ceiling((double)totalDentistsCount / (inputModel.EntitiesPerPage ?? 10))
+            };
 
             return this.View(viewModel);
         }

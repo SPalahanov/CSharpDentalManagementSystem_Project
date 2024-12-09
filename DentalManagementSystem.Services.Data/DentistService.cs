@@ -44,11 +44,25 @@
             return dentist.DentistId;
         }
 
-        public async Task<IEnumerable<AllDentistIndexViewModel>> GetAllDentistsAsync()
+        public async Task<IEnumerable<AllDentistIndexViewModel>> GetAllDentistsAsync(AllDentistsSearchViewModel inputModel)
         {
-            IEnumerable<AllDentistIndexViewModel> allDentists = await this.dentistRepository
-                .GetAllAttached()
-                .Where(d => d.IsDeleted == false)
+            IQueryable<Dentist> allDentistsQuery = this.dentistRepository
+                .GetAllAttached();
+
+            if (!String.IsNullOrWhiteSpace(inputModel.SearchQuery))
+            {
+                allDentistsQuery = allDentistsQuery
+                    .Where(d => d.Name.ToLower().Contains(inputModel.SearchQuery.ToLower()));
+            }
+
+            if (inputModel.CurrentPage.HasValue && inputModel.EntitiesPerPage.HasValue)
+            {
+                allDentistsQuery = allDentistsQuery
+                    .Skip(inputModel.EntitiesPerPage.Value * (inputModel.CurrentPage.Value - 1))
+                    .Take(inputModel.EntitiesPerPage.Value);
+            }
+
+            return await allDentistsQuery
                 .Select(d => new AllDentistIndexViewModel()
                 {
                     Id = d.DentistId.ToString(),
@@ -61,8 +75,6 @@
 
                 })
                 .ToArrayAsync();
-
-            return allDentists;
         }
         public async Task<DentistDashboardViewModel> GetDentistDashboardAsync(Guid dentistId)
         {
@@ -292,6 +304,20 @@
             await this.dentistRepository.UpdateAsync(dentistToDelete);
 
             return true;
+        }
+
+        public async Task<int> GetDentistsCountByFilterAsync(AllDentistsSearchViewModel inputModel)
+        {
+            AllDentistsSearchViewModel inputModelCopy = new AllDentistsSearchViewModel()
+            {
+                CurrentPage = null,
+                EntitiesPerPage = null,
+                SearchQuery = inputModel.SearchQuery,
+            };
+
+            int dentistsCount = (await this.GetAllDentistsAsync(inputModelCopy)).Count();
+
+            return dentistsCount;
         }
     }
 }

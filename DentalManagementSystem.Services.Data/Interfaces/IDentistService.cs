@@ -7,7 +7,8 @@
 
     public interface IDentistService
     {
-        Task<IEnumerable<AllDentistIndexViewModel>> GetAllDentistsAsync();
+        Task<IEnumerable<AllDentistIndexViewModel>> GetAllDentistsAsync(AllDentistsSearchViewModel inputModel);
+        Task<int> GetDentistsCountByFilterAsync(AllDentistsSearchViewModel inputModel);
 
         Task<DentistDashboardViewModel> GetDentistDashboardAsync(Guid dentistId);
         Task<Guid> GetDentistIdByUserIdAsync(Guid userId);
