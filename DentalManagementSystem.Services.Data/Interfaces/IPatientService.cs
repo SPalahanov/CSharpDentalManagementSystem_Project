@@ -7,7 +7,9 @@
 
     public interface IPatientService
     {
-        Task<IEnumerable<AllPatientsIndexViewModel>> GetAllPatientsAsync();
+        Task<IEnumerable<AllPatientsIndexViewModel>> GetAllPatientsAsync(AllPatientsSearchViewModel inputModel);
+
+        Task<int> GetPatientsCountByFilterAsync(AllPatientsSearchViewModel inputModel);
 
         Task<IEnumerable<AppointmentDetailsViewModel>> GetPatientDashboardAsync(Guid patientId);
         Task<Guid> GetPatientIdByUserIdAsync(Guid userId);

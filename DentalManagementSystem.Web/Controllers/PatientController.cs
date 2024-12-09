@@ -23,7 +23,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(AllPatientsSearchViewModel inputModel)
         {
             string? userId = this.User.GetUserId();
 
@@ -46,7 +46,18 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            IEnumerable<AllPatientsIndexViewModel> viewModel = await this.patientService.GetAllPatientsAsync();
+            IEnumerable<AllPatientsIndexViewModel> patients = await this.patientService.GetAllPatientsAsync(inputModel);
+
+            int totalPatientsCount = await this.patientService.GetPatientsCountByFilterAsync(inputModel);
+
+            AllPatientsSearchViewModel viewModel = new AllPatientsSearchViewModel
+            {
+                Patients = patients,
+                SearchQuery = inputModel.SearchQuery,
+                CurrentPage = inputModel.CurrentPage ?? 1,
+                EntitiesPerPage = inputModel.EntitiesPerPage ?? 10,
+                TotalPages = (int)Math.Ceiling((double)totalPatientsCount / (inputModel.EntitiesPerPage ?? 10))
+            };
 
             return this.View(viewModel);
         }

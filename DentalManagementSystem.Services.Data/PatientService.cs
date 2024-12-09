@@ -42,11 +42,25 @@
             return patient.PatientId;
         }
 
-        public async Task<IEnumerable<AllPatientsIndexViewModel>> GetAllPatientsAsync()
+        public async Task<IEnumerable<AllPatientsIndexViewModel>> GetAllPatientsAsync(AllPatientsSearchViewModel inputModel)
         {
-            IEnumerable<AllPatientsIndexViewModel> allPatients = await this.patientRepository
-                .GetAllAttached()
-                .Where(p => p.IsDeleted == false)
+            IQueryable<Patient> allPatientsQuery = this.patientRepository
+                .GetAllAttached();
+
+            if (!String.IsNullOrWhiteSpace(inputModel.SearchQuery))
+            {
+                allPatientsQuery = allPatientsQuery
+                    .Where(p => p.Name.ToLower().Contains(inputModel.SearchQuery.ToLower()));
+            }
+
+            if (inputModel.CurrentPage.HasValue && inputModel.EntitiesPerPage.HasValue)
+            {
+                allPatientsQuery = allPatientsQuery
+                    .Skip(inputModel.EntitiesPerPage.Value * (inputModel.CurrentPage.Value - 1))
+                    .Take(inputModel.EntitiesPerPage.Value);
+            }
+
+            return await allPatientsQuery
                 .Select(p => new AllPatientsIndexViewModel()
                 {
                     Id = p.PatientId.ToString(),
@@ -54,8 +68,6 @@
                     Gender = p.Gender
                 })
                 .ToArrayAsync();
-
-            return allPatients;
         }
         public async Task<IEnumerable<AppointmentDetailsViewModel>> GetPatientDashboardAsync(Guid patientId)
         {
@@ -311,6 +323,20 @@
             await this.patientRepository.UpdateAsync(patientToDelete);
 
             return true;
+        }
+
+        public async Task<int> GetPatientsCountByFilterAsync(AllPatientsSearchViewModel inputModel)
+        {
+            AllPatientsSearchViewModel inputModelCopy = new AllPatientsSearchViewModel()
+            {
+                CurrentPage = null,
+                EntitiesPerPage = null,
+                SearchQuery = inputModel.SearchQuery,
+            };
+
+            int patientsCount = (await this.GetAllPatientsAsync(inputModelCopy)).Count();
+
+            return patientsCount;
         }
     }
 }
