@@ -28,6 +28,7 @@
             this.appointmentRepository = appointmentRepository;
             this.userManager = userManager;
         }
+
         public async Task<Guid> GetPatientIdByUserIdAsync(Guid userId)
         {
             Patient? patient = await this.patientRepository
@@ -229,7 +230,7 @@
                     PhoneNumber = patient.PhoneNumber,
                     Address = patient.Address,
                     Gender = patient.Gender,
-                    DateOfBirth = patient.DateOfBirth.ToString(DateOfBirthFormat),
+                    DateOfBirth = patient.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
                     Allergies = patient.Allergies,
                     InsuranceNumber = patient.InsuranceNumber,
                     EmergencyContact =patient.EmergencyContact,
@@ -251,7 +252,7 @@
                     PhoneNumber = p.PhoneNumber,
                     Address = p.Address,
                     Gender = p.Gender,
-                    DateOfBirth = p.DateOfBirth.ToString(DateOfBirthFormat),
+                    DateOfBirth = p.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
                     Allergies = p.Allergies,
                     InsuranceNumber = p.InsuranceNumber,
                     EmergencyContact = p.EmergencyContact,
