@@ -10,6 +10,7 @@ namespace DentalManagementSystem.Web
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
     public class Program
@@ -52,6 +53,10 @@ namespace DentalManagementSystem.Web
             builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
 
             builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(cfg =>
+            {
+                cfg.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
             builder.Services.AddRazorPages();
 
             WebApplication app = builder.Build();

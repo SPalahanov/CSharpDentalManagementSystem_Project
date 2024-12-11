@@ -23,7 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Web.Infrastructure", "DentalManagementSystem.Web.Infrastructure\DentalManagementSystem.Web.Infrastructure.csproj", "{ED1AE699-6399-4EBA-81AA-46DF3AB65991}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Services.Mapping", "DentalManagementSystem.Service.Mapping\DentalManagementSystem.Services.Mapping.csproj", "{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagementSystem.Services.Mapping", "DentalManagementSystem.Service.Mapping\DentalManagementSystem.Services.Mapping.csproj", "{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{93F9B319-597E-4723-AF75-4B0B279877AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagementSystem.Services.Test", "DentalManagementSystem.Services.Test\DentalManagementSystem.Services.Test.csproj", "{1B69410E-ADE3-4E31-B697-64831CC923FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,10 @@ Global
 		{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF5591AB-285B-4ACB-953F-27B2C30ACA1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B69410E-ADE3-4E31-B697-64831CC923FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B69410E-ADE3-4E31-B697-64831CC923FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B69410E-ADE3-4E31-B697-64831CC923FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B69410E-ADE3-4E31-B697-64831CC923FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +83,7 @@ Global
 		{FB83A5DA-2C91-4202-8ED7-4C3D2D695C3C} = {FBC43B7D-154F-4EF6-A2B8-AD52D1F51A39}
 		{ED1AE699-6399-4EBA-81AA-46DF3AB65991} = {BDDCFBBB-DCB9-45D1-B6D2-23799A1C9499}
 		{FF5591AB-285B-4ACB-953F-27B2C30ACA1A} = {FBC43B7D-154F-4EF6-A2B8-AD52D1F51A39}
+		{1B69410E-ADE3-4E31-B697-64831CC923FA} = {93F9B319-597E-4723-AF75-4B0B279877AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52D1EEDF-C5B9-4941-BE4E-7319041F9FF1}
