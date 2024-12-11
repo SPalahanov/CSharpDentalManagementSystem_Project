@@ -20,7 +20,7 @@
         private readonly IRepository<Appointment, Guid> appointmentRepository;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public DentistService(IRepository<Dentist, Guid> dentistRepository, UserManager<ApplicationUser> userManager, DentalManagementSystemDbContext dbContext, IRepository<Appointment, Guid> appointmentRepository)
+        public DentistService(IRepository<Dentist, Guid> dentistRepository, IRepository<Appointment, Guid> appointmentRepository, UserManager<ApplicationUser> userManager)
         {
             this.dentistRepository = dentistRepository;
             this.userManager = userManager;
@@ -251,6 +251,11 @@
         {
             Dentist dentistEntity = await this.dentistRepository
                 .GetByIdAsync(Guid.Parse(model.Id));
+
+            if (dentistEntity == null)
+            {
+                return false;
+            }
 
             dentistEntity.Name = model.Name;
             dentistEntity.PhoneNumber = model.PhoneNumber;
