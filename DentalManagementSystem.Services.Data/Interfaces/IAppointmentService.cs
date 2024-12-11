@@ -19,7 +19,7 @@
         Task<IEnumerable<PatientAppointmentViewModel>> GetPatientListAsync();
         Task<IEnumerable<DentistAppointmentViewModel>> GetDentistListAsync();
         Task<IEnumerable<AppointmentTypeViewModel>> GetAppointmentTypeListAsync();
-        Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProcedureListAsync();
+        //Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProcedureListAsync();
         Task<EditAppointmentFormModel?> GetAppointmentForEditByIdAsync(Guid id);
         Task<bool> EditAppointmentAsync(EditAppointmentFormModel model);
 

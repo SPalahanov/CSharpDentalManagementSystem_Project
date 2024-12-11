@@ -263,7 +263,7 @@
                 model.Patients = await this.appointmentService.GetPatientListAsync();
                 model.Dentists = await this.appointmentService.GetDentistListAsync();
                 model.AppointmentTypes = await this.appointmentService.GetAppointmentTypeListAsync();
-                model.AvailableProcedures = await this.appointmentService.GetAvailableProcedureListAsync();
+                model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
 
                 return this.View(model);
             }

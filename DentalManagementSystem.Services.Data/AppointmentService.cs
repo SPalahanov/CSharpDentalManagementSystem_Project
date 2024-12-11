@@ -280,7 +280,7 @@
 
             return appointmentTypeModel;
         }
-        public async Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProcedureListAsync()
+        /*public async Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProcedureListAsync()
         {
             IEnumerable<ProcedureAppointmentViewModel> procedureEntity =  await this.procedureRepository
                 .GetAllAttached()
@@ -289,7 +289,7 @@
                 .ToListAsync();
 
             return procedureEntity;
-        }
+        }*/
         public async Task<EditAppointmentFormModel?> GetAppointmentForEditByIdAsync(Guid id)
         {
             EditAppointmentFormModel? appointmentModel = await GetAppointmentDataForEditAsync(id);
