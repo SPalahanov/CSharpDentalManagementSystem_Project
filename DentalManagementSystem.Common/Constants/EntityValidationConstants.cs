@@ -71,5 +71,17 @@ namespace DentalManagementSystem.Common.Constants
             public const int IdMinLength = 36;
             public const int IdMaxLength = 36;
         }
+
+        public class Prescription
+        {
+            public const int IdMinLength = 36;
+            public const int IdMaxLength = 36;
+
+            public const int MedicationNameMinLength = 2;
+            public const int MedicationNameMaxLength = 45;
+
+            public const int MedicationDescriptionMinLength = 2;
+            public const int MedicationDescriptionMaxLength = 350;
+        }
     }
 }
