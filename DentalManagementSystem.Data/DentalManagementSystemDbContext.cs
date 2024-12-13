@@ -24,7 +24,6 @@
         public virtual DbSet<Appointment> Appointments { get; set; } = null!;
         public virtual DbSet<Procedure> Procedures { get; set; } = null!;
         public virtual DbSet<AppointmentProcedure> AppointmentProcedures { get; set; } = null!;
-        public virtual DbSet<Prescription> Prescriptions { get; set; } = null!;
         public virtual DbSet<AppointmentType> AppointmentsTypes { get; set; } = null!;
 
         /*protected override void OnModelCreating(ModelBuilder builder)

@@ -58,12 +58,6 @@ namespace DentalManagementSystem.Common.Constants
             public const string DateOfBirthFormat = "dd/MM/yyyy";
         }
 
-        public class Prescription
-        {
-            public const int MedicationNameMinLength = 2;
-            public const int MedicationNameMaxLength = 30;
-        }
-
         public class Appointment 
         {
             public const int IdMinLength = 36;
