@@ -122,7 +122,7 @@ namespace DentalManagementSystem.Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("DentalManagementSystem.Data.Models.AppointmentProcedure", b =>
@@ -142,7 +142,7 @@ namespace DentalManagementSystem.Data.Migrations
 
                     b.HasIndex("ProcedureId");
 
-                    b.ToTable("AppointmentProcedures");
+                    b.ToTable("AppointmentProcedures", (string)null);
                 });
 
             modelBuilder.Entity("DentalManagementSystem.Data.Models.AppointmentType", b =>
@@ -160,7 +160,7 @@ namespace DentalManagementSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppointmentsTypes");
+                    b.ToTable("AppointmentsTypes", (string)null);
 
                     b.HasData(
                         new
@@ -231,7 +231,7 @@ namespace DentalManagementSystem.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Dentists");
+                    b.ToTable("Dentists", (string)null);
                 });
 
             modelBuilder.Entity("DentalManagementSystem.Data.Models.Patient", b =>
@@ -283,7 +283,7 @@ namespace DentalManagementSystem.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("DentalManagementSystem.Data.Models.Procedure", b =>
@@ -314,7 +314,7 @@ namespace DentalManagementSystem.Data.Migrations
 
                     b.HasKey("ProcedureId");
 
-                    b.ToTable("Procedures");
+                    b.ToTable("Procedures", (string)null);
 
                     b.HasData(
                         new

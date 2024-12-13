@@ -14,7 +14,11 @@
         public void Configure(EntityTypeBuilder<Procedure> builder)
         {
             builder
-                .Property(c => c.IsDeleted)
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);
+
+            builder
+                .Property(p => p.IsDeleted)
                 .IsRequired()
                 .HasDefaultValue(false);
 
