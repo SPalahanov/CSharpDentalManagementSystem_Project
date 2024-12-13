@@ -29,6 +29,7 @@ namespace DentalManagementSystem.Web
             string patientsJsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetValue<string>("Seed:PatientsJson")!);
             string appointmentsJsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetValue<string>("Seed:AppointmentsJson")!);
             string appointmentProceduresJsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetValue<string>("Seed:AppointmentProceduresJson")!);
+            string prescriptionsJsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetValue<string>("Seed:PrescriptionsJson")!);
 
             builder.Services.AddDbContext<DentalManagementSystemDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -87,6 +88,7 @@ namespace DentalManagementSystem.Web
                 app.SeedPatients(patientsJsonPath);
                 app.SeedAppointments(appointmentsJsonPath);
                 app.SeedAppointmentProcedures(appointmentProceduresJsonPath);
+                app.SeedPrescriptions(prescriptionsJsonPath);
             }
 
             app.MapControllerRoute(

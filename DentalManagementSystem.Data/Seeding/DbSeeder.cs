@@ -11,9 +11,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
-    using System.Reflection;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     public static class DbSeeder
@@ -397,6 +395,66 @@
             catch (Exception)
             {
                 Console.WriteLine("Error occurred while seeding the appointment procedures in the database!");
+            }
+        }
+
+        public static async Task SeedPrescriptionsAsync(IServiceProvider services, string jsonPath)
+        {
+            await using DentalManagementSystemDbContext dbContext = services.GetRequiredService<DentalManagementSystemDbContext>();
+
+            ICollection<Prescription> allPrescriptions = await dbContext
+                .Prescriptions
+                .ToArrayAsync();
+
+            try
+            {
+                string jsonInput = await File.ReadAllTextAsync(jsonPath, Encoding.ASCII, CancellationToken.None);
+
+                ImportPrescriptionDto[]? prescriptionDtos = JsonConvert.DeserializeObject<ImportPrescriptionDto[]>(jsonInput);
+
+                foreach (var prescriptionDto in prescriptionDtos)
+                {
+                    if (!IsValid(prescriptionDto))
+                    {
+                        continue;
+                    }
+
+                    Guid prescriptionGuid = Guid.Empty;
+
+                    if (!IsGuidValid(prescriptionDto.PrescriptionId, ref prescriptionGuid))
+                    {
+                        continue;
+                    }
+
+                    Guid appointmentGuid = Guid.Empty;
+
+                    if (!IsGuidValid(prescriptionDto.AppointmentId, ref appointmentGuid))
+                    {
+                        continue;
+                    }
+
+                    if (allPrescriptions.Any(p => p.PrescriptionId.ToString().ToLowerInvariant() == prescriptionGuid.ToString().ToLowerInvariant()))
+                    {
+                        continue;
+                    }
+
+                    Prescription prescription = new Prescription
+                    {
+                        PrescriptionId = prescriptionGuid,
+                        MedicationName = prescriptionDto.MedicationName,
+                        MedicationDescription = prescriptionDto.MedicationDescription,
+                        AppointmentId = appointmentGuid,
+                        IsDeleted = prescriptionDto.IsDeleted,
+                    };
+
+                    await dbContext.Prescriptions.AddAsync(prescription);
+                }
+
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error occurred while seeding the prescriptions in the database!");
             }
         }
 

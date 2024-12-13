@@ -193,6 +193,22 @@
             return app;
         }
 
+        public static IApplicationBuilder SeedPrescriptions(this IApplicationBuilder app, string jsonPath)
+        {
+            using IServiceScope serviceScope = app.ApplicationServices.CreateAsyncScope();
+
+            IServiceProvider serviceProvider = serviceScope.ServiceProvider;
+
+            Task.Run(async () =>
+            {
+                await DbSeeder.SeedPrescriptionsAsync(serviceProvider, jsonPath);
+            })
+                .GetAwaiter()
+                .GetResult();
+
+            return app;
+        }
+
         private static async Task<ApplicationUser?> CreateAdminUserAsync(string email, string username, string password, IUserStore<ApplicationUser> userStore, UserManager<ApplicationUser> userManager)
         {
             ApplicationUser applicationUser = new ApplicationUser

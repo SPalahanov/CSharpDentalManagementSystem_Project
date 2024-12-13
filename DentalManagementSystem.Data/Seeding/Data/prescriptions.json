@@ -1,0 +1,142 @@
+[
+  {
+    "PrescriptionId": "9cd1dab8-7983-498c-8d04-6d7754a028af",
+    "MedicationName": "Amoxicillin",
+    "MedicationDescription": "20 tablets, 500mg, take 1 tablet every 8 hours.",
+    "AppointmentId": "ef94990b-86fa-49d5-b093-402d64adfdab",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "61ddc5f6-6b20-4917-8bd9-bad7d5fc2ef9",
+    "MedicationName": "Ibuprofen",
+    "MedicationDescription": "15 tablets, 400mg, take 1 tablet every 6 hours with food.",
+    "AppointmentId": "e576dbe7-1f24-4dd6-9e0b-bc7986ea0d4b",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "949bcfcc-6c18-4be7-8216-685431fdc49d",
+    "MedicationName": "Chlorhexidine Mouthwash",
+    "MedicationDescription": "250ml, rinse 10ml twice daily after brushing.",
+    "AppointmentId": "7463ded4-56d0-429b-8063-b73e453d0ab5",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "48f02b28-9641-492e-b6c8-20fa8f72d692",
+    "MedicationName": "Paracetamol",
+    "MedicationDescription": "10 tablets, 500mg, take 1 tablet every 4-6 hours as needed.",
+    "AppointmentId": "26edaf6d-cae6-42c9-8d5c-fba578baeaf7",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "0bc458af-678f-4a19-9345-91cb51fe7cfb",
+    "MedicationName": "Metronidazole",
+    "MedicationDescription": "10 tablets, 400mg, take 1 tablet every 8 hours after meals.",
+    "AppointmentId": "7463ded4-56d0-429b-8063-b73e453d0ab5",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "4cf1706f-8105-48a2-805f-2a5aac66502c",
+    "MedicationName": "Clindamycin",
+    "MedicationDescription": "16 capsules, 300mg, take 1 capsule every 6 hours.",
+    "AppointmentId": "8cf0c1ce-1925-419a-b3dc-3e3749f2a9e7",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "41cd87e8-7449-4d4d-a6fe-b06cae8eba8b",
+    "MedicationName": "Naproxen",
+    "MedicationDescription": "10 tablets, 500mg, take 1 tablet twice daily after meals.",
+    "AppointmentId": "a8ee87c9-4c5a-4d05-bba9-6f09e5d4dfb5",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "36fbe07e-dc6f-4834-8199-bc25c94ce2df",
+    "MedicationName": "Cefalexin",
+    "MedicationDescription": "20 capsules, 500mg, take 1 capsule every 6 hours.",
+    "AppointmentId": "a8ee87c9-4c5a-4d05-bba9-6f09e5d4dfb5",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "88a35635-67ed-4e1b-bc7e-965ba73765a4",
+    "MedicationName": "Doxycycline",
+    "MedicationDescription": "14 capsules, 100mg, take 1 capsule daily with food.",
+    "AppointmentId": "9d7e3cda-4d36-4ff6-b818-90dcb21196fb",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "200f5930-03e7-461b-8df1-80747212910d",
+    "MedicationName": "Hydrocortisone Ointment",
+    "MedicationDescription": "15g tube, apply a thin layer twice daily to affected area.",
+    "AppointmentId": "520e7681-dfa0-4b0e-95fc-87afa3265c2f",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "be6b0051-4666-48f1-8364-409cb489d631",
+    "MedicationName": "Azithromycin",
+    "MedicationDescription": "5 tablets, 250mg, take 2 tablets on the first day, then 1 tablet daily.",
+    "AppointmentId": "520e7681-dfa0-4b0e-95fc-87afa3265c2f",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "f0965fa7-64db-4648-a395-c0cbe0d397c4",
+    "MedicationName": "Ketoprofen",
+    "MedicationDescription": "12 capsules, 50mg, take 1 capsule every 8 hours after meals.",
+    "AppointmentId": "b7592d68-baa8-4e8f-b29f-f2e29e4dc2c1",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "92a48f0b-cebf-41ab-81d0-e8139139339e",
+    "MedicationName": "Benzocaine Gel",
+    "MedicationDescription": "10g tube, apply a small amount to the affected area every 4 hours.",
+    "AppointmentId": "210cffcc-e35f-4e33-bea5-159823a797ac",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "40df6590-afc4-4cf7-9517-39ce9c4ec69d",
+    "MedicationName": "Mupirocin Ointment",
+    "MedicationDescription": "15g tube, apply a thin layer to the affected area twice daily.",
+    "AppointmentId": "b09834db-809c-4aba-b6b1-00b1bde57b6c",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "a8965c38-f9c5-4054-b297-d62f85eaaebc",
+    "MedicationName": "Fluconazole",
+    "MedicationDescription": "2 tablets, 150mg, take 1 tablet weekly.",
+    "AppointmentId": "9cb632e3-fb38-46e6-b97c-0dd53491e461",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "8f894593-56fe-4634-bc88-4d110a1f3c67",
+    "MedicationName": "Prednisone",
+    "MedicationDescription": "10 tablets, 10mg, take 1 tablet daily with food.",
+    "AppointmentId": "b09834db-809c-4aba-b6b1-00b1bde57b6c",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "e52daf25-4d66-4288-aefe-c786561da102",
+    "MedicationName": "Lidocaine Spray",
+    "MedicationDescription": "50ml, spray 1-2 pumps on the affected area every 6 hours.",
+    "AppointmentId": "8ca5c3ca-b991-4a6e-a5b3-29cc79012af5",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "68d71612-2ab0-4dc7-a557-e69da99ee13e",
+    "MedicationName": "Tetracycline",
+    "MedicationDescription": "28 capsules, 250mg, take 1 capsule every 6 hours.",
+    "AppointmentId": "5efcd93d-4bc1-48a1-bb5d-9c23ef6b134d",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "7dfaf4ca-9256-42c2-a952-1eb7a92b65c2",
+    "MedicationName": "Nystatin Oral Suspension",
+    "MedicationDescription": "100ml, rinse 5ml and swallow 4 times daily.",
+    "AppointmentId": "5efcd93d-4bc1-48a1-bb5d-9c23ef6b134d",
+    "IsDeleted": false
+  },
+  {
+    "PrescriptionId": "2f803967-8b20-488b-bd57-f457d18b6b85",
+    "MedicationName": "Diclofenac",
+    "MedicationDescription": "20 tablets, 50mg, take 1 tablet every 12 hours.",
+    "AppointmentId": "61496f57-111c-4618-930e-e932c685db65",
+    "IsDeleted": false
+  }
+]
