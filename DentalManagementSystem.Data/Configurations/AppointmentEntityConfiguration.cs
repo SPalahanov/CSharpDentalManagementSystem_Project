@@ -36,7 +36,7 @@
                 .IsRequired()
                 .HasDefaultValue(false);
 
-            builder.HasData(GenerateAppointment());
+            //builder.HasData(GenerateAppointment());
         }
 
         private Appointment[] GenerateAppointment()

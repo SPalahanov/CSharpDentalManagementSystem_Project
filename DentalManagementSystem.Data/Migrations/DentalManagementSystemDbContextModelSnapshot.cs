@@ -123,18 +123,6 @@ namespace DentalManagementSystem.Data.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Appointments");
-
-                    b.HasData(
-                        new
-                        {
-                            AppointmentId = new Guid("c27ca465-fcdc-474e-9dde-35bef1c8a314"),
-                            AppointmentDate = new DateTime(2024, 12, 8, 10, 21, 2, 967, DateTimeKind.Utc).AddTicks(6624),
-                            AppointmentStatus = 0,
-                            AppointmentTypeId = 1,
-                            DentistId = new Guid("ffa779be-a8d5-4662-95f2-d5771ae8a22a"),
-                            IsDeleted = false,
-                            PatientId = new Guid("d6c3bedb-81e7-4315-8e55-841b06bdd51f")
-                        });
                 });
 
             modelBuilder.Entity("DentalManagementSystem.Data.Models.AppointmentProcedure", b =>
