@@ -5,6 +5,7 @@
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.ViewModels.Appointment;
+    using DentalManagementSystem.Web.ViewModels.Prescription;
     using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -22,19 +23,22 @@
         private readonly IRepository<Patient, Guid> patientRepository;
         private readonly IRepository<Dentist, Guid> dentistRepository;
         private readonly IRepository<Procedure, int> procedureRepository;
+        private readonly IRepository<Prescription, Guid> prescriptionRepository;
         private readonly IRepository<AppointmentType, int> appointmentTypeRepository;
 
         public AppointmentService(IRepository<Appointment, Guid> appointmentRepository, 
                                   IRepository<Patient, Guid> patientRepository,
                                   IRepository<Dentist, Guid> dentistRepository,
                                   IRepository<AppointmentType, int> appointmentTypeRepository,
-                                  IRepository<Procedure, int> procedureRepository)
+                                  IRepository<Procedure, int> procedureRepository,
+                                  IRepository<Prescription, Guid> prescriptionRepository)
         {
             this.appointmentRepository = appointmentRepository;
             this.patientRepository = patientRepository;
             this.dentistRepository = dentistRepository;
             this.appointmentTypeRepository = appointmentTypeRepository;
             this.procedureRepository = procedureRepository;
+            this.prescriptionRepository = prescriptionRepository;
         }
 
         public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAllAppointmentsAsync(AllAppointmentsFilterViewModel inputModel)
@@ -162,6 +166,7 @@
 
             return procedureViewModels;
         }
+        
         public async Task<bool> CreateAppointmentAsync(CreateAppointmentViewModel model)
         {
             Appointment appointment = new Appointment
@@ -200,6 +205,7 @@
                 .Where(a => a.IsDeleted == false)
                 .Include(a => a.Patient)
                 .Include(a => a.Dentist)
+                .Include(a => a.Prescriptions)
                 .Include(a => a.AppointmentProcedures)
                 .ThenInclude(ap => ap.Procedure)
                 .FirstOrDefaultAsync(p => p.AppointmentId == id);
@@ -210,10 +216,20 @@
             {
                 viewModel = new AppointmentDetailsViewModel()
                 {
+                    AppointmentId = appointment.AppointmentId,
                     AppointmentDate = appointment.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
                     PatientName = appointment.Patient != null ? appointment.Patient.Name : "N/A",
                     DentistName = appointment.Dentist != null ? appointment.Dentist.Name : "N/A",
                     AppointmentStatus = appointment.AppointmentStatus.ToString(),
+                    Prescriptions = appointment.Prescriptions
+                        .Where(p => p.IsDeleted == false)
+                        .Select(a => new AppointmentPrescriptionViewModel()
+                        {
+                            Id = a.AppointmentId,
+                            MedicationName = a.MedicationName,
+                            MedicationDescription = a.MedicationDescription
+                        })
+                        .ToArray(),
                     Procedures = appointment.AppointmentProcedures
                         .Where(ap => ap.IsDeleted == false)
                         .Select(ap => new AppointmentProcedureViewModel()

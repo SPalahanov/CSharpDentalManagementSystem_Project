@@ -1,9 +1,11 @@
 ﻿@using DentalManagementSystem.Web.ViewModels.Appointment
+@using DentalManagementSystem.Web.ViewModels.Prescription
 @using DentalManagementSystem.Web.ViewModels.Procedure
 @model AppointmentDetailsViewModel
 
 @{
     ViewData["Title"] = "Appointment Details";
+    var canManagePrescriptions = Model.AppointmentStatus == "Scheduled" && (DateTime.Parse(Model.AppointmentDate) >= DateTime.Today && DateTime.Parse(Model.AppointmentDate) < DateTime.Today.AddDays(+1));
 }
 
 <h2>Appointment on @Model.AppointmentDate</h2>
@@ -12,24 +14,74 @@
 <p><strong>Dentist Name:</strong> Dr. @Model.DentistName</p>
 <p><strong>Status:</strong> @Model.AppointmentStatus</p>
 
-<h3>Appointment Procedures:</h3>
-
-@if (Model.Procedures.Any())
-{
-    <ul class="list-group">
-        @foreach (AppointmentProcedureViewModel procedure in Model.Procedures)
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h3>Appointment Procedures:</h3>
+        
+        @if (Model.Procedures.Any())
         {
-            <li class="list-group-item">
-                <strong>@procedure.Name</strong> <br />
-                <small>Price: @procedure.Price</small> <br />
-                <small>Description: @procedure.Description</small>
-            </li>
+            <ul class="list-group">
+                @foreach (AppointmentProcedureViewModel procedure in Model.Procedures)
+                {
+                    <li class="list-group-item">
+                        <strong>@procedure.Name</strong> <br />
+                        <small>Price: @procedure.Price</small> <br />
+                        <small>Description: @procedure.Description</small>
+                    </li>
+                }
+            </ul>
         }
-    </ul>
-}
-else
-{
-    <p>No procedures assigned to this appointment.</p>
-}
+        else
+        {
+            <p>No procedures assigned to this appointment.</p>
+        }
+    </div>
 
-<a asp-action="Index" class="btn btn-secondary mt-3">Back to Appointments</a>
+    <div class="col-md-6">
+        <h3>Appointment Prescriptions:</h3>
+        
+        @if (Model.Prescriptions.Any())
+        {
+            <ul class="list-group">
+                @foreach (AppointmentPrescriptionViewModel prescription in Model.Prescriptions)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>@prescription.MedicationName</strong> <br />
+                            <small>Description: @prescription.MedicationDescription</small>
+                        </div>
+                        @if (canManagePrescriptions)
+                        {
+                            <form asp-action="DeletePrescription" asp-controller="Prescriptions" method="post" class="d-inline">
+                                <input type="hidden" name="prescriptionId" value="@prescription.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        }
+                    </li>
+                }
+                
+            </ul>
+        }
+        else
+        {
+            <p>No prescriptions assigned to this appointment.</p>
+        }
+        
+        @if (canManagePrescriptions)
+        {
+            <a asp-action="CreatePrescription" asp-controller="Prescriptions" asp-route-appointmentId="@Model.AppointmentId" class="btn btn-success btn-sm mt-3">Add Prescription</a>
+        }
+        else
+        {
+            <p class="text-muted mt-3">
+                Prescriptions cannot be added or deleted if the appointment is completed or the appointment time has not yet arrived.
+            </p>
+        }
+    </div>
+</div>
+
+<hr class="my-4" />
+
+<div class="text-start">
+    <a asp-action="Index" class="btn btn-secondary mt-3">Back to Appointments</a>
+</div>
