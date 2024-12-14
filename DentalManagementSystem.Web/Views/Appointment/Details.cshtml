@@ -52,7 +52,7 @@
                         </div>
                         @if (canManagePrescriptions)
                         {
-                            <form asp-action="DeletePrescription" asp-controller="Prescriptions" method="post" class="d-inline">
+                            <form asp-action="Delete" asp-controller="Prescription" method="post" class="d-inline">
                                 <input type="hidden" name="prescriptionId" value="@prescription.Id" />
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
@@ -69,7 +69,8 @@
         
         @if (canManagePrescriptions)
         {
-            <a asp-action="CreatePrescription" asp-controller="Prescriptions" asp-route-appointmentId="@Model.AppointmentId" class="btn btn-success btn-sm mt-3">Add Prescription</a>
+            <a asp-action="Create" asp-controller="Prescription" asp-route-appointmentId="@Model.AppointmentId" class="btn btn-success btn-sm mt-3">Add Prescription</a>
+
         }
         else
         {
