@@ -3,6 +3,7 @@
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Appointment;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -37,6 +38,7 @@
             bool isAdmin = this.User.IsInRole("Admin");
 
             IEnumerable<AllAppointmentsIndexViewModel> appointments;
+
             int totalAppointmentsCount;
 
             if (isPatient)
@@ -356,7 +358,6 @@
 
             if (!isDeleted)
             {
-                TempData["ErrorMessage"] = "Unexpected error occurred while trying to delete the appointment! Please contact system administrator!";
                 return this.RedirectToAction(nameof(Delete), new { id = appointment.Id });
             }
 

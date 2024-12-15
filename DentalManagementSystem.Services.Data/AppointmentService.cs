@@ -1,5 +1,12 @@
 ﻿namespace DentalManagementSystem.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+
     using DentalManagementSystem.Common.Enums;
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
@@ -7,13 +14,8 @@
     using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Prescription;
     using DentalManagementSystem.Web.ViewModels.Procedure;
+
     using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
 
     using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Appointment;
 
@@ -44,7 +46,8 @@
         public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAllAppointmentsAsync(AllAppointmentsFilterViewModel inputModel)
         {
             IQueryable<Appointment> allAppointmentsQuery = this.appointmentRepository
-                .GetAllAttached();
+                .GetAllAttached()
+                .OrderByDescending(a => a.AppointmentDate);
 
             if (!String.IsNullOrWhiteSpace(inputModel.YearFilter))
             {
@@ -56,7 +59,7 @@
                     int endYear = int.Parse(rangeMatch.Groups[2].Value);
 
                     allAppointmentsQuery = allAppointmentsQuery
-                        .Where(m => m.AppointmentDate.Year >= startYear && m.AppointmentDate.Year <= endYear);
+                        .Where(a => a.AppointmentDate.Year >= startYear && a.AppointmentDate.Year <= endYear);
                 }
                 else
                 {
@@ -65,7 +68,7 @@
                     if (isValidNumber)
                     {
                         allAppointmentsQuery = allAppointmentsQuery
-                            .Where(m => m.AppointmentDate.Year == year);
+                            .Where(a => a.AppointmentDate.Year == year);
                     }
                 }
             }
@@ -85,6 +88,19 @@
                     AppointmentStatus = a.AppointmentStatus.ToString(),
                 })
                 .ToArrayAsync();
+        }
+        public async Task<int> GetAppointmentsCountByFilterAsync(AllAppointmentsFilterViewModel inputModel)
+        {
+            AllAppointmentsFilterViewModel inputModelCopy = new AllAppointmentsFilterViewModel()
+            {
+                CurrentPage = null,
+                EntitiesPerPage = null,
+                YearFilter = inputModel.YearFilter,
+            };
+
+            int appointmentCount = (await this.GetAllAppointmentsAsync(inputModelCopy)).Count();
+
+            return appointmentCount;
         }
 
         public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByPatientIdAsync(Guid patientId)
@@ -150,23 +166,7 @@
                 AvailableProcedures = procedures
             };
         }
-        public async Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProceduresAsync()
-        {
-            IEnumerable<Procedure> procedures = await this.procedureRepository
-                .GetAllAttached()
-                .Where(p => p.IsDeleted == false)
-                .ToListAsync();
 
-            List<ProcedureAppointmentViewModel> procedureViewModels = procedures
-                .Select(p => new ProcedureAppointmentViewModel
-                {
-                    Id = p.ProcedureId,
-                    Name = p.Name
-                }).ToList();
-
-            return procedureViewModels;
-        }
-        
         public async Task<bool> CreateAppointmentAsync(CreateAppointmentViewModel model)
         {
             Appointment appointment = new Appointment
@@ -195,6 +195,7 @@
             }
 
             await this.appointmentRepository.AddAsync(appointment);
+
             return true;
         }
 
@@ -223,11 +224,11 @@
                     AppointmentStatus = appointment.AppointmentStatus.ToString(),
                     Prescriptions = appointment.Prescriptions
                         .Where(p => p.IsDeleted == false)
-                        .Select(a => new AppointmentPrescriptionViewModel()
+                        .Select(ap => new AppointmentPrescriptionViewModel()
                         {
-                            Id = a.PrescriptionId,
-                            MedicationName = a.MedicationName,
-                            MedicationDescription = a.MedicationDescription
+                            Id = ap.PrescriptionId,
+                            MedicationName = ap.MedicationName,
+                            MedicationDescription = ap.MedicationDescription
                         })
                         .ToArray(),
                     Procedures = appointment.AppointmentProcedures
@@ -245,7 +246,56 @@
             return viewModel;
         }
 
-        public async Task<EditAppointmentFormModel?> GetAppointmentDataForEditAsync(Guid id)
+        public async Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProceduresAsync()
+        {
+            IEnumerable<Procedure> procedures = await this.procedureRepository
+                .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
+                .ToListAsync();
+
+            List<ProcedureAppointmentViewModel> procedureViewModels = procedures
+                .Select(p => new ProcedureAppointmentViewModel
+                {
+                    Id = p.ProcedureId,
+                    Name = p.Name
+                }).ToList();
+
+            return procedureViewModels;
+        }
+
+        public async Task<IEnumerable<PatientAppointmentViewModel>> GetPatientListAsync()
+        {
+            IEnumerable<PatientAppointmentViewModel> patientModel = await this.patientRepository
+                .GetAllAttached()
+                .Where(p => p.IsDeleted == false)
+                .Select(p => new PatientAppointmentViewModel { Id = p.PatientId, Name = p.Name })
+                .ToListAsync();
+
+            return patientModel;
+        }
+
+        public async Task<IEnumerable<DentistAppointmentViewModel>> GetDentistListAsync()
+        {
+            IEnumerable<DentistAppointmentViewModel> dentistModel = await this.dentistRepository
+                .GetAllAttached()
+                .Where(d => d.IsDeleted == false)
+                .Select(d => new DentistAppointmentViewModel { Id = d.DentistId, Name = d.Name })
+                .ToListAsync();
+
+            return dentistModel;
+        }
+
+        public async Task<IEnumerable<AppointmentTypeViewModel>> GetAppointmentTypeListAsync()
+        {
+            IEnumerable<AppointmentTypeViewModel> appointmentTypeModel = await this.appointmentTypeRepository
+                .GetAllAttached()
+                .Select(at => new AppointmentTypeViewModel { Id = at.Id, Name = at.Name })
+                .ToListAsync();
+
+            return appointmentTypeModel;
+        }
+
+        public async Task<EditAppointmentFormModel?> GetAppointmentForEditByIdAsync(Guid id)
         {
             EditAppointmentFormModel? appointmentModel = await this.appointmentRepository
                 .GetAllAttached()
@@ -264,51 +314,6 @@
                     DentistId = a.DentistId,
                 })
                 .FirstOrDefaultAsync(a => a.Id.ToLower() == id.ToString().ToLower());
-
-            return appointmentModel;
-        }
-        public async Task<IEnumerable<PatientAppointmentViewModel>> GetPatientListAsync()
-        {
-            IEnumerable<PatientAppointmentViewModel> patientModel = await this.patientRepository
-                .GetAllAttached()
-                .Where(p => p.IsDeleted == false)
-                .Select(p => new PatientAppointmentViewModel { Id = p.PatientId, Name = p.Name })
-                .ToListAsync();
-
-            return patientModel;
-        }
-        public async Task<IEnumerable<DentistAppointmentViewModel>> GetDentistListAsync()
-        {
-            IEnumerable<DentistAppointmentViewModel> dentistModel = await this.dentistRepository
-                .GetAllAttached()
-                .Where(d => d.IsDeleted == false)
-                .Select(d => new DentistAppointmentViewModel { Id = d.DentistId, Name = d.Name })
-                .ToListAsync();
-
-            return dentistModel;
-        }
-        public async Task<IEnumerable<AppointmentTypeViewModel>> GetAppointmentTypeListAsync()
-        {
-            IEnumerable<AppointmentTypeViewModel> appointmentTypeModel = await this.appointmentTypeRepository
-                .GetAllAttached()
-                .Select(at => new AppointmentTypeViewModel { Id = at.Id, Name = at.Name })
-                .ToListAsync();
-
-            return appointmentTypeModel;
-        }
-        /*public async Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProcedureListAsync()
-        {
-            IEnumerable<ProcedureAppointmentViewModel> procedureEntity =  await this.procedureRepository
-                .GetAllAttached()
-                .Where(p => p.IsDeleted == false)
-                .Select(p => new ProcedureAppointmentViewModel { Id = p.ProcedureId, Name = p.Name })
-                .ToListAsync();
-
-            return procedureEntity;
-        }*/
-        public async Task<EditAppointmentFormModel?> GetAppointmentForEditByIdAsync(Guid id)
-        {
-            EditAppointmentFormModel? appointmentModel = await GetAppointmentDataForEditAsync(id);
 
             if (appointmentModel == null)
             {
@@ -331,6 +336,7 @@
 
             return editModel;
         }
+
         public async Task<bool> EditAppointmentAsync(EditAppointmentFormModel model)
         {
             Appointment? appointment = await this.appointmentRepository
@@ -390,6 +396,7 @@
 
             return patientToDelete;
         }
+
         public async Task<bool> SoftDeleteAppointmentAsync(Guid id)
         {
             Appointment appointmentToDelete = await this.appointmentRepository
@@ -405,21 +412,6 @@
             await this.appointmentRepository.UpdateAsync(appointmentToDelete);
 
             return true;
-        }
-
-        public async Task<int> GetAppointmentsCountByFilterAsync(AllAppointmentsFilterViewModel inputModel)
-        {
-            AllAppointmentsFilterViewModel inputModelCopy = new AllAppointmentsFilterViewModel()
-            {
-                CurrentPage = null,
-                EntitiesPerPage = null,
-                YearFilter = inputModel.YearFilter,
-            };
-
-            int appointmentCount = (await this.GetAllAppointmentsAsync(inputModelCopy))
-                .Count();
-
-            return appointmentCount;
         }
     }
 }
