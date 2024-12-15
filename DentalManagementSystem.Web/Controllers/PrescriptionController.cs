@@ -3,9 +3,8 @@
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
-    using DentalManagementSystem.Web.ViewModels.Appointment;
-    using DentalManagementSystem.Web.ViewModels.Dentist;
     using DentalManagementSystem.Web.ViewModels.Prescription;
+    using DentalManagementSystem.Web.ViewModels.Procedure;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -82,6 +81,43 @@
             await this.prescriptionService.AddPrescriptionAsync(model);
 
             return this.RedirectToAction("Details", "Appointment", new { id = model.AppointmentId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SoftDeleteConfirmed(string id)
+        {
+            Guid prescriptionId = Guid.NewGuid();
+
+            if (!this.IsGuidValid(id, ref prescriptionId))
+            {
+                return this.RedirectToAction("Index", "Appointment");
+            }
+
+            string? userId = this.User.GetUserId();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return this.RedirectToAction("Index", "Appointment");
+            }
+
+            bool isDentist = await this.dentistService.DentistExistsByUserIdAsync(userId);
+            bool isAdmin = this.User.IsInRole("Admin");
+
+            if (!isDentist && !isAdmin)
+            {
+                return this.RedirectToAction("Index", "Appointment");
+            }
+
+            DeletePrescriptionViewModel? prescriptionToDeleteViewModel = await this.prescriptionService.GetPrescriptionForDeleteByIdAsync(prescriptionId);
+
+            bool isDeleted = await this.prescriptionService.SoftDeletePrescriptionAsync(prescriptionId);
+
+            if (!isDeleted)
+            {
+                return this.RedirectToAction("Details", "Appointment", new { id = prescriptionToDeleteViewModel?.AppointmentId });
+            }
+
+            return this.RedirectToAction("Details", "Appointment", new { id = prescriptionToDeleteViewModel?.AppointmentId });
         }
     }
 }

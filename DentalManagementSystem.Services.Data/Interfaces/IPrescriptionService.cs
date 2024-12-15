@@ -10,5 +10,9 @@
     public interface IPrescriptionService
     {
         Task<bool> AddPrescriptionAsync(CreatePrescriptionFormModel model);
+
+        Task<DeletePrescriptionViewModel?> GetPrescriptionForDeleteByIdAsync(Guid id);
+
+        Task<bool> SoftDeletePrescriptionAsync(Guid id);
     }
 }

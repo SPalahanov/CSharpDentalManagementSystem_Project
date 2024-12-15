@@ -225,7 +225,7 @@
                         .Where(p => p.IsDeleted == false)
                         .Select(a => new AppointmentPrescriptionViewModel()
                         {
-                            Id = a.AppointmentId,
+                            Id = a.PrescriptionId,
                             MedicationName = a.MedicationName,
                             MedicationDescription = a.MedicationDescription
                         })

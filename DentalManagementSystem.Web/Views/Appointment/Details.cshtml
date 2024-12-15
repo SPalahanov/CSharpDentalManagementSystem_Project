@@ -52,8 +52,9 @@
                         </div>
                         @if (canManagePrescriptions)
                         {
-                            <form asp-action="Delete" asp-controller="Prescription" method="post" class="d-inline">
-                                <input type="hidden" name="prescriptionId" value="@prescription.Id" />
+                            <form asp-action="SoftDeleteConfirmed" asp-controller="Prescription" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@prescription.Id" />
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
                         }
