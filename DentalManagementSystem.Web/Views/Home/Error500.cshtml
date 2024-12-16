@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="container text-center mt-5">
+    <h1 class="display-4 text-danger">Oops, something went wrong!</h1>
+
+    <div class="mt-4">
+        <button class="btn btn-primary" onclick="window.history.back()">Go Back</button>
+
+        <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">Go to Home</a>
+    </div>
+</div>
+
+<style>
+    .container {
+        margin-top: 10%;
+    }
+</style>

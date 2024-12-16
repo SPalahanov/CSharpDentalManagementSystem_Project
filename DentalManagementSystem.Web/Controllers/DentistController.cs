@@ -297,6 +297,11 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
+            if (await this.dentistService.GetDentistForDeleteByIdAsync(dentistGuid) == null)
+            {
+                return this.RedirectToAction("Home", "Error");
+            }
+
             DeleteDentistViewModel? dentistToDeleteViewModel = await this.dentistService.GetDentistForDeleteByIdAsync(dentistGuid);
 
             return this.View(dentistToDeleteViewModel);

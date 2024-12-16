@@ -55,9 +55,22 @@ namespace DentalManagementSystem.Web.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int statusCode, string referer)
         {
-            return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (statusCode == 404)
+            {
+                return this.View("Error404");
+            }
+
+            if (statusCode == 500)
+            {
+                return this.View("Error500");
+            }
+
+            var refererUrl = string.IsNullOrEmpty(referer) ? "/" : referer;
+            ViewData["RefererUrl"] = refererUrl;
+
+            return this.View();
         }
     }
 }

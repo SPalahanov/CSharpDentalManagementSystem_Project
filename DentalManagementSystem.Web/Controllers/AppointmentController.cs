@@ -250,6 +250,11 @@
 
             EditAppointmentFormModel? formModel = await this.appointmentService.GetAppointmentForEditByIdAsync(appointmentGuid);
 
+            if (formModel == null)
+            {
+                return this.NotFound();
+            }
+
             return this.View(formModel);
         }
 

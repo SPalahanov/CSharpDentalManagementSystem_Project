@@ -66,7 +66,8 @@ namespace DentalManagementSystem.Web
 
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error/500");
+                app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
 
                 app.UseHsts();
             }
@@ -78,6 +79,8 @@ namespace DentalManagementSystem.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
 
             if (app.Environment.IsDevelopment())
             {
