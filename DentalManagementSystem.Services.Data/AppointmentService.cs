@@ -103,7 +103,7 @@
             return appointmentCount;
         }
 
-        public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByPatientIdAsync(Guid patientId)
+        public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByPatientIdAsync(Guid patientId, int currentPage, int entitiesPerPage)
         {
             DateTime today = DateTime.Today;
 
@@ -113,6 +113,8 @@
                 .Where(a => a.AppointmentDate >= today.Date)
                 .Where(a => a.IsDeleted == false)
                 .OrderBy(a => a.AppointmentDate)
+                .Skip(entitiesPerPage * (currentPage - 1))
+                .Take(entitiesPerPage)
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
                     Id = a.AppointmentId.ToString(),
@@ -124,13 +126,15 @@
             return appointments;
         }
 
-        public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByDentistIdAsync(Guid dentistId)
+        public async Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByDentistIdAsync(Guid dentistId, int currentPage, int entitiesPerPage)
         {
             IEnumerable<AllAppointmentsIndexViewModel> appointments = await this.appointmentRepository
                 .GetAllAttached()
                 .Where(a => a.DentistId == dentistId)
                 .Where(a => a.IsDeleted == false)
                 .OrderByDescending(a => a.AppointmentDate)
+                .Skip(entitiesPerPage * (currentPage - 1))
+                .Take(entitiesPerPage)
                 .Select(a => new AllAppointmentsIndexViewModel
                 {
                     Id = a.AppointmentId.ToString(),

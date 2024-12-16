@@ -41,20 +41,25 @@
 
             int totalAppointmentsCount;
 
+            int currentPage = inputModel.CurrentPage ?? 1;
+            int entitiesPerPage = inputModel.EntitiesPerPage ?? 7;
+
             if (isPatient)
             {
                 Guid patientId = await this.patientService.GetPatientIdByUserIdAsync(userGuid);
 
-                appointments = await this.appointmentService.GetAppointmentsByPatientIdAsync(patientId);
+                IEnumerable<AllAppointmentsIndexViewModel> appointmentsForPatient = await this.appointmentService.GetAppointmentsByPatientIdAsync(patientId, 1, int.MaxValue);
+
+                appointments = await this.appointmentService.GetAppointmentsByPatientIdAsync(patientId, currentPage, entitiesPerPage);
 
                 totalAppointmentsCount = appointments.Count();
 
                 AllAppointmentsFilterViewModel viewModel = new AllAppointmentsFilterViewModel
                 {
                     Appointments = appointments,
-                    CurrentPage = inputModel.CurrentPage ?? 1,
-                    EntitiesPerPage = inputModel.EntitiesPerPage ?? 10,
-                    TotalPages = (int)Math.Ceiling((double)totalAppointmentsCount / (inputModel.EntitiesPerPage ?? 10)),
+                    CurrentPage = currentPage,
+                    EntitiesPerPage = entitiesPerPage,
+                    TotalPages = (int)Math.Ceiling((double)totalAppointmentsCount / entitiesPerPage),
                 };
 
                 return this.View(viewModel);
@@ -64,16 +69,18 @@
             {
                 Guid dentistId = await dentistService.GetDentistIdByUserIdAsync(userGuid);
 
-                appointments = await appointmentService.GetAppointmentsByDentistIdAsync(dentistId);
+                IEnumerable<AllAppointmentsIndexViewModel> appointmentsForDentist = await this.appointmentService.GetAppointmentsByDentistIdAsync(dentistId, 1, int.MaxValue);
 
-                totalAppointmentsCount = appointments.Count();
+                appointments = await appointmentService.GetAppointmentsByDentistIdAsync(dentistId, currentPage, entitiesPerPage);
+
+                totalAppointmentsCount = appointmentsForDentist.Count();
 
                 AllAppointmentsFilterViewModel viewModel = new AllAppointmentsFilterViewModel
                 {
                     Appointments = appointments,
-                    CurrentPage = inputModel.CurrentPage ?? 1,
-                    EntitiesPerPage = inputModel.EntitiesPerPage ?? 10,
-                    TotalPages = (int)Math.Ceiling((double)totalAppointmentsCount / (inputModel.EntitiesPerPage ?? 10)),
+                    CurrentPage = currentPage,
+                    EntitiesPerPage = entitiesPerPage,
+                    TotalPages = (int)Math.Ceiling((double)totalAppointmentsCount / entitiesPerPage),
                 };
 
                 return this.View(viewModel);

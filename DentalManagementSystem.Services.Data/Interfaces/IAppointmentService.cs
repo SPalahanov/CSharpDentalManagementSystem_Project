@@ -8,9 +8,9 @@
 
         Task<int> GetAppointmentsCountByFilterAsync(AllAppointmentsFilterViewModel inputModel);
 
-        Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByPatientIdAsync(Guid patientId);
+        Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByPatientIdAsync(Guid patientId, int currentPage, int entitiesPerPage);
 
-        Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByDentistIdAsync(Guid patientId);
+        Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByDentistIdAsync(Guid dentistId, int currentPage, int entitiesPerPage);
 
         Task<CreateAppointmentViewModel> GetCreateAppointmentModelAsync();
 
