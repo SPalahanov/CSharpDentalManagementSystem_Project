@@ -246,7 +246,23 @@
                 })
                 .FirstOrDefaultAsync(d => d.Id.ToLower() == id.ToString().ToLower());
 
-            return dentistModel;
+            if (dentistModel == null)
+            {
+                return null;
+            }
+
+            EditDentistFormModel editModel = new EditDentistFormModel
+            {
+                Id = dentistModel.Id,
+                Name = dentistModel.Name,
+                PhoneNumber = dentistModel.PhoneNumber,
+                Address = dentistModel.Address,
+                Gender = dentistModel.Gender,
+                Specialty = dentistModel.Specialty,
+                LicenseNumber = dentistModel.LicenseNumber,
+            };
+
+            return editModel;
         }
         public async Task<bool> EditDentistAsync(EditDentistFormModel model)
         {

@@ -217,6 +217,7 @@
                 return this.RedirectToAction("Index", "Dentist");
             }
 
+            var valid = await this.dentistService.GetDentistDetailsByIdAsync(dentistGuid);
             string? userId = this.User.GetUserId();
 
             if (string.IsNullOrEmpty(userId))
@@ -239,6 +240,11 @@
             }
 
             EditDentistFormModel? formModel = await this.dentistService.GetDentistForEditByIdAsync(dentistGuid);
+
+            if (formModel == null)
+            {
+                return this.RedirectToAction("Index", "Dentist");
+            }
 
             return this.View(formModel);
         }

@@ -289,6 +289,11 @@
 
             EditPatientFormModel? formModel = await this.patientService.GetPatientForEditByIdAsync(patientGuid);
 
+            if (formModel == null)
+            {
+                return this.RedirectToAction("Index", "Patient");
+            }
+
             return this.View(formModel);
         }
 

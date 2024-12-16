@@ -260,7 +260,25 @@
                 })
                 .FirstOrDefaultAsync(p => p.Id.ToLower() == id.ToString().ToLower());
 
-            return patientModel;
+            if (patientModel == null)
+            {
+                return null;
+            }
+
+            EditPatientFormModel editModel = new EditPatientFormModel
+            {
+                Id = patientModel.Id,
+                Name = patientModel.Name,
+                PhoneNumber = patientModel.PhoneNumber,
+                Address = patientModel.Address,
+                Gender = patientModel.Gender,
+                DateOfBirth = patientModel.DateOfBirth,
+                Allergies = patientModel.Allergies,
+                InsuranceNumber = patientModel.InsuranceNumber,
+                EmergencyContact = patientModel.EmergencyContact,
+            };
+
+            return editModel;
         }
         public async Task<bool> EditPatientAsync(EditPatientFormModel model)
         {
