@@ -18,7 +18,7 @@
 
         Task<bool> CreateAppointmentAsync(CreateAppointmentViewModel model);
 
-        Task<AppointmentDetailsViewModel?> GetAppointmentDetailsByIdAsync(Guid id);
+        Task<AppointmentDetailsViewModel?> GetAppointmentDetailsByIdAsync(Guid id, string userId, bool isAdmin);
 
         Task<IEnumerable<PatientAppointmentViewModel>> GetPatientListAsync();
 

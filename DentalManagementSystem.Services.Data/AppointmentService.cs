@@ -112,7 +112,7 @@
                 .Where(a => a.PatientId == patientId)
                 .Where(a => a.AppointmentDate >= today.Date)
                 .Where(a => a.IsDeleted == false)
-                .OrderBy(a => a.AppointmentDate)
+                .OrderByDescending(a => a.AppointmentDate)
                 .Skip(entitiesPerPage * (currentPage - 1))
                 .Take(entitiesPerPage)
                 .Select(a => new AllAppointmentsIndexViewModel

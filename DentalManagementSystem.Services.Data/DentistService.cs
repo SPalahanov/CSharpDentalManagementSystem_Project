@@ -44,7 +44,8 @@
         public async Task<IEnumerable<AllDentistIndexViewModel>> GetAllDentistsAsync(AllDentistsSearchViewModel inputModel)
         {
             IQueryable<Dentist> allDentistsQuery = this.dentistRepository
-                .GetAllAttached();
+                .GetAllAttached()
+                .OrderBy(d => d.Name);
 
             if (!String.IsNullOrWhiteSpace(inputModel.SearchQuery))
             {

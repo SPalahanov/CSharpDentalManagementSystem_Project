@@ -46,7 +46,8 @@
         public async Task<IEnumerable<AllPatientsIndexViewModel>> GetAllPatientsAsync(AllPatientsSearchViewModel inputModel)
         {
             IQueryable<Patient> allPatientsQuery = this.patientRepository
-                .GetAllAttached();
+                .GetAllAttached()
+                .OrderBy(p => p.Name);
 
             if (!String.IsNullOrWhiteSpace(inputModel.SearchQuery))
             {
