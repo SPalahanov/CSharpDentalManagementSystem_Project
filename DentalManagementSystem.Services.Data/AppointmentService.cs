@@ -225,11 +225,11 @@
             return true;
         }
 
-        public async Task<AppointmentDetailsViewModel?> GetAppointmentDetailsByIdAsync(Guid id)
+        public async Task<AppointmentDetailsViewModel?> GetAppointmentDetailsByIdAsync(Guid id, string userId, bool isAdmin)
         {
             Appointment? appointment = await this.appointmentRepository
                 .GetAllAttached()
-                .Where(a => a.IsDeleted == false)
+                .Where(a => a.IsDeleted == false && (a.Patient.UserId == Guid.Parse(userId) || isAdmin || a.Dentist.UserId == Guid.Parse(userId)))
                 .Include(a => a.Patient)
                 .Include(a => a.Dentist)
                 .Include(a => a.Prescriptions)

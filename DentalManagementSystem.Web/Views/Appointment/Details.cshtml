@@ -1,11 +1,16 @@
-﻿@using DentalManagementSystem.Web.ViewModels.Appointment
+﻿@using DentalManagementSystem.Services.Data.Interfaces
+@using DentalManagementSystem.Web.Infrastructure.Extensions
+@using DentalManagementSystem.Web.ViewModels.Appointment
 @using DentalManagementSystem.Web.ViewModels.Prescription
 @using DentalManagementSystem.Web.ViewModels.Procedure
 @model AppointmentDetailsViewModel
 
+@inject IPatientService patientService
+
 @{
     ViewData["Title"] = "Appointment Details";
-    var canManagePrescriptions = Model.AppointmentStatus == "Scheduled" && (DateTime.Parse(Model.AppointmentDate) >= DateTime.Today && DateTime.Parse(Model.AppointmentDate) < DateTime.Today.AddDays(+1));
+    bool canManagePrescriptions = Model.AppointmentStatus == "Scheduled" && (DateTime.Parse(Model.AppointmentDate) >= DateTime.Today && DateTime.Parse(Model.AppointmentDate) < DateTime.Today.AddDays(+1));
+    bool isPatient = await this.patientService.IsUserPatient(this.User.GetUserId()!);
 }
 
 <h2>Appointment on @Model.AppointmentDate</h2>
@@ -68,7 +73,7 @@
             <p>No prescriptions assigned to this appointment.</p>
         }
         
-        @if (canManagePrescriptions)
+        @if (canManagePrescriptions && !isPatient)
         {
             <a asp-action="Create" asp-controller="Prescription" asp-route-appointmentId="@Model.AppointmentId" class="btn btn-success btn-sm mt-3">Add Prescription</a>
 

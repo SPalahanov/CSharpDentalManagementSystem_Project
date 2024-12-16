@@ -205,7 +205,7 @@
                 return this.RedirectToAction("Index", "Appointment");
             }
 
-            AppointmentDetailsViewModel? viewModel = await this.appointmentService.GetAppointmentDetailsByIdAsync(appointmentGuid);
+            AppointmentDetailsViewModel? viewModel = await this.appointmentService.GetAppointmentDetailsByIdAsync(appointmentGuid, userId, isAdmin);
 
             if (viewModel == null)
             {
