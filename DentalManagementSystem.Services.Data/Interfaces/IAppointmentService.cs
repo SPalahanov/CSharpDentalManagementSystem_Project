@@ -12,7 +12,7 @@
 
         Task<IEnumerable<AllAppointmentsIndexViewModel>> GetAppointmentsByDentistIdAsync(Guid dentistId, int currentPage, int entitiesPerPage);
 
-        Task<CreateAppointmentViewModel> GetCreateAppointmentModelAsync();
+        Task<CreateAppointmentViewModel> GetCreateAppointmentModelAsync(string userId, bool isPatient, bool isDentist);
 
         Task<IEnumerable<ProcedureAppointmentViewModel>> GetAvailableProceduresAsync();
 

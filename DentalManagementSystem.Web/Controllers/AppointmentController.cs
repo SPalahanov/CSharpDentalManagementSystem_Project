@@ -126,7 +126,17 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            CreateAppointmentViewModel model = await this.appointmentService.GetCreateAppointmentModelAsync();
+            if (isPatient)
+            {
+                userId = (await this.patientService.GetPatientIdByUserIdAsync(Guid.Parse(userId))).ToString();
+            }
+
+            if (isDentist)
+            {
+                userId = (await this.dentistService.GetDentistIdByUserIdAsync(Guid.Parse(userId))).ToString();
+            }
+
+            CreateAppointmentViewModel model = await this.appointmentService.GetCreateAppointmentModelAsync(userId, isPatient, isDentist);
 
             model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
 
@@ -154,9 +164,9 @@
 
             if (!this.ModelState.IsValid)
             {
-                model.Patients = (await this.appointmentService.GetCreateAppointmentModelAsync()).Patients;
-                model.Dentists = (await this.appointmentService.GetCreateAppointmentModelAsync()).Dentists;
-                model.AppointmentTypes = (await this.appointmentService.GetCreateAppointmentModelAsync()).AppointmentTypes;
+                model.Patients = (await this.appointmentService.GetCreateAppointmentModelAsync(userId, isPatient, isDentist)).Patients;
+                model.Dentists = (await this.appointmentService.GetCreateAppointmentModelAsync(userId, isPatient, isDentist)).Dentists;
+                model.AppointmentTypes = (await this.appointmentService.GetCreateAppointmentModelAsync(userId, isPatient, isDentist)).AppointmentTypes;
                 model.AvailableProcedures = await this.appointmentService.GetAvailableProceduresAsync();
 
                 return this.View(model);

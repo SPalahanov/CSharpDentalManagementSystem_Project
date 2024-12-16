@@ -146,23 +146,45 @@
             return appointments;
         }
 
-        public async Task<CreateAppointmentViewModel> GetCreateAppointmentModelAsync()
+        public async Task<CreateAppointmentViewModel> GetCreateAppointmentModelAsync(string userId, bool isPatient, bool isDentist)
         {
             IEnumerable<ProcedureAppointmentViewModel> procedures = await this.procedureRepository
                 .GetAllAttached()
                 .Select(p => new ProcedureAppointmentViewModel { Id = p.ProcedureId, Name = p.Name })
                 .ToArrayAsync();
 
+            IEnumerable<PatientAppointmentViewModel> patients = await this.patientRepository
+                .GetAllAttached()
+                .Select(p => new PatientAppointmentViewModel
+                {
+                    Id = p.PatientId,
+                    Name = p.Name
+                })
+                .ToArrayAsync();
+
+            if (isPatient)
+            {
+                patients = patients.Where(p => p.Id == Guid.Parse(userId));
+            }
+
+            IEnumerable<DentistAppointmentViewModel> dentists = await this.dentistRepository
+                .GetAllAttached()
+                .Select(d => new DentistAppointmentViewModel
+                {
+                    Id = d.DentistId,
+                    Name = d.Name
+                })
+                .ToArrayAsync();
+
+            if (isDentist)
+            {
+                dentists = dentists.Where(p => p.Id == Guid.Parse(userId));
+            }
+
             return new CreateAppointmentViewModel
             {
-                Patients = await this.patientRepository
-                    .GetAllAttached()
-                    .Select(p => new PatientAppointmentViewModel { Id = p.PatientId, Name = p.Name })
-                    .ToArrayAsync(),
-                Dentists = await this.dentistRepository
-                    .GetAllAttached()
-                    .Select(d => new DentistAppointmentViewModel { Id = d.DentistId, Name = d.Name })
-                    .ToArrayAsync(),
+                Patients = patients.ToArray(),
+                Dentists = dentists.ToArray(),
                 AppointmentTypes = await this.appointmentTypeRepository
                     .GetAllAttached()
                     .Select(at => new AppointmentTypeViewModel { Id = at.Id, Name = at.Name })
