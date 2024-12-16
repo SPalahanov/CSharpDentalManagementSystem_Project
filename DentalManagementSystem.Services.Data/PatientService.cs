@@ -46,7 +46,8 @@
         public async Task<IEnumerable<AllPatientsIndexViewModel>> GetAllPatientsAsync(AllPatientsSearchViewModel inputModel)
         {
             IQueryable<Patient> allPatientsQuery = this.patientRepository
-                .GetAllAttached();
+                .GetAllAttached()
+                .OrderBy(p => p.Name);
 
             if (!String.IsNullOrWhiteSpace(inputModel.SearchQuery))
             {
@@ -81,7 +82,7 @@
                 .Include(a => a.AppointmentProcedures)
                 .ThenInclude(ap => ap.Procedure)
                 .Where(a => a.AppointmentDate < today.Date)
-                .OrderBy(a => a.AppointmentDate)
+                .OrderByDescending(a => a.AppointmentDate)
                 .Select(a => new AppointmentDetailsViewModel
                 {
                     AppointmentDate = a.AppointmentDate.ToString("dd/MM/yyyy hh:mm tt", CultureInfo.InvariantCulture),
