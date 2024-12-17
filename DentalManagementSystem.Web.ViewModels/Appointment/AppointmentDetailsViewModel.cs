@@ -1,12 +1,10 @@
 ﻿namespace DentalManagementSystem.Web.ViewModels.Appointment
 {
-    using DentalManagementSystem.Web.ViewModels.Prescription;
-    using DentalManagementSystem.Web.ViewModels.Procedure;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+
+    using DentalManagementSystem.Web.ViewModels.Prescription;
+    using DentalManagementSystem.Web.ViewModels.Procedure;
 
     public class AppointmentDetailsViewModel
     {

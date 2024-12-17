@@ -1,16 +1,14 @@
-﻿using DentalManagementSystem.Data.Models;
-using DentalManagementSystem.Data.Repository.Interfaces;
-using DentalManagementSystem.Services.Data.Interfaces;
-using DentalManagementSystem.Services.Data;
-using DentalManagementSystem.Web.ViewModels.Procedure;
-using Microsoft.AspNetCore.Identity;
-using MockQueryable;
-using Moq;
-using DentalManagementSystem.Web.ViewModels.Dentist;
-using DentalManagementSystem.Common.Enums;
-using DentalManagementSystem.Web.ViewModels.Appointment;
+﻿namespace DentalManagementSystem.Services.Test;
 
-namespace DentalManagementSystem.Services.Test;
+using DentalManagementSystem.Data.Models;
+using DentalManagementSystem.Data.Repository.Interfaces;
+using DentalManagementSystem.Services.Data;
+using DentalManagementSystem.Services.Data.Interfaces;
+using DentalManagementSystem.Web.ViewModels.Procedure;
+
+using MockQueryable;
+
+using Moq;
 
 public class ProcedureServiceTests
 {

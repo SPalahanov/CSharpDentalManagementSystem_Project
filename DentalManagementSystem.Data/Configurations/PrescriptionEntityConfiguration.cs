@@ -1,6 +1,7 @@
 ﻿namespace DentalManagementSystem.Data.Configurations
 {
-using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Data.Models;
+
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

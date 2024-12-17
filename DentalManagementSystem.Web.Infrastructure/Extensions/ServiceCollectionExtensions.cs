@@ -1,12 +1,14 @@
 ﻿namespace DentalManagementSystem.Web.Infrastructure.Extensions
 {
-    using DentalManagementSystem.Data.Models;
-    using DentalManagementSystem.Data.Repository;
-    using DentalManagementSystem.Data.Repository.Interfaces;
-    using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Linq;
     using System.Reflection;
+
+    using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Data.Repository;
+    using DentalManagementSystem.Data.Repository.Interfaces;
+
+    using Microsoft.Extensions.DependencyInjection;
 
     public static class ServiceCollectionExtensions
     {

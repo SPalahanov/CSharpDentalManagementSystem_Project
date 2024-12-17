@@ -1,8 +1,5 @@
 ﻿namespace DentalManagementSystem.Web.ViewModels.Patient
 {
-    using DentalManagementSystem.Data.Models;
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Patient;

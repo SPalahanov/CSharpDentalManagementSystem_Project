@@ -4,9 +4,8 @@ namespace DentalManagementSystem.Web.Controllers
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Dentist;
-    using DentalManagementSystem.Web.ViewModels.Home;
+
     using Microsoft.AspNetCore.Mvc;
-    using System.Diagnostics;
 
     public class HomeController : BaseController
     {

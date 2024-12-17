@@ -1,9 +1,9 @@
 ﻿namespace DentalManagementSystem.Services.Data.Interfaces
 {
-    using DentalManagementSystem.Web.ViewModels.Patient;
-    using DentalManagementSystem.Web.ViewModels.Procedure;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using DentalManagementSystem.Web.ViewModels.Procedure;
 
     public interface IProcedureService
     {

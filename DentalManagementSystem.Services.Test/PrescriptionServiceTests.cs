@@ -1,8 +1,4 @@
-﻿using DentalManagementSystem.Services.Data;
-using DentalManagementSystem.Services.Data.Interfaces;
-using DentalManagementSystem.Web.ViewModels.Prescription;
-
-namespace DentalManagementSystem.Services.Test
+﻿namespace DentalManagementSystem.Services.Test
 {
     using System;
     using System.Collections.Generic;
@@ -11,9 +7,13 @@ namespace DentalManagementSystem.Services.Test
 
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
+    using DentalManagementSystem.Services.Data;
+    using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.ViewModels.Prescription;
+
+    using MockQueryable;
 
     using Moq;
-    using MockQueryable;
 
     public class PrescriptionServiceTests
     {

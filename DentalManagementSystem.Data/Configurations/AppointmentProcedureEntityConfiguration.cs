@@ -1,13 +1,9 @@
 ﻿namespace DentalManagementSystem.Data.Configurations
 {
     using DentalManagementSystem.Data.Models;
+
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class AppointmentProcedureEntityConfiguration : IEntityTypeConfiguration<AppointmentProcedure>
     {
@@ -34,7 +30,6 @@
                 .WithMany(c => c.AppointmentProcedures)      
                 .HasForeignKey(cm => cm.ProcedureId)   
                 .OnDelete(DeleteBehavior.Restrict);
-
         }
     }
 }

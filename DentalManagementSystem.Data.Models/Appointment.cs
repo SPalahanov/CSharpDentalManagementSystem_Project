@@ -19,7 +19,7 @@
         public DateTime AppointmentDate { get; set; }
 
         [Required]
-        public AppointmentStatus AppointmentStatus { get; set; } // Schedule, Completed, Cancelled
+        public AppointmentStatus AppointmentStatus { get; set; }
         
         [Required]
         public int AppointmentTypeId { get; set; }

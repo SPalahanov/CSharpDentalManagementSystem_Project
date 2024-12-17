@@ -1,16 +1,12 @@
-﻿using DentalManagementSystem.Data.Models;
-using DentalManagementSystem.Data.Repository.Interfaces;
-using DentalManagementSystem.Services.Data.Interfaces;
-using DentalManagementSystem.Web.ViewModels.Prescription;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DentalManagementSystem.Services.Data
+﻿namespace DentalManagementSystem.Services.Data
 {
+    using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Data.Repository.Interfaces;
+    using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.ViewModels.Prescription;
+
+    using Microsoft.EntityFrameworkCore;
+
     public class PrescriptionService : BaseService, IPrescriptionService
     {
         private IRepository<Prescription, Guid> prescriptionRepository;

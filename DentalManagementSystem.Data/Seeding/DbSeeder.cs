@@ -1,18 +1,21 @@
 ﻿namespace DentalManagementSystem.Data.Seeding
 {
-    using DentalManagementSystem.Common.Enums;
-    using DentalManagementSystem.Data.Models;
-    using DentalManagementSystem.Data.Seeding.DataTransferObjects;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.DependencyInjection;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Text;
     using System.Threading.Tasks;
+
+    using DentalManagementSystem.Common.Enums;
+    using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Data.Seeding.DataTransferObjects;
+
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+
+    using Newtonsoft.Json;
 
     public static class DbSeeder
     {

@@ -1,10 +1,12 @@
 ﻿namespace DentalManagementSystem.Data
 {
+    using System.Reflection;
+
     using DentalManagementSystem.Data.Models;
+
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
-    using System.Reflection;
 
     public class DentalManagementSystemDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
@@ -26,16 +28,6 @@
         public virtual DbSet<AppointmentProcedure> AppointmentProcedures { get; set; } = null!;
         public virtual DbSet<AppointmentType> AppointmentsTypes { get; set; } = null!;
         public virtual DbSet<Prescription> Prescriptions { get; set; } = null!;
-
-        /*protected override void OnModelCreating(ModelBuilder builder)
-        {
-            Assembly configAssembly = Assembly.GetAssembly(typeof(DentalManagementSystemDbContext)) ??
-                                      Assembly.GetExecutingAssembly();
-
-            builder.ApplyConfigurationsFromAssembly(configAssembly);
-
-            base.OnModelCreating(builder);
-        }*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

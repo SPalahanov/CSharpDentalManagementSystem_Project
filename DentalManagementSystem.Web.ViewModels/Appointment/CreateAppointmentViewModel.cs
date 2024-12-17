@@ -1,10 +1,12 @@
 ﻿namespace DentalManagementSystem.Web.ViewModels.Appointment
 {
-    using DentalManagementSystem.Common.Enums;
-    using Microsoft.AspNetCore.Authorization;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+
+    using DentalManagementSystem.Common.Enums;
+
+    using Microsoft.AspNetCore.Authorization;
 
     [Authorize]
     public class CreateAppointmentViewModel

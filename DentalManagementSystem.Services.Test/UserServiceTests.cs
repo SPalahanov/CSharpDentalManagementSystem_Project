@@ -1,16 +1,16 @@
-﻿using DentalManagementSystem.Data.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using MockQueryable;
-
+﻿
 namespace DentalManagementSystem.Services.Test;
 
-using DentalManagementSystem.Data.Repository.Interfaces;
-using DentalManagementSystem.Services.Data.Interfaces;
+using DentalManagementSystem.Data.Models;
 using DentalManagementSystem.Services.Data;
-using DentalManagementSystem.Web.ViewModels.Appointment;
-using Microsoft.AspNetCore.Identity;
-using Moq;
+using DentalManagementSystem.Services.Data.Interfaces;
 using DentalManagementSystem.Web.ViewModels.Admin.UserManagement;
+
+using Microsoft.AspNetCore.Identity;
+
+using MockQueryable;
+
+using Moq;
 
 public class UserServiceTests
 {

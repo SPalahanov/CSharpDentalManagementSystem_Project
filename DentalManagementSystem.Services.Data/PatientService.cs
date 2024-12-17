@@ -1,18 +1,20 @@
 ﻿namespace DentalManagementSystem.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Patient;
     using DentalManagementSystem.Web.ViewModels.Procedure;
+
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     using static DentalManagementSystem.Common.Constants.EntityValidationConstants.Patient;
 

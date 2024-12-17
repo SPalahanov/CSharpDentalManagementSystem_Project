@@ -1,7 +1,8 @@
 ﻿namespace DentalManagementSystem.Web.ViewModels.Appointment
 {
-    using DentalManagementSystem.Common.Enums;
     using System.ComponentModel.DataAnnotations;
+
+    using DentalManagementSystem.Common.Enums;
 
     public class EditAppointmentFormModel
     {

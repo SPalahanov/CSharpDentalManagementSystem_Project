@@ -1,10 +1,10 @@
 ﻿namespace DentalManagementSystem.Web.Controllers
 {
-    using DentalManagementSystem.Services.Data;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Web.ViewModels.Patient;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 

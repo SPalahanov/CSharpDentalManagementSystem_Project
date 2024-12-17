@@ -1,9 +1,10 @@
 ﻿namespace DentalManagementSystem.Services.Data.Interfaces
 {
-    using DentalManagementSystem.Web.ViewModels.Appointment;
-    using DentalManagementSystem.Web.ViewModels.Patient;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using DentalManagementSystem.Web.ViewModels.Appointment;
+    using DentalManagementSystem.Web.ViewModels.Patient;
 
     public interface IPatientService
     {

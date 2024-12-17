@@ -1,18 +1,19 @@
 ﻿namespace DentalManagementSystem.Services.Data
 {
-    using DentalManagementSystem.Data;
-    using DentalManagementSystem.Data.Models;
-    using DentalManagementSystem.Data.Repository.Interfaces;
-    using DentalManagementSystem.Services.Data.Interfaces;
-    using DentalManagementSystem.Web.ViewModels.Dentist;
-    using DentalManagementSystem.Web.ViewModels.Home;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Data.Repository.Interfaces;
+    using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.ViewModels.Dentist;
+    using DentalManagementSystem.Web.ViewModels.Home;
+
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
 
     public class DentistService : BaseService, IDentistService
     {

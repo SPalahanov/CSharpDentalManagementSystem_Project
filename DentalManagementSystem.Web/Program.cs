@@ -9,6 +9,7 @@ namespace DentalManagementSystem.Web
     using DentalManagementSystem.Services.Mapping;
     using DentalManagementSystem.Web.Infrastructure.Extensions;
     using DentalManagementSystem.Web.ViewModels.Home;
+
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;

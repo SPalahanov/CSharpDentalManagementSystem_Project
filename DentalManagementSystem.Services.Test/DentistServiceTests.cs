@@ -1,19 +1,18 @@
 ﻿namespace DentalManagementSystem.Services.Test
 {
-    using DentalManagementSystem.Web.ViewModels.Appointment;
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Repository.Interfaces;
     using DentalManagementSystem.Services.Data;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.ViewModels.Dentist;
+
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.VisualBasic;
+
     using MockQueryable;
+
     using Moq;
+
     using NUnit.Framework;
-    using System.Globalization;
-    using System.Net;
-    using System.Reflection;
 
     public class DentistServiceTests
     {

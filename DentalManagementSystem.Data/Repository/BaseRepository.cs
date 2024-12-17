@@ -1,8 +1,10 @@
 ﻿namespace DentalManagementSystem.Data.Repository
 {
-    using DentalManagementSystem.Data.Repository.Interfaces;
-    using Microsoft.EntityFrameworkCore;
     using System.Linq.Expressions;
+
+    using DentalManagementSystem.Data.Repository.Interfaces;
+
+    using Microsoft.EntityFrameworkCore;
 
     public class BaseRepository<TType, TId> : IRepository<TType, TId> where TType : class
     {

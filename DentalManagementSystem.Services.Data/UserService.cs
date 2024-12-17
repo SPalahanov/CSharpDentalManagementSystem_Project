@@ -1,13 +1,15 @@
 ﻿namespace DentalManagementSystem.Services.Data
 {
-    using DentalManagementSystem.Data.Models;
-    using DentalManagementSystem.Services.Data.Interfaces;
-    using DentalManagementSystem.Web.ViewModels.Admin.UserManagement;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using DentalManagementSystem.Data.Models;
+    using DentalManagementSystem.Services.Data.Interfaces;
+    using DentalManagementSystem.Web.ViewModels.Admin.UserManagement;
+
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
 
     public class UserService : BaseService, IUserService
     {

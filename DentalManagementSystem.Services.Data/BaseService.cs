@@ -1,7 +1,8 @@
 ﻿namespace DentalManagementSystem.Services.Data
 {
-    using DentalManagementSystem.Services.Data.Interfaces;
     using System;
+
+    using DentalManagementSystem.Services.Data.Interfaces;
 
     public class BaseService : IBaseService
     {

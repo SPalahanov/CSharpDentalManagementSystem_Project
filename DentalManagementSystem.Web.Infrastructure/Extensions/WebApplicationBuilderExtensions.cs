@@ -3,6 +3,7 @@
     using DentalManagementSystem.Data;
     using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Data.Seeding;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;

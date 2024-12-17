@@ -1,8 +1,6 @@
 ﻿namespace DentalManagementSystem.Services.Test;
 
-using DentalManagementSystem.Data.Repository.Interfaces;
 using DentalManagementSystem.Services.Data;
-using Moq;
 
 public class BaseServiceTests
 {

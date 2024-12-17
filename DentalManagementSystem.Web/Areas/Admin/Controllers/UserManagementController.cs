@@ -1,14 +1,12 @@
 ﻿namespace DentalManagementSystem.Web.Areas.Admin.Controllers
 {
-    using DentalManagementSystem.Data.Models;
     using DentalManagementSystem.Services.Data.Interfaces;
     using DentalManagementSystem.Web.Controllers;
     using DentalManagementSystem.Web.ViewModels.Admin.UserManagement;
+
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using System.Data;
+
     using static DentalManagementSystem.Common.Constants.GeneralApplicationConstants;
 
     [Area(AdminRoleName)]
