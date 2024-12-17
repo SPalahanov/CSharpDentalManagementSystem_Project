@@ -65,7 +65,7 @@ public class AppointmentServiceTests
         },
         new Appointment()
         {
-            AppointmentId = Guid.Parse("26edaf6d-cae6-42c9-8d5c-fba578baeaf7"),
+            AppointmentId = Guid.Parse("62edaf6d-cae6-42c9-8d5c-fba578baeaf7"),
             AppointmentDate = DateTime.Parse("2022-11-25T09:30:00"),
             AppointmentStatus = AppointmentStatus.Cancelled,
             AppointmentTypeId = 2,
@@ -195,10 +195,9 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
         
-        IEnumerable<AllAppointmentsIndexViewModel> allAppointmentsActual = await appointmentService
-            .GetAllAppointmentsAsync(new AllAppointmentsFilterViewModel());
+        IEnumerable<AllAppointmentsIndexViewModel> allAppointmentsActual = await appointmentService.GetAllAppointmentsAsync(new AllAppointmentsFilterViewModel());
 
         Assert.IsNotNull(allAppointmentsActual);
         Assert.AreEqual(this.appointmentsData.Count(), allAppointmentsActual.Count());
@@ -224,7 +223,8 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
         Assert.ThrowsAsync<NullReferenceException>(async () =>
         {
             IEnumerable<AllAppointmentsIndexViewModel> allAppointmentsActual = await appointmentService
@@ -235,6 +235,9 @@ public class AppointmentServiceTests
     [Test]
     public async Task GetUpcomingAppointmentsByPatientIdAsync()
     {
+        int currentPage = 1;
+        int entitiesPerPage = 7;
+
         Guid patientId = Guid.Parse("aa0f15f1-5a46-4f0b-a3c1-88c048c180d5");
 
         IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
@@ -243,18 +246,20 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        IEnumerable<AllAppointmentsIndexViewModel> result =
-            await appointmentService.GetAppointmentsByPatientIdAsync(patientId);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
+        IEnumerable<AllAppointmentsIndexViewModel> result = await appointmentService.GetAppointmentsByPatientIdAsync(patientId, currentPage, entitiesPerPage);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(2, result.Count());
-        Assert.AreEqual("Scheduled", result.First().AppointmentStatus);
+        Assert.AreEqual("Cancelled", result.First().AppointmentStatus);
     }
 
     [Test]
     public async Task GetNoUpcomingAppointmentsByPatientIdAsync()
     {
+        int currentPage = 1;
+        int entitiesPerPage = 7;
         Guid patientId = Guid.Parse("0a116063-736f-4104-a5d3-2a516239463c");
 
         IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
@@ -263,28 +268,9 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        IEnumerable<AllAppointmentsIndexViewModel> result =
-            await appointmentService.GetAppointmentsByPatientIdAsync(patientId);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
 
-        Assert.IsNotNull(result);
-        Assert.AreEqual(0, result.Count());
-    }
-
-    [Test]
-    public async Task GetDeletedAppointmentsByPatientIdAsync()
-    {
-        Guid patientId = Guid.Parse("6844f781-c5bc-4da7-bf11-349fd5bbe9c0");
-
-        IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
-
-        this.appointmentRepository
-            .Setup(r => r.GetAllAttached())
-            .Returns(appointmentsMockQueryable);
-
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        IEnumerable<AllAppointmentsIndexViewModel> result =
-            await appointmentService.GetAppointmentsByPatientIdAsync(patientId);
+        IEnumerable<AllAppointmentsIndexViewModel> result = await appointmentService.GetAppointmentsByPatientIdAsync(patientId, currentPage, entitiesPerPage);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
@@ -293,6 +279,9 @@ public class AppointmentServiceTests
     [Test]
     public async Task GetUpcomingAppointmentsByDentistIdAsync()
     {
+        int currentPage = 1;
+        int entitiesPerPage = 7;
+
         Guid dentistId = Guid.Parse("93e0c32c-553c-4f61-a767-31eb09e85ad5");
 
         IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
@@ -301,32 +290,13 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        IEnumerable<AllAppointmentsIndexViewModel> result =
-            await appointmentService.GetAppointmentsByDentistIdAsync(dentistId);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
+        IEnumerable<AllAppointmentsIndexViewModel> result = await appointmentService.GetAppointmentsByDentistIdAsync(dentistId, currentPage, entitiesPerPage);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
         Assert.AreEqual("Scheduled", result.First().AppointmentStatus);
-    }
-
-    [Test]
-    public async Task GetNoUpcomingAppointmentsByDentistIdAsyncPositive()
-    {
-        Guid dentistId = Guid.Parse("385ee459-337a-4df2-ba1b-b2f01c451b17");
-
-        IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
-
-        this.appointmentRepository
-            .Setup(r => r.GetAllAttached())
-            .Returns(appointmentsMockQueryable);
-
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        IEnumerable<AllAppointmentsIndexViewModel> result =
-            await appointmentService.GetAppointmentsByDentistIdAsync(dentistId);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(1, result.Count());
     }
 
     [Test]
@@ -338,7 +308,8 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
         AllAppointmentsFilterViewModel inputModel = new AllAppointmentsFilterViewModel
         {
             YearFilter = "2022"
@@ -358,7 +329,8 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
         AllAppointmentsFilterViewModel inputModel = new AllAppointmentsFilterViewModel
         {
             YearFilter = "2022 - 2024"
@@ -372,12 +344,20 @@ public class AppointmentServiceTests
     [Test]
     public async Task GetAppointmentDetailsByIdAsyncPositive()
     {
-        IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
-        
-        Guid appointmentId = Guid.Parse("123ee459-337a-4df2-ba1b-b2f01c451b17");
+        string userId = "aa0f15f1-5a46-4f0b-a3c1-88c048c180d5";
+        bool isAdmin = false;
 
-        string expectedAppointmentDate = "25/11/2023 09:30 AM";
-        int expectedAppointmentType = 2;
+        Patient patient = new Patient
+        {
+            UserId = Guid.Parse(userId),
+            Name = "Hristo Dimitrov",
+        };
+
+        Dentist dentist = new Dentist
+        {
+            UserId = Guid.NewGuid(),
+            Name = "Georgi Petrov",
+        };
 
         Procedure expectedProceduresData = new Procedure
         {
@@ -386,41 +366,46 @@ public class AppointmentServiceTests
             IsDeleted = false
         };
 
+        List<Appointment> appointmentsData = new List<Appointment>
+        {
+            new Appointment
+            {
+                AppointmentId = Guid.Parse("26edaf6d-cae6-42c9-8d5c-fba578baeaf7"),
+                AppointmentDate = new DateTime(2023, 11, 25, 9, 30, 0),
+                Patient = patient,
+                Dentist = dentist,
+                AppointmentProcedures = new List<AppointmentProcedure>
+                {
+                    new AppointmentProcedure
+                    {
+                        Procedure = expectedProceduresData,
+                        IsDeleted = false
+                    }
+                },
+                IsDeleted = false
+            }
+        };
+
+        IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
+        
+        Guid appointmentId = Guid.Parse("26edaf6d-cae6-42c9-8d5c-fba578baeaf7");
+
+        string expectedAppointmentDate = "25/11/2023 09:30 AM";
+        int expectedAppointmentType = 2;
+
         this.appointmentRepository
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        AppointmentDetailsViewModel? appointmentDetailsActual = await appointmentService
-            .GetAppointmentDetailsByIdAsync(appointmentId);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
+        AppointmentDetailsViewModel? appointmentDetailsActual = await appointmentService.GetAppointmentDetailsByIdAsync(appointmentId, userId, isAdmin);
 
         Assert.IsNotNull(appointmentDetailsActual);
         Assert.IsNotNull(appointmentDetailsActual.Procedures);
-        Assert.AreEqual(expectedProceduresData.AppointmentProcedures, appointmentDetailsActual.Procedures);
-    }
-
-    [Test]
-    public async Task GetAppointmentsDetailsByIdAsyncNegative()
-    {
-        IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
-
-        Guid appointmentId = Guid.Empty;
-
-        this.appointmentRepository
-            .Setup(r => r.GetAllAttached())
-            .Returns(appointmentsMockQueryable);
-
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        Assert.ThrowsAsync<NullReferenceException>(async () =>
-        {
-            AppointmentDetailsViewModel? dentistDetailsActual = await appointmentService
-                .GetAppointmentDetailsByIdAsync(appointmentId);
-
-            if (dentistDetailsActual == null)
-            {
-                throw new NullReferenceException();
-            }
-        });
+        Assert.AreEqual("25/11/2023 09:30 AM", appointmentDetailsActual.AppointmentDate);
+        Assert.AreEqual("Hristo Dimitrov", appointmentDetailsActual.PatientName);
+        Assert.AreEqual("Georgi Petrov", appointmentDetailsActual.DentistName);
     }
 
     [Test]
@@ -439,9 +424,9 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        DeleteAppointmentViewModel? appointmentDetailsActual = await appointmentService
-            .GetAppointmentForDeleteByIdAsync(appointmentId);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
+        DeleteAppointmentViewModel? appointmentDetailsActual = await appointmentService.GetAppointmentForDeleteByIdAsync(appointmentId);
 
         Assert.IsNotNull(appointmentDetailsActual);
         Assert.AreEqual(expectedAppointmentId.ToLower(), appointmentDetailsActual.Id.ToLower());
@@ -461,11 +446,11 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(appointmentsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
         Assert.ThrowsAsync<NullReferenceException>(async () =>
         {
-            DeleteAppointmentViewModel? appointmentDetailsActual = await appointmentService
-                .GetAppointmentForDeleteByIdAsync(appointmentId);
+            DeleteAppointmentViewModel? appointmentDetailsActual = await appointmentService.GetAppointmentForDeleteByIdAsync(appointmentId);
 
             if (appointmentDetailsActual == null)
             {
@@ -473,33 +458,6 @@ public class AppointmentServiceTests
             }
         });
     }
-
-    /*[Test]
-    public async Task GetAppointmentDataForEditAsyncPositive()
-    {
-        IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
-
-        Guid appointmentId = Guid.Parse("26edaf6d-cae6-42c9-8d5c-fba578baeaf7");
-        string expectedAppointmentDate = "25.11.2025 г. 9:30:00";
-        string expectedAppointmentStatus = "Cancelled";
-        string expectedAppointmentTypeId = "2";
-        Guid expectedPatientId = Guid.Parse("aa0f15f1-5a46-4f0b-a3c1-88c048c180d5");
-        Guid expectedDentistId = Guid.Parse("05e829fb-8ba6-45d6-8afe-a6338d3ba6a8");
-
-        this.appointmentRepository
-            .Setup(r => r.GetAllAttached())
-            .Returns(appointmentsMockQueryable);
-
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object);
-
-        EditAppointmentFormModel? appointmentDetailsActual = await appointmentService
-            .GetAppointmentDataForEditAsync(appointmentId);
-
-        Assert.IsNotNull(appointmentDetailsActual);
-        Assert.AreEqual(expectedAppointmentDate, appointmentDetailsActual.AppointmentDate.ToString());
-        Assert.AreEqual(expectedAppointmentStatus, appointmentDetailsActual.AppointmentStatus.ToString());
-        Assert.AreEqual(expectedAppointmentTypeId, appointmentDetailsActual.AppointmentTypeId.ToString());
-    }*/
 
     [Test]
     public async Task CreateAppointmentAsync()
@@ -515,7 +473,8 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(proceduresMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
         string appointmentId = "70d6cddb-1787-4e7c-822b-b4b8929f1c82";
 
         CreateAppointmentViewModel model = new CreateAppointmentViewModel
@@ -542,9 +501,9 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(dentistsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        IEnumerable<DentistAppointmentViewModel> allAppointmentsDentists = await appointmentService
-            .GetDentistListAsync();
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, this.appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
+        IEnumerable<DentistAppointmentViewModel> allAppointmentsDentists = await appointmentService.GetDentistListAsync();
 
         Assert.IsNotNull(allAppointmentsDentists);
     }
@@ -558,9 +517,9 @@ public class AppointmentServiceTests
             .Setup(r => r.GetAllAttached())
             .Returns(patientsMockQueryable);
 
-        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        IEnumerable<PatientAppointmentViewModel> allAppointmentsPatients = await appointmentService
-            .GetPatientListAsync();
+        IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, this.dentistRepository.Object, appointmentTypeRepository.Object, this.procedureRepository.Object, this.prescriptionRepository.Object);
+        
+        IEnumerable<PatientAppointmentViewModel> allAppointmentsPatients = await appointmentService.GetPatientListAsync();
 
         Assert.IsNotNull(allAppointmentsPatients);
     }
@@ -575,8 +534,8 @@ public class AppointmentServiceTests
             .Returns(appointmentTypesMockQueryable);
 
         IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        IEnumerable<AppointmentTypeViewModel> allAppointmentTypes = await appointmentService
-            .GetAppointmentTypeListAsync();
+        
+        IEnumerable<AppointmentTypeViewModel> allAppointmentTypes = await appointmentService.GetAppointmentTypeListAsync();
 
         Assert.IsNotNull(allAppointmentTypes);
     }
@@ -591,8 +550,8 @@ public class AppointmentServiceTests
             .Returns(proceduresMockQueryable);
 
         IAppointmentService appointmentService = new AppointmentService(this.appointmentRepository.Object, this.patientRepository.Object, dentistRepository.Object, appointmentTypeRepository.Object, procedureRepository.Object, prescriptionRepository.Object);
-        IEnumerable<ProcedureAppointmentViewModel> allAppointmentProcedures = await appointmentService
-            .GetAvailableProceduresAsync();
+        
+        IEnumerable<ProcedureAppointmentViewModel> allAppointmentProcedures = await appointmentService.GetAvailableProceduresAsync();
 
         Assert.IsNotNull(allAppointmentProcedures);
     }

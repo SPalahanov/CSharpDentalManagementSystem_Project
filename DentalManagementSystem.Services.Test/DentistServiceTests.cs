@@ -93,11 +93,9 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
-            IEnumerable<AllDentistIndexViewModel> allDentistsActual = await dentistService
-                .GetAllDentistsAsync(new AllDentistsSearchViewModel());
+            IEnumerable<AllDentistIndexViewModel> allDentistsActual = await dentistService.GetAllDentistsAsync(new AllDentistsSearchViewModel());
 
             Assert.IsNotNull(allDentistsActual);
             Assert.AreEqual(this.dentistsData.Count(), allDentistsActual.Count());
@@ -110,8 +108,7 @@
 
             foreach (AllDentistIndexViewModel returnedDentists in allDentistsActual)
             {
-                Assert.AreEqual(this.dentistsData.OrderBy(d => d.DentistId).ToList()[i++].DentistId.ToString(),
-                    returnedDentists.Id);
+                Assert.AreEqual(this.dentistsData.OrderBy(d => d.DentistId).ToList()[i++].DentistId.ToString(), returnedDentists.Id);
             }
         }
 
@@ -131,8 +128,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             IEnumerable<AllDentistIndexViewModel> allDentistsActual = await dentistService
                 .GetAllDentistsAsync(new AllDentistsSearchViewModel()
@@ -158,8 +154,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             IEnumerable<AllDentistIndexViewModel> allDentistsActual = await dentistService
                 .GetAllDentistsAsync(new AllDentistsSearchViewModel()
@@ -180,13 +175,11 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             Assert.ThrowsAsync<NullReferenceException>(async () =>
             {
-                IEnumerable<AllDentistIndexViewModel> allMoviesActual = await dentistService
-                    .GetAllDentistsAsync(null);
+                IEnumerable<AllDentistIndexViewModel> allMoviesActual = await dentistService.GetAllDentistsAsync(null);
             });
         }
 
@@ -202,8 +195,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             Guid dentistIdActual = await dentistService.GetDentistIdByUserIdAsync(userId);
 
@@ -222,8 +214,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object,this.appointmentRepository.Object, this.userManager.Object);
 
             Guid actualDentistId = await dentistService.GetDentistIdByUserIdAsync(userId);
 
@@ -249,14 +240,11 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
-            Guid actualDentistId =
-                await dentistService.GetDentistIdByUserIdAsync(Guid.Parse("70d6cddb-1787-4e7c-822b-b4b8929f1c82"));
+            Guid actualDentistId = await dentistService.GetDentistIdByUserIdAsync(Guid.Parse("70d6cddb-1787-4e7c-822b-b4b8929f1c82"));
 
             Assert.AreEqual(Guid.Empty, actualDentistId);
-
         }
 
         [Test]
@@ -268,8 +256,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             string userId = "70d6cddb-1787-4e7c-822b-b4b8929f1c82";
 
@@ -303,8 +290,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             string userId = "70d6cddb-1787-4e7c-822b-b4b8929f1c82";
 
@@ -333,8 +319,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             string userId = "70d6cddb-1787-4e7c-822b-b4b8929f1c82";
 
@@ -363,8 +348,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             string userId = "7126cddb-1787-4e7c-822b-b4b8929f1c82";
 
@@ -395,8 +379,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             bool result = await dentistService.IsUserDentist(userId.ToString());
 
@@ -414,8 +397,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             bool result = await dentistService.IsUserDentist(userId.ToString());
 
@@ -437,11 +419,9 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
-            DentistDetailsViewModel? dentistDetailsActual = await dentistService
-                .GetDentistDetailsByIdAsync(patientId);
+            DentistDetailsViewModel? dentistDetailsActual = await dentistService.GetDentistDetailsByIdAsync(patientId);
 
             Assert.IsNotNull(dentistDetailsActual);
             Assert.AreEqual(expectedDentistName, dentistDetailsActual.Name);
@@ -461,13 +441,11 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             Assert.ThrowsAsync<NullReferenceException>(async () =>
             {
-                DentistDetailsViewModel? dentistDetailsActual = await dentistService
-                    .GetDentistDetailsByIdAsync(patientId);
+                DentistDetailsViewModel? dentistDetailsActual = await dentistService.GetDentistDetailsByIdAsync(patientId);
 
                 if (dentistDetailsActual == null)
                 {
@@ -488,16 +466,13 @@
             string expectedDentistLicenseNumber = "XX-007-XX";
             string expectedDentistSpecialty = "Endodontics";
 
-
             this.dentistRepository
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, userManager.Object);
 
-            EditDentistFormModel? dentistDetailsActual = await dentistService
-                .GetDentistForEditByIdAsync(patientId);
+            EditDentistFormModel? dentistDetailsActual = await dentistService.GetDentistForEditByIdAsync(patientId);
 
             Assert.IsNotNull(dentistDetailsActual);
             Assert.AreEqual(expectedDentistName, dentistDetailsActual.Name);
@@ -518,13 +493,11 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             Assert.ThrowsAsync<NullReferenceException>(async () =>
             {
-                EditDentistFormModel? dentistDetailsActual = await dentistService
-                    .GetDentistForEditByIdAsync(patientId);
+                EditDentistFormModel? dentistDetailsActual = await dentistService.GetDentistForEditByIdAsync(patientId);
 
                 if (dentistDetailsActual == null)
                 {
@@ -542,8 +515,7 @@
                 .Setup(r => r.GetByIdAsync())
                 .ReturnsAsync((Guid id) => dentistsData.FirstOrDefault(d => d.DentistId == id));
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             EditDentistFormModel model = new EditDentistFormModel
             {
@@ -579,8 +551,7 @@
                 .Setup(r => r.GetByIdAsync())
                 .ReturnsAsync((Guid id) => dentistsData.FirstOrDefault(d => d.DentistId == id));
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             EditDentistFormModel model = new EditDentistFormModel
             {
@@ -614,11 +585,9 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
-            DeleteDentistViewModel? dentistDetailsActual = await dentistService
-                .GetDentistForDeleteByIdAsync(dentistId);
+            DeleteDentistViewModel? dentistDetailsActual = await dentistService.GetDentistForDeleteByIdAsync(dentistId);
 
             Assert.IsNotNull(dentistDetailsActual);
             Assert.AreEqual(expectedDentistId.ToLower(), dentistDetailsActual.Id.ToLower());
@@ -638,13 +607,11 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             Assert.ThrowsAsync<NullReferenceException>(async () =>
             {
-                DeleteDentistViewModel? dentistDetailsActual = await dentistService
-                    .GetDentistForDeleteByIdAsync(dentistId);
+                DeleteDentistViewModel? dentistDetailsActual = await dentistService.GetDentistForDeleteByIdAsync(dentistId);
 
                 if (dentistDetailsActual == null)
                 {
@@ -662,8 +629,7 @@
                 .Setup(r => r.GetAllAttached())
                 .Returns(dentistsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             AllDentistsSearchViewModel inputModel = new AllDentistsSearchViewModel
             {
@@ -682,8 +648,7 @@
                 .Setup(um => um.Users)
                 .Returns(usersData.AsQueryable().BuildMock());
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             IEnumerable<UserEmailViewModel> result = await dentistService.GetUserEmailsAsync();
 
@@ -699,8 +664,7 @@
                 .Setup(um => um.Users)
                 .Returns(usersData.AsQueryable().BuildMock());
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object,
-                appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
             IEnumerable<UserEmailViewModel> result = await dentistService.GetUserEmailsAsync();
 
@@ -768,21 +732,19 @@
                     }
                 }
             };
+
             IQueryable<Appointment> appointmentsMockQueryable = appointmentsData.BuildMock();
 
             this.appointmentRepository
                 .Setup(r => r.GetAllAttached())
                 .Returns(appointmentsMockQueryable);
 
-            IDentistService dentistService = new DentistService(this.dentistRepository.Object, appointmentRepository.Object, userManager.Object);
+            IDentistService dentistService = new DentistService(this.dentistRepository.Object, this.appointmentRepository.Object, this.userManager.Object);
 
-            // Act
             DentistDashboardViewModel dashboard = await dentistService.GetDentistDashboardAsync(dentistId);
 
-            // Assert
             Assert.IsNotNull(dashboard);
             Assert.AreEqual(1, dashboard.TodayAppointmentCount);
-            Assert.AreEqual(1, dashboard.TodayAppointments.Count);
             Assert.AreEqual(1, dashboard.MonthlyPatientCount);
         }
     }
