@@ -1,23 +1,48 @@
-# C# Dental Management System
+# Dental Management System
 
-This is a **Dental Clinic Management System** project built using **.NET Core MVC**. The system is designed to simplify the management of dental clinic operations, including handling patient information, dentist schedules, appointments, and procedures.
+The **Dental Management System** is a web application built using the .NET Core framework. It enables dental clinics to efficiently manage their daily operations, including scheduling appointments, assigning procedures, generating prescriptions, and managing users.
 
-## Features
+---
 
-- **Patient Management:** Add, view, update, and manage patient information.
-- **Dentist Management:** Register dentists, manage their schedules, and assign them to appointments.
-- **Appointment Scheduling:**
-- **Role Management:**
-- **Procedure Management:** Manage dental procedures associated with appointments.
-- **User-Friendly Interface:** Simplified navigation with clear separation of roles and functionalities.
+## Technologies Used
 
+- **Frontend**:
+  - Razor Pages
 
-## Project Structure
+- **Backend**:
+  - ASP.NET Core MVC
+  - Entity Framework Core
 
-The project follows a clean architecture with the following key components:
+- **Database**:
+  - Microsoft SQL Server
 
-- **Controllers:** Handle HTTP requests and responses.
-- **Services:** Implement business logic and interact with repositories.
-- **Repositories:** Abstract database operations.
-- **View Models:** Simplify data exchange between views and controllers.
-- **Views:** HTML and Razor pages for the frontend.
+- **Other**:
+  - Dependency Injection
+  - Repository Pattern
+
+---
+
+## Setup Instructions
+
+Follow the steps below to get the project running on your local machine:
+
+### Prerequisites
+
+1. **Install SQL Server**:
+   - Set up Microsoft SQL Server and ensure it's running locally.
+
+2. **Install Visual Studio**:
+   - Make sure you have Visual Studio 2022 or later installed with ASP.NET and web development workloads.
+
+### Installation
+
+1. **Configure Database**:
+   - Update the `appsettings.json` file with your SQL Server connection string.
+
+2. **Apply Migrations**
+
+3. **Run the Application**
+
+---
+
+**Horizontal scrolling avoided on 1920x1080 Resolution at 90% Browser Zoom**
