@@ -304,7 +304,7 @@
                 return this.View(model);
             }
 
-            return this.RedirectToAction("Index", "Appointment", new { id = model.Id });
+            return this.RedirectToAction("Details", "Appointment", new { id = model.Id });
         }
 
         [HttpGet]
