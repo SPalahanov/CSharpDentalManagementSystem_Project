@@ -338,6 +338,11 @@
                     AppointmentTypeId = a.AppointmentTypeId,
                     PatientId = a.PatientId,
                     DentistId = a.DentistId,
+                    SelectedProcedureIds = a.AppointmentProcedures
+                        .Where(ap => !ap.IsDeleted)
+                        .Select(ap => ap.ProcedureId)
+                        .ToArray()
+
                 })
                 .FirstOrDefaultAsync(a => a.Id.ToLower() == id.ToString().ToLower());
 
@@ -354,6 +359,7 @@
                 AppointmentTypeId = appointmentModel.AppointmentTypeId,
                 PatientId = appointmentModel.PatientId,
                 DentistId = appointmentModel.DentistId,
+                SelectedProcedureIds = appointmentModel.SelectedProcedureIds,
                 Patients = await GetPatientListAsync(),
                 Dentists = await GetDentistListAsync(),
                 AppointmentTypes = await GetAppointmentTypeListAsync(),
@@ -383,7 +389,32 @@
 
             IEnumerable<int> selectedProcedureIds = model.SelectedProcedureIds;
 
-            IEnumerable<int> existingProcedureIds = appointment.AppointmentProcedures.Select(ap => ap.ProcedureId);
+            List<AppointmentProcedure> existingProcedures = appointment.AppointmentProcedures.ToList();
+
+            foreach (var procedure in existingProcedures)
+            {
+                if (!selectedProcedureIds.Contains(procedure.ProcedureId))
+                {
+                    procedure.IsDeleted = true;
+                }
+                else if (procedure.IsDeleted)
+                {
+                    procedure.IsDeleted = false;
+                }
+            }
+
+            IEnumerable<int> existingProcedureIds = appointment.AppointmentProcedures
+                .Where(ap => !ap.IsDeleted)
+                .Select(ap => ap.ProcedureId);
+
+            IEnumerable<AppointmentProcedure> proceduresToRemove = appointment.AppointmentProcedures
+                .Where(ap => !ap.IsDeleted && !selectedProcedureIds.Contains(ap.ProcedureId))
+                .ToList();
+
+            foreach (var procedure in proceduresToRemove)
+            {
+                procedure.IsDeleted = true;
+            }
 
             IEnumerable<Procedure> newProcedures = await this.procedureRepository
                 .GetAllAttached()
