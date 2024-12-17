@@ -10,7 +10,7 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="AppointmentDate"></label>
+        <label asp-for="AppointmentDate">Appointment Date</label>
         <input asp-for="AppointmentDate" class="form-control" value="@Model.AppointmentDate.ToString("dd/MMMM/yyyy hh:mm tt")"/>
         <span asp-validation-for="AppointmentDate" class="text-danger"></span>
     </div>
