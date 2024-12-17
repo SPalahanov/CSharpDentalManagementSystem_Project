@@ -305,7 +305,7 @@
 
             if (await this.dentistService.GetDentistForDeleteByIdAsync(dentistGuid) == null)
             {
-                return this.RedirectToAction("Home", "Error");
+                return this.RedirectToAction("Error", "Home");
             }
 
             DeleteDentistViewModel? dentistToDeleteViewModel = await this.dentistService.GetDentistForDeleteByIdAsync(dentistGuid);
